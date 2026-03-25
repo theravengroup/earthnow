@@ -1,0 +1,16 @@
+
+> my-project@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.161:3000
+
+✓ Starting...
+✓ Ready in 347ms
+ GET /terra/display 404 in 373ms (compile: 267ms, render: 106ms)
+ GET /favicon.svg 404 in 24ms (compile: 3ms, render: 21ms)
+ GET /terra/display 404 in 63ms (compile: 14ms, render: 49ms)
+ GET /terra/display 404 in 56ms (compile: 8ms, render: 48ms)
+ GET /terra/display 404 in 58ms (compile: 9ms, render: 50ms)
+ GET /terra 200 in 518ms (compile: 449ms, render: 69ms)
