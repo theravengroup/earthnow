@@ -127,7 +127,7 @@ export const MetricCard = React.memo(function MetricCard({
       <div className="flex-shrink-0 relative">
         {/* Number - static display, no animations */}
         <div
-          className="metric-value font-mono text-lg font-semibold md:text-xl"
+          className="metric-value font-mono font-semibold text-[clamp(14px,4vw,20px)]"
           style={{ 
             color, 
             textShadow,
@@ -162,7 +162,7 @@ export const MetricCard = React.memo(function MetricCard({
       
       {/* BOTTOM: Label - fixed height area, 2 lines max */}
       <div
-        className="flex-shrink-0 text-[11px] font-medium uppercase leading-tight tracking-wider text-[#94a3b8] md:text-[12px]"
+        className="flex-shrink-0 text-[10px] sm:text-[11px] md:text-[12px] font-medium uppercase leading-tight tracking-wider text-[#94a3b8]"
         style={{ minHeight: '30px', textAlign: 'center' }}
       >
         {label}

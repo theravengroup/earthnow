@@ -44,7 +44,7 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
 
   return (
     <motion.section
-      style={{ padding: '60px 24px', background: '#0a0e17' }}
+      style={{ padding: '40px 16px', background: '#0a0e17' }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
@@ -59,7 +59,7 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
         overflow: 'hidden',
       }}>
         {/* Stat 1 */}
-        <div style={{ padding: '32px 32px 28px' }}>
+        <div style={{ padding: '24px 20px 20px' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(18px, 3.5vw, 24px)',
@@ -87,7 +87,7 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
         </div>
 
         {/* Stat 2 */}
-        <div style={{ padding: '28px 32px 24px' }}>
+        <div style={{ padding: '20px 20px 16px' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(18px, 3.5vw, 24px)',

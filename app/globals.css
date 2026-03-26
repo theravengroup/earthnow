@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 /* ===========================================
    INTERACTIVE ELEMENT STACKING RULES
    Ensures all clickable elements are above decorative layers
@@ -560,9 +565,12 @@ select,
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .civilization-signals-grid > *:last-child:nth-child(odd) {
-    grid-column: span 2;
+    grid-column: span 2 !important;
+  }
+  .vital-signs-grid > *:last-child:nth-child(odd) {
+    grid-column: span 2 !important;
   }
 }
 

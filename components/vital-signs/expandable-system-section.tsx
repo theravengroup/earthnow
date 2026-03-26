@@ -153,7 +153,7 @@ export function ExpandableSystemSection({
   
   return (
     <div 
-      className="vital-signs-section relative mt-[100px] first:mt-0 rounded-3xl px-6 py-12"
+      className="vital-signs-section relative mt-[60px] sm:mt-[100px] first:mt-0 rounded-3xl px-3 py-8 sm:px-6 sm:py-12"
       style={{ background: backgroundGradient }}
     >
       {/* Section Header with Status Indicator */}

@@ -1247,7 +1247,7 @@ export default function Home() {
       <StarField />
 
       {/* Hero Section */}
-      <section className="relative flex min-h-[75vh] flex-col items-center justify-center overflow-hidden px-4 md:min-h-screen">
+      <section className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden px-4 md:min-h-screen">
         {/* Satellite dots - clustered above the globe */}
         <div className="pointer-events-none absolute inset-0 z-[2] hidden md:block">
           {SATELLITE_DOTS.map((dot, i) => (
@@ -1462,7 +1462,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       <motion.section
         id="vital-signs"
         ref={vitalSignsRef}
-        className="vital-signs-container relative overflow-hidden bg-[#0a0e17] px-6 py-24 md:px-12"
+        className="vital-signs-container relative overflow-hidden bg-[#0a0e17] px-6 py-10 md:py-24 md:px-12"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -1507,7 +1507,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         <div className="relative z-10 mx-auto w-full max-w-7xl">
           {/* Section Heading */}
           <div className="mb-16 text-center">
-            <h2 className="mb-4 font-serif text-[40px] font-semibold text-white">
+            <h2 className="mb-4 font-serif text-[28px] sm:text-[36px] md:text-[40px] font-semibold text-white">
               The Vital Signs
             </h2>
             <p className="text-[16px] text-[#94a3b8] md:text-[18px]">
@@ -1662,7 +1662,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         <div className="relative z-10 mx-auto w-full max-w-7xl">
           {/* Section Heading */}
           <div className="mb-16 text-center">
-            <h2 className="mb-4 font-serif text-[40px] font-semibold text-white">
+            <h2 className="mb-4 font-serif text-[28px] sm:text-[36px] md:text-[40px] font-semibold text-white">
               Explore the Systems
             </h2>
 <p className="text-[16px] text-[#94a3b8] md:text-[18px]">
@@ -1958,7 +1958,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
 
           {/* Section Heading */}
           <div className="mb-8 text-center">
-            <h2 className="mb-4 font-serif text-[40px] font-semibold text-white">
+            <h2 className="mb-4 font-serif text-[28px] sm:text-[36px] md:text-[40px] font-semibold text-white">
               Your Lifetime Impact
             </h2>
 <p className="text-[16px] text-[#94a3b8] md:text-[18px]">
