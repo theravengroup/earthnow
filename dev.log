@@ -14,3 +14,4 @@
  GET /terra/display 404 in 56ms (compile: 8ms, render: 48ms)
  GET /terra/display 404 in 58ms (compile: 9ms, render: 50ms)
  GET /terra 200 in 518ms (compile: 449ms, render: 69ms)
+ GET /terra 200 in 99ms (compile: 34ms, render: 64ms)
