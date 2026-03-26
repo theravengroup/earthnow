@@ -131,7 +131,9 @@ export function CivilizationSignalCard({
             opacity: isLoaded ? 1 : 0,
             fontSize: 'clamp(18px, 4vw, 28px)',
             whiteSpace: 'nowrap',
-            overflow: 'visible',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100%',
             minWidth: 0,
           }}
           suppressHydrationWarning

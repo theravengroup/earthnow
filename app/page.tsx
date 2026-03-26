@@ -1462,7 +1462,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       <motion.section
         id="vital-signs"
         ref={vitalSignsRef}
-        className="vital-signs-container relative overflow-hidden bg-[#0a0e17] px-6 py-10 md:py-24 md:px-12"
+        className="vital-signs-container relative overflow-hidden bg-[#0a0e17] px-3 py-16 sm:px-6 sm:py-24 md:px-12"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -2184,9 +2184,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
 
       {/* Transition Section - Invitation to Observe */}
       <motion.section
-        className="relative flex flex-col items-center justify-center px-6 text-center"
-        style={{ 
-          paddingTop: '60px', 
+        className="relative flex flex-col items-center justify-center px-6 pt-8 sm:pt-[60px] text-center"
+        style={{
           paddingBottom: '24px',
           background: '#070b11',
         }}

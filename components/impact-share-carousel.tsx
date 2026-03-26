@@ -210,7 +210,7 @@ export function ImpactShareCarousel({
         {/* Card Container with swipe support */}
         <div
           className="relative overflow-hidden"
-          style={{ width: 600, maxWidth: "calc(100vw - 80px)" }}
+          style={{ width: 600, maxWidth: "calc(100vw - 40px)" }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
