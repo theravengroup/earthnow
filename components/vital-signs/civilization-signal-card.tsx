@@ -102,7 +102,7 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
 
   return (
     <div
-      className="group relative overflow-hidden rounded-2xl p-7 hover:-translate-y-1"
+      className="group relative overflow-hidden rounded-2xl p-7"
       style={{
         height: '100%',
         borderTop: `2px solid ${sentimentBorder}`,

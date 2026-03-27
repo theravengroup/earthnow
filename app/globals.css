@@ -353,7 +353,6 @@ select,
   border-radius: 2px;
   pointer-events: none;
   opacity: 0;
-  will-change: top, opacity;
   transition: top 500ms ease-out;
 }
 
@@ -468,8 +467,6 @@ select,
 
 .ambient-glow-breathing {
   animation: ambientBreathing 12s ease-in-out infinite;
-  will-change: transform, opacity;
-  transition: transform 200ms ease-out, opacity 200ms ease-out;
 }
 
 /* Pulse boost - triggered on metric update */

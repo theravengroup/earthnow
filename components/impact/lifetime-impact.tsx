@@ -94,12 +94,10 @@ export function ImpactCard({
     <div
       className="overflow-hidden rounded-2xl p-6"
       style={{
-        background: `${accentTint}, linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)`,
+        background: `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`,
         border: "1px solid rgba(255,255,255,0.15)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.03), 0 12px 40px rgba(0,0,0,0.5)",
-        backdropFilter: "blur(24px) saturate(1.8)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.8)",
       }}
     >
       <AnimatedNumber value={value} color={color} abbreviated={abbreviated} />
@@ -1103,9 +1101,7 @@ export const ShareMomentSection = () => {
                     marginTop: "auto",
                     marginBottom: 32,
                     width: "78%",
-                    background: "rgba(255,255,255,0.03)",
-                    backdropFilter: "blur(6px)",
-                    WebkitBackdropFilter: "blur(6px)",
+                    background: "rgba(15,23,42,0.8)",
                     border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 20,
                     padding: "32px 28px",
@@ -1321,9 +1317,7 @@ export const ShareMomentSection = () => {
                     <div
                       className="absolute bottom-full left-1/2 z-50 mb-2 w-[220px] -translate-x-1/2 animate-in fade-in-0 slide-in-from-bottom-2"
                       style={{
-                        background: "rgba(15, 20, 30, 0.95)",
-                        backdropFilter: "blur(16px)",
-                        WebkitBackdropFilter: "blur(16px)",
+                        background: "rgba(15, 20, 30, 0.97)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         borderRadius: "12px",
                         boxShadow:

@@ -27,8 +27,7 @@ export function VitalSignsPulseGlow() {
       style={{
         width: '80%',
         height: '60%',
-        background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.04) 0%, transparent 70%)',
-        filter: 'blur(100px)',
+        background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.03) 0%, rgba(20,184,166,0.008) 35%, transparent 60%)',
         opacity: isPulsing ? 1 : 0.4,
         transform: `translate(-50%, -50%) scale(${isPulsing ? 1.02 : 1})`,
         transition: 'opacity 0.25s ease, transform 0.25s ease',

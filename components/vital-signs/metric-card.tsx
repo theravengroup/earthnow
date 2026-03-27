@@ -84,7 +84,7 @@ export const MetricCard = React.memo(function MetricCard({
 
   return (
     <div 
-      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl p-5 hover:-translate-y-1"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl p-5"
       style={{
         alignSelf: 'stretch',
         height: '100%',

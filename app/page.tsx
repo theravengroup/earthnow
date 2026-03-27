@@ -480,8 +480,7 @@ const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileY
         style={{
           width: '900px',
           height: '450px',
-          background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.12) 0%, rgba(20,184,166,0.04) 40%, transparent 70%)',
-          filter: 'blur(40px)',
+          background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.08) 0%, rgba(20,184,166,0.03) 35%, transparent 60%)',
         }}
       />
       
@@ -1261,34 +1260,31 @@ export default function Home() {
 
       {/* Background gradient orbs - bold and visible */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Main teal orb behind globe - large and bright */}
+        {/* Main teal orb behind globe — pre-softened gradient, no filter:blur */}
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            width: '900px',
-            height: '900px',
-            background: 'radial-gradient(circle, rgba(20,184,166,0.25) 0%, transparent 65%)',
-            filter: 'blur(100px)',
+            width: '1200px',
+            height: '1200px',
+            background: 'radial-gradient(circle, rgba(20,184,166,0.18) 0%, rgba(20,184,166,0.06) 30%, transparent 55%)',
           }}
         />
         {/* Blue orb upper right */}
         <div
           className="absolute right-[5%] top-[15%]"
           style={{
-            width: '600px',
-            height: '600px',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)',
-            filter: 'blur(120px)',
+            width: '900px',
+            height: '900px',
+            background: 'radial-gradient(circle, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.03) 35%, transparent 60%)',
           }}
         />
         {/* Purple orb to the right */}
         <div
           className="absolute right-[15%] top-[50%]"
           style={{
-            width: '500px',
-            height: '500px',
-            background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-            filter: 'blur(100px)',
+            width: '800px',
+            height: '800px',
+            background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(139,92,246,0.02) 35%, transparent 60%)',
           }}
         />
       </div>
@@ -1520,34 +1516,31 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       >
         {/* Background gradient orbs for Vital Signs - bold and visible */}
         <div className="pointer-events-none absolute inset-0">
-          {/* Teal orb upper left - large and bright */}
+          {/* Teal orb upper left — pre-softened, no filter:blur */}
           <div
             className="absolute -left-[5%] -top-[10%]"
             style={{
-              width: '700px',
-              height: '700px',
-              background: 'radial-gradient(circle, rgba(20,184,166,0.15) 0%, transparent 70%)',
-              filter: 'blur(150px)',
+              width: '1000px',
+              height: '1000px',
+              background: 'radial-gradient(circle, rgba(20,184,166,0.10) 0%, rgba(20,184,166,0.03) 30%, transparent 55%)',
             }}
           />
-          {/* Purple orb lower right - prominent */}
+          {/* Purple orb lower right */}
           <div
             className="absolute -bottom-[5%] -right-[5%]"
             style={{
-              width: '600px',
-              height: '600px',
-              background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-              filter: 'blur(150px)',
+              width: '900px',
+              height: '900px',
+              background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(139,92,246,0.02) 30%, transparent 55%)',
             }}
           />
           {/* Amber orb center-bottom */}
           <div
             className="absolute bottom-[10%] left-[30%]"
             style={{
-              width: '500px',
-              height: '500px',
-              background: 'radial-gradient(circle, rgba(234,179,8,0.08) 0%, transparent 70%)',
-              filter: 'blur(150px)',
+              width: '800px',
+              height: '800px',
+              background: 'radial-gradient(circle, rgba(234,179,8,0.05) 0%, rgba(234,179,8,0.015) 30%, transparent 55%)',
             }}
           />
           {/* Synchronized pulse glow - heartbeat of the planet */}
@@ -1580,8 +1573,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
             <div 
               className="absolute inset-0 -z-10"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.06) 0%, transparent 70%)',
-                filter: 'blur(60px)',
+                background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.04) 0%, rgba(20,184,166,0.01) 40%, transparent 65%)',
               }}
             />
             

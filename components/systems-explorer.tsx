@@ -742,9 +742,7 @@ function SystemDeepDivePanel({
     >
       <div
         style={{
-          background: "rgba(255,255,255,0.04)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          background: "rgba(15,23,42,0.85)",
           border: `1px solid ${accentColor}66`,
           boxShadow: `0 0 15px ${accentColor}4D, inset 0 0 15px ${accentColor}0D`,
           borderRadius: 16,

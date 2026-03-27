@@ -115,8 +115,7 @@ export function NowWhatSection() {
               ease: "easeOut",
             }}
             style={{
-              background: "rgba(255,255,255,0.06)",
-              backdropFilter: "blur(12px)",
+              background: "rgba(15,23,42,0.88)",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 16,
               padding: "36px 40px",

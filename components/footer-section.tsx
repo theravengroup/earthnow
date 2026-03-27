@@ -328,9 +328,7 @@ function FooterModal({
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[100]"
             style={{
-              background: "rgba(10,14,23,0.85)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              background: "rgba(10,14,23,0.95)",
             }}
             onClick={onClose}
           />
@@ -523,9 +521,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[100]"
             style={{
-              background: "rgba(10,14,23,0.85)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              background: "rgba(10,14,23,0.95)",
             }}
             onClick={onClose}
           />
@@ -791,9 +787,7 @@ function AboutModal({
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[100]"
             style={{
-              background: "rgba(10,14,23,0.85)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              background: "rgba(10,14,23,0.95)",
             }}
             onClick={onClose}
           />
