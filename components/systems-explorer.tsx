@@ -1161,7 +1161,7 @@ export function SystemsExplorer() {
       ) : (
         <div 
           ref={cardsRef}
-          className="grid grid-cols-5 gap-4"
+          className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5"
           style={{ overflowAnchor: 'none' }}
         >
           {systemsConfig.map((system) => (

@@ -148,7 +148,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden items-center md:flex" style={{ gap: "24px" }}>
+          <div className="hidden items-center lg:flex" style={{ gap: "24px" }}>
             {/* Primary nav links */}
             {primaryNavLinks.map((link) => {
               const isActive = isLinkActive(link);
@@ -332,7 +332,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
 
           {/* Mobile Menu Button */}
           <button
-            className="relative z-[60] text-white md:hidden"
+            className="relative z-[60] text-white lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -353,7 +353,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center md:hidden"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center lg:hidden"
             style={{
               background: "rgba(10,14,23,0.98)",
               backdropFilter: "blur(24px)",

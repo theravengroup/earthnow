@@ -32,7 +32,7 @@ export function FloatingDonateButton() {
   }
 
   return (
-    <div className="hidden md:block">
+    <div className="hidden lg:block">
       {/* Floating Support Button - fixed to bottom right */}
       <button
         onClick={() => setDonateModalOpen(true)}
