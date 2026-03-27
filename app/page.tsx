@@ -686,17 +686,38 @@ export default function Home() {
   // Countdown is handled by ShuffleCountdown component to avoid re-rendering entire page
   const SHUFFLE_INTERVAL = 60;
   const [shuffleKey, setShuffleKey] = useState(0);
+  const [shufflePhase, setShufflePhase] = useState<'idle' | 'fading-out' | 'fading-in'>('idle');
+  const shuffleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     setDisplayedSignals(buildCivAssignment());
   }, [buildCivAssignment]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
+  // Animated shuffle: fade-out → swap data → fade-in → idle
+  const triggerAnimatedShuffle = useCallback(() => {
+    // Phase 1: Fade out (0.6s + stagger)
+    setShufflePhase('fading-out');
+
+    shuffleTimeoutRef.current = setTimeout(() => {
+      // Phase 2: Swap data while invisible
       setDisplayedSignals(buildCivAssignment());
       setShuffleKey(k => k + 1);
-    }, SHUFFLE_INTERVAL * 1000);
-    return () => clearInterval(timer);
+      setShufflePhase('fading-in');
+
+      shuffleTimeoutRef.current = setTimeout(() => {
+        // Phase 3: Back to idle
+        setShufflePhase('idle');
+      }, 700); // fade-in duration + stagger buffer
+    }, 700); // fade-out duration + stagger buffer
   }, [buildCivAssignment]);
+
+  useEffect(() => {
+    const timer = setInterval(triggerAnimatedShuffle, SHUFFLE_INTERVAL * 1000);
+    return () => {
+      clearInterval(timer);
+      if (shuffleTimeoutRef.current) clearTimeout(shuffleTimeoutRef.current);
+    };
+  }, [triggerAnimatedShuffle]);
 
   // Share Your Impact state
   const [impactShareState, setImpactShareState] = useState<'idle' | 'generating' | 'success'>('idle');
@@ -1628,6 +1649,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                     decimalPlaces={signal.decimalPlaces}
                     staticRateDisplay={signal.staticRateDisplay}
                     sentiment={signal.sentiment}
+                    shufflePhase={shufflePhase}
+                    totalCards={displayedSignals.length}
                   />
               ))}
             </div>

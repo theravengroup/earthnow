@@ -15,6 +15,8 @@ interface CivilizationSignalCardProps {
   decimalPlaces?: number;
   staticRateDisplay?: string;
   sentiment?: 'positive' | 'challenging' | 'neutral';
+  shufflePhase?: 'idle' | 'fading-out' | 'fading-in';
+  totalCards?: number;
 }
 
 // Civilization Signal Card - larger and more prominent than regular MetricCard
@@ -30,6 +32,8 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
   decimalPlaces,
   staticRateDisplay,
   sentiment,
+  shufflePhase = 'idle',
+  totalCards = 16,
 }: CivilizationSignalCardProps) {
   const { secondsSinceMidnight, isLoaded } = useGlobalTick();
   const [isHovered, setIsHovered] = useState(false);
@@ -100,6 +104,23 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
   const hoverAccentTint = `linear-gradient(135deg, ${color}30 0%, transparent 60%)`;
   const hoverGlow = `0 0 50px ${color}30`;
 
+  // Shuffle animation: staggered fade-out (L→R) and fade-in (R→L)
+  const STAGGER_MS = 30;
+  const isFadingOut = shufflePhase === 'fading-out';
+  const isFadingIn = shufflePhase === 'fading-in';
+  const isAnimating = isFadingOut || isFadingIn;
+
+  // L→R stagger for fade-out, R→L stagger for fade-in
+  const staggerDelay = isFadingOut
+    ? index * STAGGER_MS
+    : isFadingIn
+      ? (totalCards - 1 - index) * STAGGER_MS
+      : 0;
+
+  const shuffleOpacity = isFadingOut ? 0 : isFadingIn ? 1 : 1;
+  const shuffleTransform = isFadingOut ? 'translateY(-8px)' : 'translateY(0px)';
+  const shuffleFilter = isFadingOut ? 'blur(4px)' : 'blur(0px)';
+
   return (
     <div
       className="group relative overflow-hidden rounded-2xl p-7"
@@ -111,7 +132,12 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
         borderTopColor: sentimentBorder,
         borderTopWidth: 2,
         boxShadow: `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`,
-        transition: 'box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
+        opacity: shuffleOpacity,
+        transform: shuffleTransform,
+        filter: shuffleFilter,
+        transition: isAnimating
+          ? `opacity 0.6s ease ${staggerDelay}ms, transform 0.6s ease ${staggerDelay}ms, filter 0.6s ease ${staggerDelay}ms, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease`
+          : 'box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
       }}
       onPointerEnter={(e) => {
         if (e.pointerType === 'mouse') {
