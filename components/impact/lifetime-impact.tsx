@@ -966,7 +966,7 @@ export const ShareMomentSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto max-w-[500px]"
+            className="mx-auto max-w-[90vw] sm:max-w-[500px]"
           >
             {/* Cinematic Card Container */}
             <div
@@ -1271,7 +1271,7 @@ export const ShareMomentSection = () => {
         {/* Success state */}
         {state === "success" && imageDataUrl && (
           <motion.div
-            className="mx-auto max-w-[540px]"
+            className="mx-auto max-w-[90vw] sm:max-w-[540px]"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}

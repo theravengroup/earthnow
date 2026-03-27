@@ -1936,7 +1936,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       <motion.section
         id="your-impact"
         ref={impactRef}
-        className="relative overflow-hidden bg-[#0a0e17] px-6 pb-16 pt-16 md:px-12"
+        className="relative overflow-hidden bg-[#0a0e17] px-6 pb-8 pt-16 sm:pb-16 md:px-12"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}

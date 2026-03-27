@@ -217,7 +217,7 @@ function ImpactSubSection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay }}
-      className="mb-20"
+      className="mb-10 sm:mb-20"
     >
       {/* Section header */}
       <div className="mb-8 text-center">
@@ -280,7 +280,7 @@ export function ExpandedImpactSections({ birthYear }: { birthYear: number | "" }
   const totalReach = INFLUENCE_CONSTANTS.AVERAGE_SOCIAL_REACH * INFLUENCE_CONSTANTS.SECOND_DEGREE_MULTIPLIER;
 
   return (
-    <div className="mt-16 border-t border-white/10 pt-16">
+    <div className="mt-8 border-t border-white/10 pt-8 sm:mt-16 sm:pt-16">
       {/* Section Divider */}
       <motion.div
         initial={{ opacity: 0 }}
