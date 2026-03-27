@@ -20,7 +20,6 @@ import { ACTION_POOL } from "./action-data";
 import { SYSTEMS_DEEP_DIVE } from "./systems-data";
 import { CONTRAST_DATA, type ContrastEntry } from "@/lib/data/contrast-data";
 import {
-  civilizationSignals,
   vitalSignsRow1,
   vitalSignsRow2,
   vitalSignsRow3,
@@ -28,6 +27,7 @@ import {
   vitalSignsRow5,
   type MetricConfig,
 } from "@/lib/data/vital-signs";
+import { CIVILIZATION_SIGNAL_POOL, type CivilizationSignal } from "@/lib/data/civilization-signals";
 import { heroTickerPairings } from "@/lib/data/hero-ticker";
 import { StarField } from "@/components/hero/star-field";
 import { GlobalTickProvider, useGlobalTick } from "@/hooks/use-global-tick";
@@ -639,15 +639,77 @@ export default function Home() {
     setHeroTickerIndex(Math.floor(Math.random() * heroTickerPairings.length));
   }, []);
   
-  // Shuffle Civilization Signals once on mount for visual variety
-  const shuffledCivSignals = useMemo(() => {
-    const arr = [...civilizationSignals];
-    for (let i = arr.length - 1; i > 0; i--) {
+  // Build a 15-signal assignment: 3 hero (wide) + 12 standard
+  // Each entry tagged with _wide so rendering doesn't depend on index
+  type TaggedSignal = CivilizationSignal & { _wide: boolean };
+
+  // Fisher-Yates shuffle (proper, unbiased)
+  const shuffle = <T,>(arr: T[]): T[] => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      [a[i], a[j]] = [a[j], a[i]];
     }
-    return arr;
+    return a;
+  };
+
+  // Display order: wide, std×4, wide, std×4, wide, std×4 = 15 tiles
+  const buildCivAssignment = useCallback((): TaggedSignal[] => {
+    const allHeroes = CIVILIZATION_SIGNAL_POOL.filter(s => s.tier === "hero");
+
+    // Pick 3 heroes with at least 2 positive
+    const shuffledHeroes = shuffle(allHeroes);
+    const positives = shuffledHeroes.filter(s => s.sentiment === "positive");
+    const nonPositives = shuffledHeroes.filter(s => s.sentiment !== "positive");
+    const pickedHeroes = [
+      positives[0],
+      positives[1],
+      shuffle([...nonPositives, ...positives.slice(2)])[0],
+    ];
+
+    // Pick 10 from remaining 57 signals
+    // Layout: [W, S, S] × 3 + [S, S, S, S] = 13 tiles
+    // Desktop 4-col: W(2)+S+S = 4 per row × 3 + S×4 = 4 rows, zero gaps
+    // Mobile 2-col: W(full) + S,S per group (even!) + 2 pairs = zero orphans
+    const heroLabels = new Set(pickedHeroes.map(h => h.label));
+    const pool = shuffle(CIVILIZATION_SIGNAL_POOL.filter(s => !heroLabels.has(s.label)));
+    const pickedStandard = pool.slice(0, 10);
+
+    const result: TaggedSignal[] = [];
+    for (let i = 0; i < 3; i++) {
+      result.push({ ...pickedHeroes[i], _wide: true });
+      result.push({ ...pickedStandard[i * 2 + 0], _wide: false });
+      result.push({ ...pickedStandard[i * 2 + 1], _wide: false });
+    }
+    // Final row: 4 more standards
+    result.push({ ...pickedStandard[6], _wide: false });
+    result.push({ ...pickedStandard[7], _wide: false });
+    result.push({ ...pickedStandard[8], _wide: false });
+    result.push({ ...pickedStandard[9], _wide: false });
+    return result;
   }, []);
+
+  const [displayedSignals, setDisplayedSignals] = useState<TaggedSignal[]>(() => []);
+  const [shuffleCountdown, setShuffleCountdown] = useState(60);
+  const SHUFFLE_INTERVAL = 60; // seconds
+
+  // Initialize on mount and rotate every 60 seconds
+  useEffect(() => {
+    setDisplayedSignals(buildCivAssignment());
+    setShuffleCountdown(SHUFFLE_INTERVAL);
+
+    const tick = setInterval(() => {
+      setShuffleCountdown(prev => {
+        if (prev <= 1) {
+          setDisplayedSignals(buildCivAssignment());
+          return SHUFFLE_INTERVAL;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(tick);
+  }, [buildCivAssignment]);
 
   // Share Your Impact state
   const [impactShareState, setImpactShareState] = useState<'idle' | 'generating' | 'success'>('idle');
@@ -1554,24 +1616,59 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       Tap any signal to see its per-minute rate
     </span>
   </div>
+              {/* Sentiment color guide */}
+              <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-[#64748b]">
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block h-[2px] w-4 rounded-full bg-[#14b8a6]" />
+                  Positive
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block h-[2px] w-4 rounded-full bg-[#ef4444]" />
+                  Challenging
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block h-[2px] w-4 rounded-full bg-[#64748b]" />
+                  Neutral
+                </span>
+              </div>
             </div>
-            
-{/* Civilization Signals Grid - 5 columns on desktop */}
-        <div className="grid grid-cols-2 gap-5 lg:grid-cols-5 civilization-signals-grid">
-        {shuffledCivSignals.map((signal, idx) => (
-                <CivilizationSignalCard
-                  key={signal.label}
-                  color={signal.color}
-                  label={signal.label}
-                  ratePerSecond={signal.ratePerSecond}
-                  useAbbreviated={signal.useAbbreviated}
-                  prefix={signal.prefix}
-                  index={idx}
-                  staticValue={signal.staticValue}
-                  decimalPlaces={signal.decimalPlaces}
-                  staticRateDisplay={signal.staticRateDisplay}
-                />
+
+{/* Civilization Signals Bento Grid — 4 cols desktop, 2 cols mobile */}
+        <div className="civilization-signals-grid grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5" style={{ gridAutoFlow: 'dense' }}>
+        {displayedSignals.map((signal, idx) => (
+                <div key={`civ-${idx}`} className={signal._wide ? "civ-wide-tile" : ""}>
+                  <CivilizationSignalCard
+                    color={signal.color}
+                    label={signal.label}
+                    ratePerSecond={signal.ratePerSecond}
+                    useAbbreviated={signal.useAbbreviated}
+                    prefix={signal.prefix}
+                    index={idx}
+                    staticValue={signal.staticValue}
+                    decimalPlaces={signal.decimalPlaces}
+                    staticRateDisplay={signal.staticRateDisplay}
+                    isWide={signal._wide}
+                    context={signal.context}
+                    sentiment={signal.sentiment}
+                  />
+                </div>
               ))}
+            </div>
+            {/* Shuffle countdown */}
+            <div className="mt-6 flex flex-col items-center gap-1.5" style={{ opacity: 0.4 }} suppressHydrationWarning>
+              <div className="overflow-hidden rounded-full bg-white/10" style={{ width: 120, height: 2 }}>
+                <div
+                  className="h-full rounded-full bg-[#14b8a6]"
+                  style={{
+                    width: `${(shuffleCountdown / SHUFFLE_INTERVAL) * 100}%`,
+                    transition: 'width 1s linear',
+                  }}
+                  suppressHydrationWarning
+                />
+              </div>
+              <span className="font-mono text-[11px] text-[#64748b]" suppressHydrationWarning>
+                new signals in {shuffleCountdown}s
+              </span>
             </div>
           </div>
 
