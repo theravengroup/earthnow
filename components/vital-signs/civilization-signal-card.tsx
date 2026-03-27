@@ -113,19 +113,23 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
         boxShadow: `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`,
         transition: 'box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
       }}
-      onMouseEnter={(e) => {
-        setIsHovered(true);
-        e.currentTarget.style.background = `${hoverAccentTint}, linear-gradient(180deg, rgba(20,30,50,0.95) 0%, rgba(12,18,35,0.98) 100%)`;
-        e.currentTarget.style.borderColor = `rgba(255,255,255,0.28)`;
-        e.currentTarget.style.borderTopColor = sentimentBorder;
-        e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 24px rgba(255,255,255,0.06), 0 20px 56px rgba(0,0,0,0.6), ${hoverGlow}`;
+      onPointerEnter={(e) => {
+        if (e.pointerType === 'mouse') {
+          setIsHovered(true);
+          e.currentTarget.style.background = `${hoverAccentTint}, linear-gradient(180deg, rgba(20,30,50,0.95) 0%, rgba(12,18,35,0.98) 100%)`;
+          e.currentTarget.style.borderColor = `rgba(255,255,255,0.28)`;
+          e.currentTarget.style.borderTopColor = sentimentBorder;
+          e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 24px rgba(255,255,255,0.06), 0 20px 56px rgba(0,0,0,0.6), ${hoverGlow}`;
+        }
       }}
-      onMouseLeave={(e) => {
-        setIsHovered(false);
-        e.currentTarget.style.background = `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`;
-        e.currentTarget.style.borderColor = `rgba(255,255,255,0.18)`;
-        e.currentTarget.style.borderTopColor = sentimentBorder;
-        e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`;
+      onPointerLeave={(e) => {
+        if (e.pointerType === 'mouse') {
+          setIsHovered(false);
+          e.currentTarget.style.background = `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`;
+          e.currentTarget.style.borderColor = `rgba(255,255,255,0.18)`;
+          e.currentTarget.style.borderTopColor = sentimentBorder;
+          e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`;
+        }
       }}
       onClick={() => setIsHovered(prev => !prev)}
     >
@@ -162,20 +166,20 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
       </div>
       
       {/* Trend indicator - hidden by default, visible on hover/tap */}
-      <div 
-        className="mt-1.5 flex items-center gap-1 font-mono text-[13px] md:text-[14px]"
-        style={{ 
+      <div
+        className="mt-1.5 font-mono text-[11px] md:text-[14px]"
+        style={{
           color: 'rgba(120,255,170,0.8)',
           opacity: isHovered ? 0.8 : 0,
           transition: 'opacity 0.3s ease',
           fontVariantNumeric: 'tabular-nums',
           fontFeatureSettings: '"tnum"',
           letterSpacing: '0.02em',
-          height: 20,
+          whiteSpace: 'nowrap',
+          height: 18,
         }}
       >
-        <span>▲</span>
-        <span>+{trendDisplay} / min</span>
+        ▲ +{trendDisplay}/min
       </div>
       
       {/* Label - slightly larger */}

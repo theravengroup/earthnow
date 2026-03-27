@@ -110,11 +110,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
         className={`fixed left-0 right-0 top-0 flex items-center px-6 ${navHeight}`}
   style={{
   zIndex: 1000,
-  background: forceSolidBackground ? "rgba(10,14,23,0.95)" : (isScrolled ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.15)"),
-  backdropFilter: forceSolidBackground ? "none" : (isScrolled ? "blur(12px)" : "blur(0px)"),
-  WebkitBackdropFilter: forceSolidBackground ? "none" : (isScrolled ? "blur(12px)" : "blur(0px)"),
+  background: forceSolidBackground ? "rgba(10,14,23,0.98)" : (isScrolled ? "rgba(10,14,23,0.92)" : "rgba(0,0,0,0.15)"),
   borderBottom: "1px solid rgba(255,255,255,0.08)",
-  transition: "background 220ms ease, backdrop-filter 220ms ease, -webkit-backdrop-filter 220ms ease, height 220ms ease-out",
+  transition: "background 220ms ease, height 220ms ease-out",
   }}
       >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
@@ -355,8 +353,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 flex flex-col items-center justify-center lg:hidden"
             style={{
-              background: "rgba(10,14,23,0.98)",
-              backdropFilter: "blur(24px)",
+              background: "rgba(10,14,23,0.99)",
             }}
           >
             {/* Mobile Nav Links */}

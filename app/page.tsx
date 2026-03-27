@@ -212,8 +212,6 @@ function SystemCard({
         background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
         border: '1px solid rgba(255,255,255,0.12)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.4)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
         transform: isHovered ? 'scale(1.02)' : 'scale(1)',
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -1937,9 +1935,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   key={milestone.year}
                   className="group relative overflow-hidden rounded-xl p-5"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
+                    background: 'rgba(15,23,42,0.8)',
                     border: '1px solid rgba(255,255,255,0.08)',
                   }}
                   initial={{ opacity: 0, y: 20 }}

@@ -113,11 +113,9 @@ function MetricCard({
       onViewportEnter={() => startAnimation()}
       className="group relative overflow-hidden rounded-2xl p-5"
       style={{
-        background: `${accentTint}, linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)`,
+        background: `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.9) 0%, rgba(10,15,30,0.95) 100%)`,
         border: '1px solid rgba(255,255,255,0.1)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.4)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
       }}
     >
       {/* Icon */}
