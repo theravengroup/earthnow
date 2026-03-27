@@ -2,7 +2,11 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend;
+function getResend() {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -34,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'EarthNow <onboarding@resend.dev>',
       to: contactEmail,
       subject: `EarthNow Contact — ${name}`,

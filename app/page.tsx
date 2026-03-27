@@ -702,7 +702,7 @@ export default function Home() {
       try {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1200px-The_Blue_Marble_%28remastered%29.jpg';
+        img.src = '/earth-globe.jpg';
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = reject;

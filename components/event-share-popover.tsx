@@ -126,7 +126,7 @@ async function generateShareCardPNG(
       resolve();
     };
     earthImg.onerror = () => resolve(); // Continue without Earth if load fails
-    earthImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1200px-The_Blue_Marble_%28remastered%29.jpg";
+    earthImg.src = "/earth-globe.jpg";
   });
 
   // ============================================

@@ -252,7 +252,7 @@ export function ImpactShareCarousel({
                   flexShrink: 0,
                   borderRadius: "50%",
                   opacity: 0.45,
-                  backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1200px-The_Blue_Marble_%28remastered%29.jpg')",
+                  backgroundImage: "url('/earth-globe.jpg')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

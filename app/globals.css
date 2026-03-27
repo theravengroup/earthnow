@@ -75,6 +75,10 @@ select,
 }
 
 :root {
+  --color-teal: #14b8a6;
+  --color-bg: #0a0e17;
+  --color-muted: #94a3b8;
+  --color-subtle: #64748b;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

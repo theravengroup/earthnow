@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useGlobalTick } from "@/hooks/use-global-tick";
 import { formatNumber } from "@/lib/format";
 
@@ -18,7 +18,7 @@ interface CivilizationSignalCardProps {
 
 // Civilization Signal Card - larger and more prominent than regular MetricCard
 // Uses shared global tick for efficient timer management
-export function CivilizationSignalCard({
+export const CivilizationSignalCard = React.memo(function CivilizationSignalCard({
   color,
   label,
   ratePerSecond,
@@ -165,4 +165,5 @@ export function CivilizationSignalCard({
       </div>
     </div>
   );
-}
+});
+CivilizationSignalCard.displayName = 'CivilizationSignalCard';
