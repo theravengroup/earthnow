@@ -607,7 +607,35 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock,
 };
 
+// Isolated countdown component — ticks every second without re-rendering the parent
+function ShuffleCountdown({ interval }: { interval: number }) {
+  const [countdown, setCountdown] = useState(interval);
+  useEffect(() => {
+    setCountdown(interval);
+    const tick = setInterval(() => {
+      setCountdown(prev => (prev <= 1 ? interval : prev - 1));
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [interval]);
 
+  return (
+    <div className="mt-6 flex flex-col items-center gap-1.5" style={{ opacity: 0.4 }} suppressHydrationWarning>
+      <div className="overflow-hidden rounded-full bg-white/10" style={{ width: 120, height: 2 }}>
+        <div
+          className="h-full rounded-full bg-[#14b8a6]"
+          style={{
+            width: `${(countdown / interval) * 100}%`,
+            transition: 'width 1s linear',
+          }}
+          suppressHydrationWarning
+        />
+      </div>
+      <span className="font-mono text-[11px] text-[#64748b]" suppressHydrationWarning>
+        new signals in {countdown}s
+      </span>
+    </div>
+  );
+}
 
 export default function Home() {
   const impactRef = useRef<HTMLDivElement>(null);
@@ -639,10 +667,6 @@ export default function Home() {
     setHeroTickerIndex(Math.floor(Math.random() * heroTickerPairings.length));
   }, []);
   
-  // Build a 15-signal assignment: 3 hero (wide) + 12 standard
-  // Each entry tagged with _wide so rendering doesn't depend on index
-  type TaggedSignal = CivilizationSignal & { _wide: boolean };
-
   // Fisher-Yates shuffle (proper, unbiased)
   const shuffle = <T,>(arr: T[]): T[] => {
     const a = [...arr];
@@ -653,62 +677,28 @@ export default function Home() {
     return a;
   };
 
-  // Display order: wide, std×4, wide, std×4, wide, std×4 = 15 tiles
-  const buildCivAssignment = useCallback((): TaggedSignal[] => {
-    const allHeroes = CIVILIZATION_SIGNAL_POOL.filter(s => s.tier === "hero");
-
-    // Pick 3 heroes with at least 2 positive
-    const shuffledHeroes = shuffle(allHeroes);
-    const positives = shuffledHeroes.filter(s => s.sentiment === "positive");
-    const nonPositives = shuffledHeroes.filter(s => s.sentiment !== "positive");
-    const pickedHeroes = [
-      positives[0],
-      positives[1],
-      shuffle([...nonPositives, ...positives.slice(2)])[0],
-    ];
-
-    // Pick 10 from remaining 57 signals
-    // Layout: [W, S, S] × 3 + [S, S, S, S] = 13 tiles
-    // Desktop 4-col: W(2)+S+S = 4 per row × 3 + S×4 = 4 rows, zero gaps
-    // Mobile 2-col: W(full) + S,S per group (even!) + 2 pairs = zero orphans
-    const heroLabels = new Set(pickedHeroes.map(h => h.label));
-    const pool = shuffle(CIVILIZATION_SIGNAL_POOL.filter(s => !heroLabels.has(s.label)));
-    const pickedStandard = pool.slice(0, 10);
-
-    const result: TaggedSignal[] = [];
-    for (let i = 0; i < 3; i++) {
-      result.push({ ...pickedHeroes[i], _wide: true });
-      result.push({ ...pickedStandard[i * 2 + 0], _wide: false });
-      result.push({ ...pickedStandard[i * 2 + 1], _wide: false });
-    }
-    // Final row: 4 more standards
-    result.push({ ...pickedStandard[6], _wide: false });
-    result.push({ ...pickedStandard[7], _wide: false });
-    result.push({ ...pickedStandard[8], _wide: false });
-    result.push({ ...pickedStandard[9], _wide: false });
-    return result;
+  // Pick 16 random signals from the full pool, shuffle them uniformly
+  // All tiles same size — no heroes, no wide cards, pure variety
+  const buildCivAssignment = useCallback((): CivilizationSignal[] => {
+    return shuffle(CIVILIZATION_SIGNAL_POOL).slice(0, 16);
   }, []);
 
-  const [displayedSignals, setDisplayedSignals] = useState<TaggedSignal[]>(() => []);
-  const [shuffleCountdown, setShuffleCountdown] = useState(60);
-  const SHUFFLE_INTERVAL = 60; // seconds
+  const [displayedSignals, setDisplayedSignals] = useState<CivilizationSignal[]>(() => []);
 
   // Initialize on mount and rotate every 60 seconds
+  // Countdown is handled by ShuffleCountdown component to avoid re-rendering entire page
+  const SHUFFLE_INTERVAL = 60;
+  const [shuffleKey, setShuffleKey] = useState(0);
   useEffect(() => {
     setDisplayedSignals(buildCivAssignment());
-    setShuffleCountdown(SHUFFLE_INTERVAL);
+  }, [buildCivAssignment]);
 
-    const tick = setInterval(() => {
-      setShuffleCountdown(prev => {
-        if (prev <= 1) {
-          setDisplayedSignals(buildCivAssignment());
-          return SHUFFLE_INTERVAL;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(tick);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDisplayedSignals(buildCivAssignment());
+      setShuffleKey(k => k + 1);
+    }, SHUFFLE_INTERVAL * 1000);
+    return () => clearInterval(timer);
   }, [buildCivAssignment]);
 
   // Share Your Impact state
@@ -1633,11 +1623,11 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               </div>
             </div>
 
-{/* Civilization Signals Bento Grid — 4 cols desktop, 2 cols mobile */}
-        <div className="civilization-signals-grid grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5" style={{ gridAutoFlow: 'dense' }}>
+{/* Civilization Signals Grid — uniform 4 cols desktop, 2 cols mobile */}
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
         {displayedSignals.map((signal, idx) => (
-                <div key={`civ-${idx}`} className={signal._wide ? "civ-wide-tile" : ""}>
                   <CivilizationSignalCard
+                    key={`civ-${signal.label}`}
                     color={signal.color}
                     label={signal.label}
                     ratePerSecond={signal.ratePerSecond}
@@ -1647,29 +1637,12 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                     staticValue={signal.staticValue}
                     decimalPlaces={signal.decimalPlaces}
                     staticRateDisplay={signal.staticRateDisplay}
-                    isWide={signal._wide}
-                    context={signal.context}
                     sentiment={signal.sentiment}
                   />
-                </div>
               ))}
             </div>
-            {/* Shuffle countdown */}
-            <div className="mt-6 flex flex-col items-center gap-1.5" style={{ opacity: 0.4 }} suppressHydrationWarning>
-              <div className="overflow-hidden rounded-full bg-white/10" style={{ width: 120, height: 2 }}>
-                <div
-                  className="h-full rounded-full bg-[#14b8a6]"
-                  style={{
-                    width: `${(shuffleCountdown / SHUFFLE_INTERVAL) * 100}%`,
-                    transition: 'width 1s linear',
-                  }}
-                  suppressHydrationWarning
-                />
-              </div>
-              <span className="font-mono text-[11px] text-[#64748b]" suppressHydrationWarning>
-                new signals in {shuffleCountdown}s
-              </span>
-            </div>
+            {/* Shuffle countdown — isolated component to avoid re-rendering the whole page every second */}
+            <ShuffleCountdown key={shuffleKey} interval={SHUFFLE_INTERVAL} />
           </div>
 
           {/* Contrast Moment - Pool E (Scale & Paradox) */}

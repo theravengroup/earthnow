@@ -88,22 +88,20 @@ export const MetricCard = React.memo(function MetricCard({
       style={{
         alignSelf: 'stretch',
         height: '100%',
-        background: `${accentTint}, linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)`,
+        background: `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`,
         border: '1px solid rgba(255,255,255,0.15)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.03), 0 12px 40px rgba(0,0,0,0.5)',
-        backdropFilter: 'blur(24px) saturate(1.8)',
-        WebkitBackdropFilter: 'blur(24px) saturate(1.8)',
         transition: 'box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease',
       }}
       onMouseEnter={(e) => {
         setIsHovered(true);
-        e.currentTarget.style.background = `${hoverAccentTint}, linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)`;
+        e.currentTarget.style.background = `${hoverAccentTint}, linear-gradient(180deg, rgba(20,30,50,0.95) 0%, rgba(12,18,35,0.98) 100%)`;
         e.currentTarget.style.border = '1px solid rgba(255,255,255,0.25)';
         e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.2), inset 0 0 20px rgba(255,255,255,0.05), 0 16px 48px rgba(0,0,0,0.6), ${hoverGlow}`;
       }}
       onMouseLeave={(e) => {
         setIsHovered(false);
-        e.currentTarget.style.background = `${accentTint}, linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)`;
+        e.currentTarget.style.background = `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`;
         e.currentTarget.style.border = '1px solid rgba(255,255,255,0.15)';
         e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.03), 0 12px 40px rgba(0,0,0,0.5)';
       }}

@@ -569,17 +569,6 @@ select,
   }
 }
 
-/* Wide tile responsive: span 2 on desktop, full-width on mobile */
-@media (max-width: 1023px) {
-  .civ-wide-tile {
-    grid-column: 1 / -1 !important;
-  }
-}
-@media (min-width: 1024px) {
-  .civ-wide-tile {
-    grid-column: span 2 !important;
-  }
-}
 
 @media (max-width: 1023px) {
   .vital-signs-grid > *:last-child:nth-child(odd) {
