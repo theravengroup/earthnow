@@ -105,16 +105,22 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
   const hoverGlow = `0 0 50px ${color}30`;
 
   // Shuffle animation: staggered fade-out (L→R) and fade-in (R→L)
-  const STAGGER_MS = 30;
+  // Cap total stagger to 300ms across all cards
+  const MAX_STAGGER_TOTAL = 300;
+  const cardCount = Math.max(totalCards, 1);
+  const STAGGER_MS = Math.min(20, Math.floor(MAX_STAGGER_TOTAL / cardCount));
   const isFadingOut = shufflePhase === 'fading-out';
   const isFadingIn = shufflePhase === 'fading-in';
   const isAnimating = isFadingOut || isFadingIn;
 
+  // Clamp index to valid range [0, cardCount-1]
+  const safeIndex = Math.min(index, cardCount - 1);
+
   // L→R stagger for fade-out, R→L stagger for fade-in
   const staggerDelay = isFadingOut
-    ? index * STAGGER_MS
+    ? safeIndex * STAGGER_MS
     : isFadingIn
-      ? (totalCards - 1 - index) * STAGGER_MS
+      ? (cardCount - 1 - safeIndex) * STAGGER_MS
       : 0;
 
   const shuffleOpacity = isFadingOut ? 0 : isFadingIn ? 1 : 1;
