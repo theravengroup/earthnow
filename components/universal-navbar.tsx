@@ -125,7 +125,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                 handleLogoClick();
               }
             }}
-            className="group mr-14 flex items-center gap-2"
+            className="group mr-6 flex items-center gap-2 xl:mr-14"
           >
             {/* Teal dot */}
             <div
@@ -136,7 +136,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
               }}
             />
             {/* Site title with hover underline */}
-            <span className="relative cursor-pointer font-serif text-[22px] font-bold text-white transition-colors duration-200 group-hover:text-[#f8fafc]">
+            <span className="relative cursor-pointer font-serif text-[20px] font-bold text-white transition-colors duration-200 group-hover:text-[#f8fafc] xl:text-[22px]">
               EarthNow
               <span
                 className="absolute -bottom-[3px] left-1/2 h-[2px] w-0 -translate-x-1/2 transition-all duration-[240ms] ease-out group-hover:w-full"
@@ -146,7 +146,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden items-center lg:flex" style={{ gap: "24px" }}>
+          <div className="hidden items-center lg:flex lg:gap-3 xl:gap-6">
             {/* Primary nav links */}
             {primaryNavLinks.map((link) => {
               const isActive = isLinkActive(link);
@@ -157,7 +157,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                   <button
                     key={link.id}
                     onClick={() => handleLinkClick(link)}
-                    className="nav-link group relative text-[14px] font-medium tracking-wide transition-all duration-200"
+                    className="nav-link group relative whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
                     style={{ 
                       color: isActive ? "white" : "#94a3b8",
                     }}
@@ -199,7 +199,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                 <Link
                   key={link.id}
                   href={link.href}
-                  className="nav-link group relative text-[14px] font-medium tracking-wide transition-all duration-200"
+                  className="nav-link group relative whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
                   style={{ 
                     color: isActive ? "white" : "#94a3b8",
                   }}
@@ -258,8 +258,8 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
             </Link>
 
             {/* Scroll Progress Orbit Indicator - shows on all pages */}
-            <div 
-              className="relative ml-4 flex items-center justify-center"
+            <div
+              className="relative ml-2 flex items-center justify-center xl:ml-4"
               style={{ width: "26px", height: "26px" }}
               title={isHomepage ? `${Math.round(scrollProgress * 100)}% explored` : "EarthNow"}
             >
