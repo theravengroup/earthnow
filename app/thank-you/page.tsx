@@ -31,18 +31,18 @@ const STARS: Array<{ x: number; y: number; size: number; dur: number; del: numbe
 ];
 
 // Session verification component (needs Suspense boundary for useSearchParams)
-function SessionVerifier() {
+function PaymentVerifier() {
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
+  const paymentIntent = searchParams.get("payment_intent");
 
   useEffect(() => {
-    if (!sessionId) return;
-    fetch(`/api/checkout/status?session_id=${sessionId}`)
+    if (!paymentIntent) return;
+    fetch(`/api/checkout/status?payment_intent=${paymentIntent}`)
       .then((res) => res.json())
       .catch(() => {
         // Silent fail — page still shows thank you
       });
-  }, [sessionId]);
+  }, [paymentIntent]);
 
   return null;
 }
@@ -50,9 +50,9 @@ function SessionVerifier() {
 export default function ThankYouPage() {
   return (
     <>
-      {/* Verify session in background */}
+      {/* Verify payment in background */}
       <Suspense fallback={null}>
-        <SessionVerifier />
+        <PaymentVerifier />
       </Suspense>
 
       {/* Navbar OUTSIDE overflow-hidden container for proper fixed positioning */}

@@ -4,27 +4,27 @@ import { getStripe } from "@/lib/stripe";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get("session_id");
+    const paymentIntentId = searchParams.get("payment_intent");
 
-    if (!sessionId) {
+    if (!paymentIntentId) {
       return NextResponse.json(
-        { error: "Missing session_id" },
+        { error: "Missing payment_intent" },
         { status: 400 }
       );
     }
 
     const stripe = getStripe();
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
     return NextResponse.json({
-      status: session.status,
-      customerEmail: session.customer_details?.email,
-      amountTotal: session.amount_total,
+      status: paymentIntent.status,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
     });
   } catch (error) {
-    console.error("Checkout status error:", error);
+    console.error("Payment status error:", error);
     return NextResponse.json(
-      { error: "Failed to retrieve session status" },
+      { error: "Failed to retrieve payment status" },
       { status: 500 }
     );
   }
