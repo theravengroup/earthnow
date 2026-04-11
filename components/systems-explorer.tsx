@@ -1000,14 +1000,27 @@ export function SystemsExplorer() {
   const [isMobile, setIsMobile] = useState(false);
   const cardsRef = useRef<HTMLDivElement>(null);
   const sectionContainerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Handle system card click — toggle expanded state
+  // Handle system card click — toggle expanded state, scroll into view on compact layout
   const handleSystemClick = (systemId: string) => {
+    const isCollapsing = expandedSystem === systemId;
     setExpandedSystem(prev => prev === systemId ? null : systemId);
+
+    // On compact/tablet layout, scroll the tapped card into view after the deep dive opens
+    if (!isCollapsing && isMobile) {
+      requestAnimationFrame(() => {
+        const cardEl = cardRefs.current[systemId];
+        if (cardEl) {
+          cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
   };
 
+  // Use inline (stacked) layout for phones and tablets, grid for desktop
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -1090,12 +1103,19 @@ export function SystemsExplorer() {
         </p>
       </div>
 
-      {/* System Cards - Mobile: inline panels, Desktop: grid */}
+      {/* System Cards - Compact (phone/tablet): inline deep dive below each card. Desktop: horizontal grid */}
       {isMobile ? (
-        <div className="flex flex-col gap-4" style={{ overflowAnchor: 'none' }}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3" style={{ overflowAnchor: 'none' }}>
           {systemsConfig.map((system) => (
-            <div key={system.id}>
-              <SystemCard 
+            <div
+              key={system.id}
+              ref={(el) => { cardRefs.current[system.id] = el; }}
+              style={{
+                // When expanded, span full width so deep dive isn't cramped in a grid column
+                gridColumn: expandedSystem === system.id ? '1 / -1' : undefined,
+              }}
+            >
+              <SystemCard
                 system={system}
                 isHighlighted={hoveredSystem === system.id}
                 isExpanded={expandedSystem === system.id}
@@ -1116,15 +1136,15 @@ export function SystemsExplorer() {
                   <div style={{
                     width: 2,
                     height: 20,
-                    background: systemsConfig.find(s => s.id === system.id)?.accentColor || '#22c55e',
-                    boxShadow: `0 0 6px ${systemsConfig.find(s => s.id === system.id)?.accentColor || '#22c55e'}`,
+                    background: system.accentColor,
+                    boxShadow: `0 0 6px ${system.accentColor}`,
                   }} />
                   <div style={{
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: systemsConfig.find(s => s.id === system.id)?.accentColor || '#22c55e',
-                    boxShadow: `0 0 8px ${systemsConfig.find(s => s.id === system.id)?.accentColor || '#22c55e'}`,
+                    background: system.accentColor,
+                    boxShadow: `0 0 8px ${system.accentColor}`,
                   }} />
                 </div>
               )}
@@ -1141,7 +1161,7 @@ export function SystemsExplorer() {
       ) : (
         <div 
           ref={cardsRef}
-          className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5"
+          className="grid grid-cols-5 gap-4"
           style={{ overflowAnchor: 'none' }}
         >
           {systemsConfig.map((system) => (
