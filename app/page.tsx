@@ -1178,14 +1178,6 @@ export default function Home() {
     },
   ];
 
-  // Scroll listener for active section detection
-  useEffect(() => {
-    const handleScroll = () => {
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Scroll-based active section detection (reverse loop approach)
   useEffect(() => {
     const sections = [
@@ -1278,11 +1270,11 @@ export default function Home() {
         onSectionClick={scrollToSection}
       />
       
-      {/* Main page content - can have overflow:hidden for decorative elements */}
-      <div className="noise-overlay relative min-h-screen overflow-hidden bg-[#0a0e17]" style={{ paddingTop: '64px' }}>
+      {/* Main page content */}
+      <div className="noise-overlay relative min-h-screen bg-[#0a0e17]" style={{ paddingTop: '64px' }}>
 
-      {/* Background gradient orbs - bold and visible */}
-      <div className="pointer-events-none absolute inset-0">
+      {/* Background gradient orbs - bold and visible, clipped to viewport */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Main teal orb behind globe — pre-softened gradient, no filter:blur */}
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"

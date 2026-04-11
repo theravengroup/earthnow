@@ -551,11 +551,12 @@ select,
 
 /* ===========================================
    SYSTEMS SECTION SCROLL ANCHORING FIX
-   Prevents Chrome from auto-scrolling when panels expand/collapse
+   Prevents Chrome from auto-scrolling when panels expand/collapse.
+   Only applied to the section container, not every descendant,
+   to avoid disabling scroll anchoring globally.
    =========================================== */
-#systems,
-#systems * {
-  overflow-anchor: none !important;
+#systems {
+  overflow-anchor: none;
 }
 
   /* Noise/grain texture overlay 

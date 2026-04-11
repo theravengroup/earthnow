@@ -267,11 +267,7 @@ function PlanetarySystemsMap({
             onMouseEnter={() => onHoverSystem(system.id)}
             onMouseLeave={() => onHoverSystem(null)}
             onClick={() => {
-              const scrollY = window.scrollY;
               onClickSystem(system.id);
-              requestAnimationFrame(() => {
-                window.scrollTo(0, scrollY);
-              });
             }}
           >
             {/* Outer glow ring */}
@@ -512,11 +508,7 @@ function SystemCard({
       onMouseEnter={() => !isMobile && onHover(true)}
       onMouseLeave={() => !isMobile && onHover(false)}
       onClick={() => {
-        const scrollY = window.scrollY;
         onClick();
-        requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY);
-        });
       }}
     >
       {/* Top accent */}
@@ -1009,13 +1001,9 @@ export function SystemsExplorer() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const sectionContainerRef = useRef<HTMLDivElement>(null);
 
-  // Handle system card click with scroll position preservation
+  // Handle system card click — toggle expanded state
   const handleSystemClick = (systemId: string) => {
-    const scrollY = window.scrollY;
     setExpandedSystem(prev => prev === systemId ? null : systemId);
-    requestAnimationFrame(() => {
-      window.scrollTo(0, scrollY);
-    });
   };
 
   useEffect(() => {
