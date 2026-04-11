@@ -1602,12 +1602,12 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               </p>
 {/* Device-aware hint text */}
   <div className="flex items-center justify-center gap-2 text-center">
-    <Mouse className="h-3.5 w-3.5 hidden md:inline" style={{ color: 'rgba(255,255,255,0.5)' }} />
-    <Hand className="h-3.5 w-3.5 inline md:hidden" style={{ color: 'rgba(255,255,255,0.5)' }} />
-    <span className="hidden md:inline text-[14px] font-medium italic" style={{ color: 'rgba(255,255,255,0.65)' }}>
+    <Mouse className="pointer-coarse:hidden h-3.5 w-3.5" style={{ color: 'rgba(255,255,255,0.5)' }} />
+    <Hand className="pointer-fine:hidden h-3.5 w-3.5" style={{ color: 'rgba(255,255,255,0.5)' }} />
+    <span className="pointer-coarse:hidden text-[14px] font-medium italic" style={{ color: 'rgba(255,255,255,0.65)' }}>
       Hover over any signal to see its per-minute rate
     </span>
-    <span className="inline md:hidden text-[14px] font-medium italic" style={{ color: 'rgba(255,255,255,0.65)' }}>
+    <span className="pointer-fine:hidden text-[14px] font-medium italic" style={{ color: 'rgba(255,255,255,0.65)' }}>
       Tap any signal to see its per-minute rate
     </span>
   </div>

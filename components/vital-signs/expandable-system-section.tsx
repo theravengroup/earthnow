@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Mouse } from "lucide-react";
+import { Mouse, Hand } from "lucide-react";
 import { useGlobalTick } from "@/hooks/use-global-tick";
 import { MetricCard } from "@/components/vital-signs/metric-card";
 import { ExpandToggleLink } from "@/components/interactive-link";
@@ -63,11 +63,12 @@ export function RowHeader({
       <p className="mt-1 text-[13px] font-light italic text-[#64748b]">
         {subtitle}
       </p>
-      {/* Hover hint - desktop only */}
-      <p className="mt-2 hidden items-center gap-1.5 text-[13px] italic text-[rgba(255,255,255,0.6)] md:flex" style={{ fontFamily: 'Outfit, sans-serif' }}>
-        <span>🖱️</span>
-        <Mouse className="h-3 w-3" style={{ color: 'rgba(255,255,255,0.6)' }} />
-        Hover over any signal to see its per-minute rate
+      {/* Interaction hint */}
+      <p className="mt-2 flex items-center gap-1.5 text-[13px] italic text-[rgba(255,255,255,0.6)]" style={{ fontFamily: 'Outfit, sans-serif' }}>
+        <Mouse className="pointer-coarse:hidden h-3 w-3" style={{ color: 'rgba(255,255,255,0.6)' }} />
+        <Hand className="pointer-fine:hidden h-3 w-3" style={{ color: 'rgba(255,255,255,0.6)' }} />
+        <span className="pointer-coarse:hidden">Hover over any signal to see its per-minute rate</span>
+        <span className="pointer-fine:hidden">Tap any signal to see its per-minute rate</span>
       </p>
     </div>
   );
@@ -184,10 +185,12 @@ export function ExpandableSystemSection({
                 background: 'rgba(255,255,255,0.15)',
               }}
             />
-            {/* Hover hint - desktop only */}
-            <p className="mt-3 hidden items-center gap-1.5 text-[13px] italic md:flex" style={{ fontFamily: 'Outfit, sans-serif', color: 'rgba(255, 255, 255, 0.75)' }}>
-              <Mouse className="h-3 w-3" style={{ color: 'rgba(255, 255, 255, 0.75)' }} />
-              Hover over any signal to see its per-minute rate
+            {/* Interaction hint */}
+            <p className="mt-3 flex items-center gap-1.5 text-[13px] italic" style={{ fontFamily: 'Outfit, sans-serif', color: 'rgba(255, 255, 255, 0.75)' }}>
+              <Mouse className="pointer-coarse:hidden h-3 w-3" style={{ color: 'rgba(255, 255, 255, 0.75)' }} />
+              <Hand className="pointer-fine:hidden h-3 w-3" style={{ color: 'rgba(255, 255, 255, 0.75)' }} />
+              <span className="pointer-coarse:hidden">Hover over any signal to see its per-minute rate</span>
+              <span className="pointer-fine:hidden">Tap any signal to see its per-minute rate</span>
             </p>
           </div>
           {/* Status Indicator */}
