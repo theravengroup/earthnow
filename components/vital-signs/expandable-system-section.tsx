@@ -86,6 +86,7 @@ interface ExpandableSystemSectionProps {
     prefix?: string;
     staticValue?: number;
     decimalPlaces?: number;
+    baseValue?: number;
   }>;
   systemStatus?: "stable" | "increasing" | "critical";
   defaultVisibleCount?: number;
@@ -225,6 +226,7 @@ export function ExpandableSystemSection({
             index={idx}
             staticValue={metric.staticValue}
             decimalPlaces={metric.decimalPlaces}
+            baseValue={metric.baseValue}
           />
         ))}
       </div>

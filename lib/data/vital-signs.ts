@@ -13,6 +13,8 @@ export interface MetricConfig {
   staticValue?: number;
   staticRateDisplay?: string;
   decimalPlaces?: number;
+  /** Base value added before daily rate accumulation (e.g. cumulative all-time stats) */
+  baseValue?: number;
 }
 
 // Civilization Signals - the most powerful indicators of humanity and the planet
@@ -44,7 +46,7 @@ export const vitalSignsRow1: MetricConfig[] = [
   { color: "#f59e0b", label: "Babies Born Into Poverty Today", ratePerSecond: 1.76 },
   { color: "#06b6d4", label: "Children Born Today", ratePerSecond: 4.4 },
   { color: "#a855f7", label: "Years of Human Life Added Today", ratePerSecond: 140000000 / 86400, useAbbreviated: true },
-  { color: "#64748b", label: "People Ever Lived", ratePerSecond: 2.6, useAbbreviated: false },
+  { color: "#64748b", label: "People Ever Lived", ratePerSecond: 2.6, useAbbreviated: true, baseValue: 117_000_000_000 },
   { color: "#14b8a6", label: "People Turning 18 Today", ratePerSecond: 360000 / 86400, useAbbreviated: false },
   { color: "#8b5cf6", label: "People Turning 65 Today", ratePerSecond: 210000 / 86400, useAbbreviated: false },
   { color: "#ec4899", label: "Human Years of Life Lived Today", ratePerSecond: 8100000000 / 86400, useAbbreviated: true },

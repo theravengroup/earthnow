@@ -13,6 +13,8 @@ export interface MetricCardProps {
   index?: number;
   staticValue?: number;
   decimalPlaces?: number;
+  /** Base value added before daily rate accumulation (e.g. cumulative all-time stats) */
+  baseValue?: number;
 }
 
 // Metric Card Component
@@ -27,12 +29,14 @@ export const MetricCard = React.memo(function MetricCard({
   index = 0,
   staticValue,
   decimalPlaces,
+  baseValue,
 }: MetricCardProps) {
   const { secondsSinceMidnight, isLoaded } = useGlobalTick();
   const [isHovered, setIsHovered] = useState(false);
 
   // Calculate value from shared tick (or use static value)
-  const value = staticValue !== undefined ? staticValue : secondsSinceMidnight * ratePerSecond;
+  // baseValue supports cumulative all-time stats (e.g. "People Ever Lived" = 117B + daily growth)
+  const value = staticValue !== undefined ? staticValue : (baseValue ?? 0) + secondsSinceMidnight * ratePerSecond;
 
   // Staggered animation delay for the breathing dot (0.5s increments)
   const breatheDelay = `${index * 0.5}s`;
