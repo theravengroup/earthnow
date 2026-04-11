@@ -480,7 +480,6 @@ function CinematicIntro({ onComplete, replayKey }: { onComplete: () => void; rep
       {/* Phase 2: Stat sentence with fade-up (3.5s-7s) */}
       {phase === "stat" && (
         <div
-          className={phase === "fadeout" ? "stat-fadeout" : ""}
           style={{
             position: "absolute",
             inset: 0,

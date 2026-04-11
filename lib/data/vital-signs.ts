@@ -1,8 +1,8 @@
 // Vital Signs data extracted from app/page.tsx
 
 // Shared constant for AI tokens processed per day (85 billion/day for 2026 estimate)
-const AI_TOKENS_PER_DAY = 85_000_000_000;
-const AI_TOKENS_PER_SECOND = AI_TOKENS_PER_DAY / 86400;
+export const AI_TOKENS_PER_DAY = 85_000_000_000;
+export const AI_TOKENS_PER_SECOND = AI_TOKENS_PER_DAY / 86400;
 
 export interface MetricConfig {
   color: string;

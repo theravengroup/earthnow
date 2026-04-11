@@ -31,8 +31,6 @@ select,
 }
 
 /* Decorative/background layers must be non-interactive */
-.decorative-layer,
-.background-effect,
 [data-decorative="true"] {
   pointer-events: none !important;
   z-index: 0;
@@ -228,20 +226,6 @@ select,
   pointer-events: none;
 }
 
-/* Counter loading pulse animation - mission control "powering up" effect */
-@keyframes counter-loading-pulse {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.counter-loading-bar {
-  animation: counter-loading-pulse 1s ease-in-out infinite;
-}
-
 /* CTA button pulse glow animation */
 @keyframes pulse-glow {
   0%, 100% {
@@ -268,22 +252,6 @@ select,
 
 .globe-spin {
   animation: globeSpin 120s linear infinite;
-}
-
-/* Milestone "You Are Here" pulsing dot */
-@keyframes milestone-pulse {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(20,184,166,0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 16px rgba(20,184,166,0.7), 0 0 24px rgba(20,184,166,0.4);
-    transform: scale(1.15);
-  }
-}
-
-.milestone-pulse {
-  animation: milestone-pulse 2s ease-in-out infinite;
 }
 
 /* Fade-up entrance animation for cards */
@@ -330,34 +298,6 @@ select,
     transform: translate(-50%, -50%) scale(1.8);
     opacity: 0;
   }
-}
-
-/* Timeline spine traveling glow */
-@keyframes spine-glow-fade {
-  0% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-.timeline-spine-glow {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3px;
-  height: 50px;
-  background: rgba(80, 200, 255, 0.35);
-  filter: blur(6px);
-  border-radius: 2px;
-  pointer-events: none;
-  opacity: 0;
-  transition: top 500ms ease-out;
-}
-
-.timeline-spine-glow.animating {
-  animation: spine-glow-fade 500ms ease-out forwards;
 }
 
 .timeline-event.focused .timeline-node-ring {
@@ -429,30 +369,6 @@ select,
   transition: opacity 0.25s ease;
 }
 
-/* Timeline era dot intro animation */
-@keyframes era-dot-light-up {
-  0% {
-    opacity: 0.3;
-    transform: scale(0.6);
-    filter: brightness(0.5);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.3);
-    filter: brightness(1.5);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-    filter: brightness(1);
-  }
-}
-
-.era-dot-animated {
-  animation: era-dot-light-up 0.4s ease-out forwards;
-  opacity: 0.3;
-}
-
 /* Ambient breathing glow for While You Were Here section */
 @keyframes ambientBreathing {
   0%, 100% {
@@ -487,20 +403,6 @@ select,
   }
 }
 
-/* Donation section arrival highlight */
-@keyframes donationHighlight {
-  0% {
-    box-shadow: inset 0 0 0 2px rgba(20,184,166,0.4), 0 0 30px rgba(20,184,166,0.15);
-  }
-  100% {
-    box-shadow: inset 0 0 0 2px transparent, 0 0 0 transparent;
-  }
-}
-
-.donation-section-highlight {
-  animation: donationHighlight 700ms ease-out forwards;
-}
-
 /* Telemetry tick animation for Vital Signs dashboard */
 @keyframes telemetryTick {
   0% {
@@ -533,23 +435,11 @@ select,
 }
 
 /* ===========================================
-   VITAL SIGNS CARD SYSTEM
-   Fixed height cards for consistent grid alignment
+   VITAL SIGNS GRID
+   Clean aligned rows, no masonry behavior
    =========================================== */
 
-:root {
-  --vital-card-height: 180px;
-  --vital-card-label-height: 28px;
-}
-
-/* Ensure all vital signs cards have identical fixed height */
-.vital-signs-card {
-  height: auto;
-  min-height: var(--vital-card-height);
-  max-height: none;
-}
-
-/* Vital signs grid - clean aligned rows, no masonry behavior */
+/* Vital signs grid */
 .vital-signs-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

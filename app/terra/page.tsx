@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UniversalNavbar } from "@/components/universal-navbar";
+import { terraLinks } from "@/lib/payment-links";
 
 // Gradient Divider Component
 function GradientDivider() {
@@ -681,7 +682,7 @@ export default function TerraPage() {
               </div>
               
               <a
-                href="https://buy.stripe.com/7sYdRa6pEcqGass2DXfYY0i"
+                href={terraLinks.poster}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488]"
@@ -739,7 +740,7 @@ export default function TerraPage() {
               </div>
               
               <a
-                href="https://buy.stripe.com/6oU5kE15k3Ua7gg1zTfYY0j"
+                href={terraLinks.print}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488]"

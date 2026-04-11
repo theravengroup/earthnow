@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { toast } from "sonner";
+import { defaultSupportLink } from "@/lib/payment-links";
 
 // ============================================================================
 // DAILY RATE CONSTANTS (same as homepage)
@@ -104,7 +105,8 @@ function getTodayISODate(): string {
 // ============================================================================
 // HERO STAT TEMPLATES
 // ============================================================================
-const HERO_STAT_TEMPLATES = [
+type HeroStatResult = { text: string; highlight1: string; mid: string; highlight2: string | null; end: string };
+const HERO_STAT_TEMPLATES: Array<(...args: number[]) => HeroStatResult> = [
   (births: number, deaths: number) => ({
     text: `So far today, `,
     highlight1: formatNumber(births),
@@ -294,10 +296,10 @@ function StatCard({
   index,
   isPast = false,
 }: { 
-  icon: React.ComponentType<{ className?: string }>; 
-  label: string; 
-  color: string; 
-  dailyRate: number; 
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  label: string;
+  color: string;
+  dailyRate: number;
   abbreviated: boolean;
   prefix?: string;
   index: number;
@@ -969,7 +971,7 @@ export default function TodayDatePage() {
           
           <p className="mt-6">
             <Link 
-              href="https://buy.stripe.com/8x23cwaFUfCSfMM3I1fYY04"
+              href={defaultSupportLink}
               target="_blank"
               rel="noopener noreferrer"
               className="font-sans text-sm transition-colors hover:text-white"

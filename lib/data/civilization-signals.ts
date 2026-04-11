@@ -1,14 +1,10 @@
-import type { MetricConfig } from "./vital-signs";
+import { type MetricConfig, AI_TOKENS_PER_DAY, AI_TOKENS_PER_SECOND } from "./vital-signs";
 
 export type CivilizationSignal = MetricConfig & {
   tier: "hero" | "standard";
   sentiment: "positive" | "challenging" | "neutral";
   context?: string;
 };
-
-// Shared constant for AI tokens processed per day (85 billion/day for 2026 estimate)
-const AI_TOKENS_PER_DAY = 85_000_000_000;
-const AI_TOKENS_PER_SECOND = AI_TOKENS_PER_DAY / 86400;
 
 export const CIVILIZATION_SIGNAL_POOL: CivilizationSignal[] = [
   // ═══════════════════════════════════════════════════════════════

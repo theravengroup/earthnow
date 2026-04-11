@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
 // Get seconds since local midnight (user's timezone)
-function getSecondsSinceLocalMidnight(): number {
+export function getSecondsSinceLocalMidnight(): number {
   const now = new Date();
   const hours = now.getHours();
   const minutes = now.getMinutes();

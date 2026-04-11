@@ -25,13 +25,16 @@ import {
   vitalSignsRow3,
   vitalSignsRow4,
   vitalSignsRow5,
+  AI_TOKENS_PER_DAY,
+  AI_TOKENS_PER_SECOND,
   type MetricConfig,
 } from "@/lib/data/vital-signs";
 import { CIVILIZATION_SIGNAL_POOL, type CivilizationSignal } from "@/lib/data/civilization-signals";
 import { heroTickerPairings } from "@/lib/data/hero-ticker";
 import { StarField } from "@/components/hero/star-field";
-import { GlobalTickProvider, useGlobalTick } from "@/hooks/use-global-tick";
+import { GlobalTickProvider, useGlobalTick, getSecondsSinceLocalMidnight } from "@/hooks/use-global-tick";
 import { formatNumber } from "@/lib/format";
+import { toast } from "sonner";
 import { MetricCard } from "@/components/vital-signs/metric-card";
 import { CivilizationSignalCard } from "@/components/vital-signs/civilization-signal-card";
 import { ExpandableSystemSection, VitalSignsPulseGlow, RowHeader } from "@/components/vital-signs/expandable-system-section";
@@ -83,9 +86,6 @@ const SATELLITE_DOTS: Array<{ left: number; top: number; size: number }> = [
 
 
 
-// Shared constant for AI tokens processed per day (85 billion/day for 2026 estimate)
-const AI_TOKENS_PER_DAY = 85_000_000_000;
-const AI_TOKENS_PER_SECOND = AI_TOKENS_PER_DAY / 86400;
 
 // Counter Component for Ticker
 // Uses shared global tick for efficient timer management
@@ -98,7 +98,7 @@ function Counter({
   useAbbreviated = false,
   isStatic = false,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   color: string;
   label: string;
   baseValue: number;
@@ -171,7 +171,7 @@ function SystemCard({
   gradientTo,
   stats,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   title: string;
   tagline: string;
   gradientFrom: string;
@@ -450,15 +450,17 @@ const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileY
     return () => clearInterval(interval);
   }, [phase, triggerGlowPulse]);
 
+  type HeroStat = { key: string; label: string; color: string; value: number; decimals?: number };
+
   // Top row: 3 items (larger)
-  const topRowStats = [
+  const topRowStats: HeroStat[] = [
     { key: "births", label: "Births", color: "#14b8a6", value: values.births },
     { key: "co2", label: "CO₂ Emitted (tonnes)", color: "#f59e0b", value: values.co2 },
     { key: "forest", label: "Forest Lost (hectares)", color: "#22c55e", value: values.forest, decimals: 1 },
   ];
-  
+
   // Bottom row: 2 items (slightly smaller)
-  const bottomRowStats = [
+  const bottomRowStats: HeroStat[] = [
     { key: "deaths", label: "Deaths", color: "#94a3b8", value: values.deaths },
     { key: "searches", label: "Google Searches", color: "#8b5cf6", value: values.searches },
   ];
@@ -600,7 +602,7 @@ const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileY
 });
 
 // Icon mapping for ticker
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
   Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock,
 };
 
@@ -735,7 +737,7 @@ export default function Home() {
   useEffect(() => {
     const checkShareSupport = async () => {
       try {
-        if (navigator.share && navigator.canShare) {
+        if ("share" in navigator && "canShare" in navigator) {
           const testFile = new File(['test'], 'test.png', { type: 'image/png' });
           const supported = navigator.canShare({ files: [testFile] });
           setCanShareFiles(supported);
@@ -2215,7 +2217,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   onShareCurrentCard={(card) => setCurrentShareCard(card)}
                   onGetImageBlob={async () => {
                     try {
-                      return await generateImpactCard();
+                      const result = await generateImpactCard();
+                      return result?.blob ?? null;
                     } catch {
                       return null;
                     }

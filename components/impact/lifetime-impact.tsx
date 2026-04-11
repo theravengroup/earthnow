@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Share2, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
 import { formatNumber } from "@/lib/format";
+import { monthlyLinks, oneTimeLinks } from "@/lib/payment-links";
 import {
   drawRoundRect,
   formatLargeNumber,
@@ -121,24 +122,6 @@ export function SupportSection() {
 
   const amounts = [1, 5, 10, 25, 50, 100];
 
-  // Stripe Payment Links
-  const monthlyLinks: Record<number, string> = {
-    1: "https://buy.stripe.com/6oU28s9BQ0HY300diBfYY03",
-    5: "https://buy.stripe.com/8x23cwaFUfCSfMM3I1fYY04",
-    10: "https://buy.stripe.com/3cI7sM4hw76m588diBfYY05",
-    25: "https://buy.stripe.com/6oU7sMaFU1M25884gzfYY06",
-    50: "https://buy.stripe.com/14A6oI2Zogenq1128kfYY07",
-    100: "https://buy.stripe.com/cN214o8xMfCSeII5ktfYY08",
-  };
-
-  const oneTimeLinks: Record<number, string> = {
-    1: "https://buy.stripe.com/bJe5kE7tI62ibYYfZhfYY09",
-    5: "https://buy.stripe.com/eVqeVe8xM1M27gg4gyfYY0a",
-    10: "https://buy.stripe.com/28E00k7tI9iu9QQ3ctfYY0b",
-    25: "https://buy.stripe.com/fZu14o6pE62i8MM6pFfYY0c",
-    50: "https://buy.stripe.com/00w00k6pE76meII4gvfYY0d",
-    100: "https://buy.stripe.com/aEUbJ26pE9iudEE6pDfYY0e",
-  };
 
   const handleDonate = () => {
     const amount =
@@ -401,8 +384,8 @@ export const ShareMomentSection = () => {
     const checkShareSupport = async () => {
       if (
         typeof navigator !== "undefined" &&
-        navigator.share &&
-        navigator.canShare
+        "share" in navigator &&
+        "canShare" in navigator
       ) {
         try {
           // Create a tiny test blob to check file sharing support

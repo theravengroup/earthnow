@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Users, Zap, Globe, Utensils, Cpu, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SYSTEMS_DEEP_DIVE } from "@/app/systems-data";
+import { getSecondsSinceLocalMidnight } from "@/hooks/use-global-tick";
 
 // CSS keyframes for animations - GPU-optimized, slow and cinematic
 const animationStyles = `
@@ -50,13 +51,6 @@ function formatNumber(num: number): string {
   return Math.floor(num).toLocaleString();
 }
 
-// Get seconds since local midnight
-function getSecondsSinceLocalMidnight(): number {
-  const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(0, 0, 0, 0);
-  return Math.floor((now.getTime() - midnight.getTime()) / 1000);
-}
 
 // System data configuration
 const systemsConfig = [

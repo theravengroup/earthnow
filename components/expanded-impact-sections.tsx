@@ -96,7 +96,7 @@ function MetricCard({
   value: number;
   label: string;
   microcopy: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
   color: string;
   delay?: number;
 }) {

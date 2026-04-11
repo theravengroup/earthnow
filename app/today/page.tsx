@@ -8,6 +8,7 @@ import {
   GraduationCap, Camera, ChevronDown, Copy, Utensils
 } from "lucide-react";
 import { UniversalNavbar } from "@/components/universal-navbar";
+import { defaultSupportLink } from "@/lib/payment-links";
 import { ShareButton } from "@/components/share-button";
 import { toast } from "sonner";
 
@@ -75,7 +76,8 @@ function getYearsAgo(year: number | string): number {
 // ============================================================================
 // HERO STAT TEMPLATES
 // ============================================================================
-const HERO_STAT_TEMPLATES = [
+type HeroStatResult = { text: string; highlight1: string; mid: string; highlight2: string | null; end: string };
+const HERO_STAT_TEMPLATES: Array<(...args: number[]) => HeroStatResult> = [
   (births: number, deaths: number) => ({
     text: `So far today, `,
     highlight1: formatNumber(births),
@@ -368,7 +370,7 @@ function StatCard({
   prefix = "",
   index,
 }: { 
-  icon: React.ComponentType<{ className?: string }>; 
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   label: string; 
   color: string; 
   dailyRate: number; 
@@ -481,7 +483,8 @@ function EraScroller({
   
   const handleEraClick = (eraId: string) => {
     setJustSelected(eraId);
-    onEraSelect(eraId);
+    const era = HISTORICAL_ERAS.find(e => e.id === eraId);
+    if (era) onEraSelect(era);
     setTimeout(() => setJustSelected(null), 200);
   };
   
@@ -694,7 +697,7 @@ function HistoricalStatCard({
   index,
   notInvented = false,
 }: { 
-  icon: React.ComponentType<{ className?: string }>; 
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   label: string; 
   color: string; 
   value: number; 
@@ -949,8 +952,8 @@ export default function TodayPage() {
   const isViewingToday = selectedEra.isToday === true;
   
   // Handle era selection from scroller
-  const handleEraSelect = (eraId: string) => {
-    setSelectedEraId(eraId);
+  const handleEraSelect = (era: HistoricalEra) => {
+    setSelectedEraId(era.id);
   };
   
   // Handle "Back to today" click
@@ -1480,7 +1483,7 @@ export default function TodayPage() {
           
           <p className="mt-6">
             <Link 
-              href="https://buy.stripe.com/8x23cwaFUfCSfMM3I1fYY04"
+              href={defaultSupportLink}
               target="_blank"
               rel="noopener noreferrer"
               className="font-sans text-sm transition-colors hover:text-white"

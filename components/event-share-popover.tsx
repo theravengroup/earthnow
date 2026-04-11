@@ -334,7 +334,7 @@ export function EventSharePopover({
   // Detect Web Share API with file support on mount
   useEffect(() => {
     const checkShareSupport = async () => {
-      if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+      if (typeof navigator !== 'undefined' && "share" in navigator && "canShare" in navigator) {
         try {
           const testBlob = new Blob(['test'], { type: 'image/png' });
           const testFile = new File([testBlob], 'test.png', { type: 'image/png' });
