@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Share2, Copy, Download } from "lucide-react";
+import { Share2, Copy, Download, Check } from "lucide-react";
 import { toast } from "sonner";
 import { formatNumber } from "@/lib/format";
-import { monthlyLinks, oneTimeLinks } from "@/lib/payment-links";
+import { useDonationCheckout } from "@/hooks/use-donation-checkout";
+import { StripePaymentForm } from "@/components/stripe-payment-form";
 import {
   drawRoundRect,
   formatLargeNumber,
@@ -120,28 +121,79 @@ export function SupportSection() {
   const [selectedAmount, setSelectedAmount] = useState<number | "custom">(25);
   const [customAmount, setCustomAmount] = useState<string>("");
 
-  const amounts = [1, 5, 10, 25, 50, 100];
+  const {
+    view,
+    clientSecret,
+    loading,
+    checkoutAmount,
+    checkoutFrequency,
+    startCheckout,
+    handleComplete,
+    reset,
+  } = useDonationCheckout();
 
+  const amounts = [1, 5, 10, 25, 50, 100];
 
   const handleDonate = () => {
     const amount =
       selectedAmount === "custom" ? parseInt(customAmount) || 0 : selectedAmount;
     if (amount <= 0) return;
-
-    const links = donationType === "monthly" ? monthlyLinks : oneTimeLinks;
-    const url = links[amount as keyof typeof links];
-
-    if (url) {
-      window.open(url, "_blank");
-    } else {
-      // Custom amount - use base URL with amount parameter
-      const baseUrl =
-        donationType === "monthly"
-          ? "https://buy.stripe.com/test_monthly"
-          : "https://buy.stripe.com/test_onetime";
-      window.open(`${baseUrl}?amount=${amount * 100}`, "_blank");
-    }
+    startCheckout({ frequency: donationType, amount });
   };
+
+  if (view === "checkout" && clientSecret) {
+    return (
+      <div
+        className="rounded-2xl p-8"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
+          border: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <StripePaymentForm
+          clientSecret={clientSecret}
+          amount={checkoutAmount}
+          frequency={checkoutFrequency}
+          onComplete={handleComplete}
+          onBack={reset}
+        />
+      </div>
+    );
+  }
+
+  if (view === "success") {
+    return (
+      <div
+        className="rounded-2xl p-8 text-center"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
+          border: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(20,184,166,0.15)' }}>
+          <Check className="h-7 w-7 text-[#14b8a6]" />
+        </div>
+        <h3 className="mb-2 font-serif text-[22px] font-semibold text-white">
+          Thank you!
+        </h3>
+        <p className="mb-5 text-[14px] text-[#94a3b8]">
+          Your support keeps EarthNow free and ad-free.
+        </p>
+        <button
+          onClick={reset}
+          className="rounded-full px-5 py-2 text-[13px] font-medium text-[#94a3b8] transition-all hover:text-white"
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }}
+        >
+          Make another donation
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -221,18 +273,31 @@ export function SupportSection() {
       {/* Donate Button */}
       <button
         onClick={handleDonate}
-        className="w-full rounded-full bg-[#14b8a6] py-4 text-[15px] font-medium text-white transition-all hover:bg-[#0d9488]"
+        disabled={loading || (selectedAmount === "custom" && (!customAmount || parseInt(customAmount) < 1))}
+        className="w-full rounded-full bg-[#14b8a6] py-4 text-[15px] font-medium text-white transition-all hover:bg-[#0d9488] disabled:opacity-50"
         style={{
           boxShadow: "0 0 30px rgba(20, 184, 166, 0.3)",
         }}
       >
-        Donate{" "}
-        {selectedAmount === "custom"
-          ? customAmount
-            ? `$${customAmount}`
-            : ""
-          : `$${selectedAmount}`}
-        {donationType === "monthly" ? "/month" : ""}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Setting up payment...
+          </span>
+        ) : (
+          <>
+            Donate{" "}
+            {selectedAmount === "custom"
+              ? customAmount
+                ? `$${customAmount}`
+                : ""
+              : `$${selectedAmount}`}
+            {donationType === "monthly" ? "/month" : ""}
+          </>
+        )}
       </button>
 
       <p className="mt-4 text-center text-[12px] text-[#64748b]">

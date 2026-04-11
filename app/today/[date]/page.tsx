@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { toast } from "sonner";
-import { defaultSupportLink } from "@/lib/payment-links";
 
 // ============================================================================
 // DAILY RATE CONSTANTS (same as homepage)
@@ -970,15 +969,13 @@ export default function TodayDatePage() {
           </Link>
           
           <p className="mt-6">
-            <Link 
-              href={defaultSupportLink}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("open-donate-modal"))}
               className="font-sans text-sm transition-colors hover:text-white"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              style={{ color: "rgba(255,255,255,0.5)", background: "none", border: "none", cursor: "pointer" }}
             >
               Or support the mission.
-            </Link>
+            </button>
           </p>
         </section>
       </main>

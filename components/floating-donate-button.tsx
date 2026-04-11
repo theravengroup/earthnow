@@ -22,8 +22,15 @@ export function FloatingDonateButton() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Check initial position
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Listen for custom event to open donate modal from anywhere
+  useEffect(() => {
+    const handleOpenModal = () => setDonateModalOpen(true);
+    window.addEventListener("open-donate-modal", handleOpenModal);
+    return () => window.removeEventListener("open-donate-modal", handleOpenModal);
   }, []);
 
   // Don't render on hidden routes

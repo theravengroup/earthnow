@@ -4,7 +4,10 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UniversalNavbar } from "@/components/universal-navbar";
-import { terraLinks } from "@/lib/payment-links";
+import { useDonationCheckout } from "@/hooks/use-donation-checkout";
+import { StripePaymentForm } from "@/components/stripe-payment-form";
+import { AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 // Gradient Divider Component
 function GradientDivider() {
@@ -249,9 +252,31 @@ function DeviceVisual() {
 
 export default function TerraPage() {
   const [scrollY, setScrollY] = useState(0);
+  const [terraCheckout, setTerraCheckout] = useState<{ plan: "monthly" | "annual"; quantity: number } | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const isPricingInView = useInView(pricingRef, { once: true, margin: "-100px" });
+
+  const {
+    view: terraView,
+    clientSecret: terraClientSecret,
+    loading: terraLoading,
+    checkoutAmount: terraCheckoutAmount,
+    checkoutFrequency: terraCheckoutFrequency,
+    startTerraCheckout,
+    handleComplete: terraHandleComplete,
+    reset: terraReset,
+  } = useDonationCheckout();
+
+  const handleTerraOrder = (plan: "monthly" | "annual") => {
+    setTerraCheckout({ plan, quantity: 1 });
+    startTerraCheckout({ plan, quantity: 1 });
+  };
+
+  const handleTerraClose = () => {
+    setTerraCheckout(null);
+    terraReset();
+  };
 
   // Parallax scroll effect
   useEffect(() => {
@@ -681,14 +706,13 @@ export default function TerraPage() {
                 </div>
               </div>
               
-              <a
-                href={terraLinks.poster}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488]"
+              <button
+                onClick={() => handleTerraOrder("monthly")}
+                disabled={terraLoading}
+                className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488] disabled:opacity-50"
               >
-                Order Monthly →
-              </a>
+                {terraLoading && terraCheckout?.plan === "monthly" ? "Setting up..." : "Order Monthly →"}
+              </button>
             </motion.div>
 
             {/* Annual Card - slides in from right */}
@@ -739,14 +763,13 @@ export default function TerraPage() {
                 </div>
               </div>
               
-              <a
-                href={terraLinks.print}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488]"
+              <button
+                onClick={() => handleTerraOrder("annual")}
+                disabled={terraLoading}
+                className="mt-8 block w-full rounded-full bg-[#14b8a6] py-4 text-center font-sans text-[16px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488] disabled:opacity-50"
               >
-                Order Annual →
-              </a>
+                {terraLoading && terraCheckout?.plan === "annual" ? "Setting up..." : "Order Annual →"}
+              </button>
             </motion.div>
           </div>
           
@@ -836,6 +859,59 @@ export default function TerraPage() {
 
       {/* Bottom spacing before footer */}
       <div className="h-24" />
+
+      {/* Terra Checkout Modal */}
+      <AnimatePresence>
+        {terraCheckout && terraView === "checkout" && terraClientSecret && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100]"
+              style={{
+                background: "rgba(10,14,23,0.85)",
+                backdropFilter: "blur(8px)",
+              }}
+              onClick={handleTerraClose}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              className="fixed left-1/2 top-1/2 z-[101] w-[95%] max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+              style={{
+                background: "linear-gradient(180deg, rgba(20,25,35,0.98) 0%, rgba(10,14,23,0.98) 100%)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 80px rgba(20,184,166,0.1)",
+              }}
+            >
+              <button
+                onClick={handleTerraClose}
+                className="absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full transition-all hover:scale-110 hover:bg-white/15"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <X className="h-5 w-5 text-[#94a3b8]" />
+              </button>
+              <div style={{ padding: "52px 20px 24px 20px" }}>
+                <StripePaymentForm
+                  clientSecret={terraClientSecret}
+                  amount={terraCheckoutAmount}
+                  frequency={terraCheckoutFrequency}
+                  onComplete={() => {
+                    handleTerraClose();
+                    window.location.href = "/terra/thank-you";
+                  }}
+                  onBack={handleTerraClose}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

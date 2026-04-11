@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { UniversalNavbar } from "@/components/universal-navbar";
 
 // Pre-computed star positions (completely deterministic to avoid hydration mismatch)
@@ -29,9 +30,31 @@ const STARS: Array<{ x: number; y: number; size: number; dur: number; del: numbe
   { x: 48, y: 31, size: 1, dur: 3.8, del: 2.8 }, { x: 85, y: 69, size: 1, dur: 2.8, del: 0.4 },
 ];
 
+// Session verification component (needs Suspense boundary for useSearchParams)
+function SessionVerifier() {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+
+  useEffect(() => {
+    if (!sessionId) return;
+    fetch(`/api/checkout/status?session_id=${sessionId}`)
+      .then((res) => res.json())
+      .catch(() => {
+        // Silent fail — page still shows thank you
+      });
+  }, [sessionId]);
+
+  return null;
+}
+
 export default function ThankYouPage() {
   return (
     <>
+      {/* Verify session in background */}
+      <Suspense fallback={null}>
+        <SessionVerifier />
+      </Suspense>
+
       {/* Navbar OUTSIDE overflow-hidden container for proper fixed positioning */}
       <UniversalNavbar />
       

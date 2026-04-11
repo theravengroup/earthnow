@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Lock, Download, Copy, Check, Share2 } from "lucide-react";
-import { monthlyLinks, oneTimeLinks } from "@/lib/payment-links";
+import { useDonationCheckout } from "@/hooks/use-donation-checkout";
+import { StripePaymentForm } from "@/components/stripe-payment-form";
 
 interface DonateModalProps {
   isOpen: boolean;
@@ -14,11 +15,21 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
   const [donationType, setDonationType] = useState<"one-time" | "monthly">("monthly");
   const [selectedAmount, setSelectedAmount] = useState<number | "custom">(10);
   const [customAmount, setCustomAmount] = useState<string>("");
-  const [view, setView] = useState<"donate" | "success">("donate");
   const [copied, setCopied] = useState<"image" | "text" | null>(null);
   const [cardGenerated, setCardGenerated] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const supportTimeRef = useRef<Date>(new Date());
+
+  const {
+    view,
+    clientSecret,
+    loading,
+    checkoutAmount,
+    checkoutFrequency,
+    startCheckout,
+    handleComplete,
+    reset,
+  } = useDonationCheckout();
 
   const amounts = [1, 5, 10, 25, 50, 100];
 
@@ -26,15 +37,15 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
   const generateSupportCard = useCallback(async (): Promise<HTMLCanvasElement | null> => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
-    
+
     const width = 1080;
     const height = 1080;
     canvas.width = width;
     canvas.height = height;
-    
+
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, '#0a0e17');
@@ -42,29 +53,29 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
     gradient.addColorStop(1, '#070b11');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
-    
+
     // Subtle glow in center
     const glowGradient = ctx.createRadialGradient(width/2, height/2 - 50, 0, width/2, height/2, 350);
     glowGradient.addColorStop(0, 'rgba(20, 184, 166, 0.1)');
     glowGradient.addColorStop(1, 'transparent');
     ctx.fillStyle = glowGradient;
     ctx.fillRect(0, 0, width, height);
-    
+
     // Top accent line
     ctx.fillStyle = 'rgba(20, 184, 166, 0.3)';
     ctx.fillRect(0, 0, width, 3);
-    
+
     // Main text - "While I was here,"
     ctx.font = 'italic 56px Georgia, serif';
     ctx.fillStyle = 'rgba(255,255,255,0.85)';
     ctx.textAlign = 'center';
     ctx.fillText('While I was here,', width/2, 380);
-    
+
     // "the planet kept moving."
     ctx.font = '56px Georgia, serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('the planet kept moving.', width/2, 460);
-    
+
     // Divider
     ctx.strokeStyle = 'rgba(255,255,255,0.1)';
     ctx.lineWidth = 1;
@@ -72,62 +83,62 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
     ctx.moveTo(width/2 - 120, 520);
     ctx.lineTo(width/2 + 120, 520);
     ctx.stroke();
-    
+
     // "I chose to support what comes next."
     ctx.font = 'italic 36px Georgia, serif';
     ctx.fillStyle = '#14b8a6';
     ctx.fillText('I chose to support what comes next.', width/2, 600);
-    
+
     // Timestamp
     const now = supportTimeRef.current;
-    const dateStr = now.toLocaleDateString('en-US', { 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric' 
+    const dateStr = now.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
     });
     ctx.font = '18px -apple-system, BlinkMacSystemFont, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText(`Joined EarthNow supporters · ${dateStr}`, width/2, 680);
-    
+
     // Footer URL
     ctx.font = '20px -apple-system, BlinkMacSystemFont, sans-serif';
     ctx.fillStyle = '#475569';
     ctx.fillText('EarthNow.app', width/2, 950);
-    
+
     // Brand mark in bottom-right corner
     const markX = width - 28 - 36;
     const markY = height - 28 - 36;
     const markSize = 36;
-    
+
     ctx.save();
     ctx.globalAlpha = 0.8;
     ctx.shadowColor = 'rgba(54, 226, 198, 0.5)';
     ctx.shadowBlur = 12;
-    
+
     // Globe circle
     ctx.beginPath();
     ctx.arc(markX + markSize/2, markY + markSize/2, markSize/2 - 2, 0, Math.PI * 2);
     ctx.strokeStyle = '#36E2C6';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
+
     // Latitude line
     ctx.beginPath();
     ctx.moveTo(markX + 5, markY + markSize/2);
     ctx.lineTo(markX + markSize - 5, markY + markSize/2);
     ctx.stroke();
-    
+
     // Longitude arc
     ctx.beginPath();
     ctx.ellipse(markX + markSize/2, markY + markSize/2, 7, markSize/2 - 5, 0, 0, Math.PI * 2);
     ctx.stroke();
-    
+
     ctx.restore();
-    
+
     // Bottom accent
     ctx.fillStyle = 'rgba(20, 184, 166, 0.3)';
     ctx.fillRect(0, height - 3, width, 3);
-    
+
     setCardGenerated(true);
     return canvas;
   }, []);
@@ -136,7 +147,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
   const downloadImage = async () => {
     const canvas = await generateSupportCard();
     if (!canvas) return;
-    
+
     const link = document.createElement('a');
     link.download = `earthnow-supporter-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
@@ -147,7 +158,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
   const copyImage = async () => {
     const canvas = await generateSupportCard();
     if (!canvas) return;
-    
+
     try {
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((b) => {
@@ -183,11 +194,11 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
     onClose();
     // Reset state after animation
     setTimeout(() => {
-      setView("donate");
+      reset();
       setCardGenerated(false);
       setCopied(null);
     }, 300);
-  }, [onClose]);
+  }, [onClose, reset]);
 
   // Handle ESC key press
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -216,16 +227,20 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
   };
 
   const handleDonate = () => {
-    let link: string;
-    if (donationType === "monthly") {
-      link = monthlyLinks[selectedAmount as number];
-    } else {
-      link = oneTimeLinks[selectedAmount];
-    }
-    if (link) {
-      window.location.href = link;
-    }
+    const amount = selectedAmount === "custom" ? parseInt(customAmount, 10) : selectedAmount;
+    if (!amount || amount < 1) return;
+    startCheckout({ frequency: donationType, amount });
   };
+
+  const handlePaymentComplete = useCallback(() => {
+    supportTimeRef.current = new Date();
+    handleComplete();
+    // Generate share card after transition
+    setTimeout(() => generateSupportCard(), 100);
+  }, [handleComplete, generateSupportCard]);
+
+  // Determine modal width — wider during checkout for payment form
+  const maxWidth = view === "checkout" ? "600px" : "520px";
 
   return (
     <AnimatePresence>
@@ -252,12 +267,14 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed left-1/2 top-1/2 z-[101] w-[95%] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+            className="fixed left-1/2 top-1/2 z-[101] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
             style={{
+              maxWidth,
               background: "linear-gradient(180deg, rgba(20,25,35,0.98) 0%, rgba(10,14,23,0.98) 100%)",
               border: "1px solid rgba(255,255,255,0.1)",
               boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 80px rgba(20,184,166,0.1)",
               overflow: "visible",
+              transition: "max-width 0.3s ease",
             }}
           >
             {/* Close button - positioned inside modal, top-left */}
@@ -282,7 +299,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
 
             {/* Content - extra top padding to avoid close button collision */}
             <div style={{ padding: "52px 20px 24px 20px" }}>
-              {view === "donate" ? (
+              {view === "form" ? (
                 <>
                   {/* Mission Identity Line */}
                   <p className="mb-4 text-center text-[13px] tracking-wide text-[#94a3b8]">
@@ -334,12 +351,12 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                     {amounts.map((amount) => {
                       const isPopular = amount === 10 && donationType === "monthly";
                       const isSelected = selectedAmount === amount;
-                      
+
                       return (
                         <div key={amount} className="relative flex flex-col items-center">
                           {/* Recommended Label */}
                           {isPopular && (
-                            <span 
+                            <span
                               className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium uppercase tracking-wider"
                               style={{ color: '#14b8a6' }}
                             >
@@ -351,16 +368,16 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                             className="w-full rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-200 sm:w-auto sm:rounded-full sm:px-4 sm:py-2"
                             style={{
                               background: isSelected ? "#14b8a6" : isPopular ? "rgba(20,184,166,0.12)" : "rgba(255,255,255,0.05)",
-                              border: isSelected 
-                                ? "1px solid #14b8a6" 
-                                : isPopular 
-                                  ? "1px solid rgba(20,184,166,0.4)" 
+                              border: isSelected
+                                ? "1px solid #14b8a6"
+                                : isPopular
+                                  ? "1px solid rgba(20,184,166,0.4)"
                                   : "1px solid rgba(255,255,255,0.1)",
                               color: isSelected ? "white" : isPopular ? "#14b8a6" : "#94a3b8",
-                              boxShadow: isSelected 
-                                ? "0 0 12px rgba(20,184,166,0.3)" 
-                                : isPopular 
-                                  ? "0 0 16px rgba(20,184,166,0.2)" 
+                              boxShadow: isSelected
+                                ? "0 0 12px rgba(20,184,166,0.3)"
+                                : isPopular
+                                  ? "0 0 16px rgba(20,184,166,0.2)"
                                   : "none",
                               transform: isPopular && !isSelected ? "scale(1.03)" : "scale(1)",
                             }}
@@ -371,7 +388,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                       );
                     })}
                   </div>
-                  
+
                   {/* Custom button row - only for one-time donations */}
                   {donationType === "one-time" && (
                     <div className="mb-4 flex justify-center">
@@ -414,19 +431,51 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                   {/* Donate Button */}
                   <motion.button
                     onClick={handleDonate}
-                    className="w-full rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300"
+                    disabled={loading || (selectedAmount === "custom" && (!customAmount || parseInt(customAmount) < 1))}
+                    className="w-full rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300 disabled:opacity-50"
                     style={{
-                      background: "linear-gradient(135deg, #0f766e, #14b8a6)",
+                      background: loading
+                        ? "rgba(20,184,166,0.5)"
+                        : "linear-gradient(135deg, #0f766e, #14b8a6)",
                       border: "1px solid rgba(20,184,166,0.4)",
-                      boxShadow: "0 0 20px rgba(20,184,166,0.25), 0 4px 15px rgba(0,0,0,0.3)",
+                      boxShadow: loading
+                        ? "none"
+                        : "0 0 20px rgba(20,184,166,0.25), 0 4px 15px rgba(0,0,0,0.3)",
                     }}
-                    whileHover={{
+                    whileHover={loading ? {} : {
                       scale: 1.02,
                       boxShadow: "0 0 35px rgba(20,184,166,0.4), 0 4px 15px rgba(0,0,0,0.3)",
                     }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={loading ? {} : { scale: 0.98 }}
                   >
-                    {donationType === "monthly" ? "Donate Monthly with Stripe" : "Donate with Stripe"}
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg
+                          className="h-4 w-4 animate-spin"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                          />
+                        </svg>
+                        Setting up payment...
+                      </span>
+                    ) : donationType === "monthly" ? (
+                      "Continue to Payment"
+                    ) : (
+                      "Continue to Payment"
+                    )}
                   </motion.button>
 
                   {/* Micro Impact Text */}
@@ -435,7 +484,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                   </p>
 
                   {/* Trust Indicator */}
-                  <div 
+                  <div
                     className="mt-4 flex items-center justify-center gap-1.5 text-center"
                     style={{ opacity: 0.6 }}
                   >
@@ -449,7 +498,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                     <button
                       onClick={() => {
                         supportTimeRef.current = new Date();
-                        setView("success");
+                        handleComplete();
                         setTimeout(() => generateSupportCard(), 100);
                       }}
                       className="mt-4 w-full text-center text-[11px] text-[#64748b] hover:text-[#94a3b8]"
@@ -458,6 +507,21 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                     </button>
                   )}
                 </>
+              ) : view === "checkout" && clientSecret ? (
+                /* Checkout View - Stripe Payment Form */
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <StripePaymentForm
+                    clientSecret={clientSecret}
+                    amount={checkoutAmount}
+                    frequency={checkoutFrequency}
+                    onComplete={handlePaymentComplete}
+                    onBack={reset}
+                  />
+                </motion.div>
               ) : (
                 /* Success View - Share Your Support */
                 <motion.div
@@ -484,7 +548,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                       <Share2 className="h-3.5 w-3.5" />
                       Share Your Support
                     </p>
-                    <div 
+                    <div
                       className="relative mx-auto aspect-square w-full max-w-[280px] overflow-hidden rounded-xl"
                       style={{
                         background: 'linear-gradient(180deg, #0a0e17 0%, #0d1220 50%, #070b11 100%)',
