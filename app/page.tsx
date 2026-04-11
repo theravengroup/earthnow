@@ -1729,8 +1729,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       <motion.section
         id="systems"
         ref={systemsRef}
-        className="relative overflow-hidden bg-[#0a0e17] px-6 py-24 md:px-12"
-        style={{ overflowAnchor: 'none' }}
+        className="relative overflow-hidden bg-[#0a0e17] px-6 py-24 md:px-12 [overflow-anchor:none]"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}

@@ -551,15 +551,6 @@ select,
   --tw-enter-translate-y: 0.5rem;
 }
 
-/* ===========================================
-   SYSTEMS SECTION SCROLL ANCHORING FIX
-   Prevents Chrome from auto-scrolling when panels expand/collapse.
-   Only applied to the section container, not every descendant,
-   to avoid disabling scroll anchoring globally.
-   =========================================== */
-#systems {
-  overflow-anchor: none;
-}
 
   /* Noise/grain texture overlay 
      IMPORTANT: z-index must be BELOW navbar (z-1000) but above page content
