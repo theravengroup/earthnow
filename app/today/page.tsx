@@ -745,7 +745,7 @@ export default function TodayPage() {
         onBackToToday={handleBackToToday}
       />
       
-      <main className="min-h-screen" style={{ background: "#0a0e17" }}>
+      <main className="min-h-screen bg-[#0a0e17]">
         {/* ================================================================
             SECTION 1: HERO DATE/ERA
         ================================================================ */}
@@ -796,12 +796,12 @@ export default function TodayPage() {
                 }}
               >
                 {heroStat.text}
-                <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+                <span className="font-mono not-italic text-[#2dd4bf]">
                   {heroStat.highlight1}
                 </span>
                 {heroStat.mid}
                 {heroStat.highlight2 && (
-                  <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+                  <span className="font-mono not-italic text-[#2dd4bf]">
                     {heroStat.highlight2}
                   </span>
                 )}
@@ -862,11 +862,11 @@ export default function TodayPage() {
                 }}
               >
                 The world had{" "}
-                <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+                <span className="font-mono not-italic text-[#2dd4bf]">
                   {formatAbbreviated(selectedEra.data.population)}
                 </span>
                 {" "}people. Today it has{" "}
-                <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+                <span className="font-mono not-italic text-[#2dd4bf]">
                   {formatAbbreviated(HISTORICAL_ERAS.find(e => e.isToday)!.data.population)}
                 </span>.
               </p>
@@ -898,7 +898,7 @@ export default function TodayPage() {
               {isViewingToday ? "Today's Numbers" : `${selectedEra.yearDisplay} — Daily Numbers`}
             </h2>
             
-            <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: "16px" }}>
+            <div className="grid grid-cols-2 gap-[16px] lg:grid-cols-4">
               {STAT_CARDS.map((card, index) => {
                 // Get historical value for this stat
                 const dataKey = STAT_KEY_MAP[card.label];

@@ -103,10 +103,9 @@ function PastDateBanner({ dateStr }: { dateStr: string }) {
       >
         This briefing is from {dateStr}.
       </span>
-      <Link 
+      <Link
         href="/today"
-        className="flex items-center gap-1 font-sans text-sm font-medium transition-colors hover:text-white"
-        style={{ color: "#2dd4bf" }}
+        className="flex items-center gap-1 font-sans text-sm font-medium text-[#2dd4bf] transition-colors hover:text-white"
       >
         See today&apos;s briefing
         <ArrowRight className="h-4 w-4" />
@@ -420,12 +419,12 @@ export default function TodayDatePage() {
             }}
           >
             {heroStat.text}
-            <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+            <span className="font-mono not-italic text-[#2dd4bf]">
               {heroStat.highlight1}
             </span>
             {heroStat.mid}
             {heroStat.highlight2 && (
-              <span className="font-mono not-italic" style={{ color: "#2dd4bf" }}>
+              <span className="font-mono not-italic text-[#2dd4bf]">
                 {heroStat.highlight2}
               </span>
             )}
@@ -457,7 +456,7 @@ export default function TodayDatePage() {
               {isPast ? "That Day's" : "Today's"} Numbers
             </h2>
             
-            <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: "16px" }}>
+            <div className="grid grid-cols-2 gap-[16px] lg:grid-cols-4">
               {STAT_CARDS.map((card, index) => (
                 <StatCard
                   key={card.label}
