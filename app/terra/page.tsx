@@ -140,8 +140,8 @@ function AnimatedPrice({
     : animatedValue.toString();
 
   return (
-    <span className="font-mono text-[15px] text-white">
-      ${formattedValue}<span className="hidden md:inline"> {suffix}</span>
+    <span className="whitespace-nowrap font-mono text-[13px] text-white sm:text-[15px]">
+      ${formattedValue} <span className="text-[#94a3b8]">{suffix}</span>
     </span>
   );
 }
@@ -537,6 +537,90 @@ export default function TerraPage() {
 
       <GradientDivider />
 
+      {/* IT Requirements Section */}
+      <section className="px-6 py-20 md:px-12">
+        <div className="mx-auto max-w-[900px]">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="text-center"
+          >
+            <p
+              className="font-mono uppercase text-[#14b8a6]"
+              style={{ fontSize: "11px", letterSpacing: "0.2em" }}
+            >
+              FOR IT DEPARTMENTS
+            </p>
+            <h2 className="mt-4 font-serif text-[48px] text-white">
+              Works With What You Already Have
+            </h2>
+            <p
+              className="mx-auto mt-4 max-w-[600px] font-sans text-[#94a3b8]"
+              style={{ fontSize: "18px" }}
+            >
+              Terra is designed to run on standard corporate infrastructure. No special hardware beyond the included streamer. No IT project.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="mx-auto mt-12 max-w-[700px]"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(20,184,166,0.2)",
+              borderRadius: "16px",
+              padding: "8px 0",
+            }}
+          >
+            {[
+              { label: "Display", value: "Any HDMI-compatible TV or monitor" },
+              { label: "Resolution", value: "1080p minimum \u2014 4K recommended" },
+              { label: "Internet", value: "10 Mbps WiFi or faster" },
+              { label: "Network", value: "Standard HTTPS outbound only" },
+              { label: "Power", value: "Standard outlet near display" },
+              { label: "Operation", value: "Display on during business hours" },
+            ].map((row, index, arr) => (
+              <div
+                key={row.label}
+                className="flex flex-col gap-1 transition-colors duration-200 hover:bg-[rgba(20,184,166,0.04)] md:flex-row md:items-center md:justify-between"
+                style={{
+                  padding: "16px 24px",
+                  borderBottom: index < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                }}
+              >
+                <span
+                  className="font-sans uppercase text-[#768a9e]"
+                  style={{ fontSize: "12px", letterSpacing: "0.08em" }}
+                >
+                  {row.label}
+                </span>
+                <span className="font-sans text-[15px] text-white">
+                  {row.value}
+                </span>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            className="mt-6 text-center font-sans italic text-[#94a3b8]"
+            style={{ fontSize: "16px" }}
+          >
+            No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
+          </motion.p>
+        </div>
+      </section>
+
+      <GradientDivider />
+
       {/* Two Ways to Run Terra */}
       <section className="px-6 py-24 md:px-12">
         <div className="mx-auto max-w-5xl">
@@ -745,90 +829,6 @@ export default function TerraPage() {
 
       <GradientDivider />
 
-      {/* IT Requirements Section */}
-      <section className="px-6 py-20 md:px-12">
-        <div className="mx-auto max-w-[900px]">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="text-center"
-          >
-            <p
-              className="font-mono uppercase text-[#14b8a6]"
-              style={{ fontSize: "11px", letterSpacing: "0.2em" }}
-            >
-              FOR IT DEPARTMENTS
-            </p>
-            <h2 className="mt-4 font-serif text-[48px] text-white">
-              Works With What You Already Have
-            </h2>
-            <p
-              className="mx-auto mt-4 max-w-[600px] font-sans text-[#94a3b8]"
-              style={{ fontSize: "18px" }}
-            >
-              Terra is designed to run on standard corporate infrastructure. No special hardware beyond the included streamer. No IT project.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="mx-auto mt-12 max-w-[700px]"
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(20,184,166,0.2)",
-              borderRadius: "16px",
-              padding: "8px 0",
-            }}
-          >
-            {[
-              { label: "Display", value: "Any HDMI-compatible TV or monitor" },
-              { label: "Resolution", value: "1080p minimum \u2014 4K recommended" },
-              { label: "Internet", value: "10 Mbps WiFi or faster" },
-              { label: "Network", value: "Standard HTTPS outbound only" },
-              { label: "Power", value: "Standard outlet near display" },
-              { label: "Operation", value: "Display on during business hours" },
-            ].map((row, index, arr) => (
-              <div
-                key={row.label}
-                className="flex flex-col gap-1 transition-colors duration-200 hover:bg-[rgba(20,184,166,0.04)] md:flex-row md:items-center md:justify-between"
-                style={{
-                  padding: "16px 24px",
-                  borderBottom: index < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
-                }}
-              >
-                <span
-                  className="font-sans uppercase text-[#768a9e]"
-                  style={{ fontSize: "12px", letterSpacing: "0.08em" }}
-                >
-                  {row.label}
-                </span>
-                <span className="font-sans text-[15px] text-white">
-                  {row.value}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-            className="mt-6 text-center font-sans italic text-[#94a3b8]"
-            style={{ fontSize: "16px" }}
-          >
-            No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
-          </motion.p>
-        </div>
-      </section>
-
-      <GradientDivider />
-
       {/* Pricing Section */}
       <section id="pricing" className="scroll-mt-24 px-6 py-24 md:px-12">
         <div ref={pricingRef} className="mx-auto max-w-5xl">
@@ -853,7 +853,7 @@ export default function TerraPage() {
             </p>
           </motion.div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-2">
+          <div className="mt-12 grid gap-8 lg:grid-cols-2">
             {/* Monthly Card */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -880,21 +880,21 @@ export default function TerraPage() {
               </div>
 
               <div className="flex-1 space-y-4">
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">1\u20135 screens</span>
-                  <AnimatedPrice value={179} suffix="/ screen / month" delay={0} isInView={isPricingInView} />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">1–5 screens</span>
+                  <AnimatedPrice value={179} suffix="/screen/mo" delay={0} isInView={isPricingInView} />
                 </div>
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">6\u201310 screens</span>
-                  <AnimatedPrice value={149} suffix="/ screen / month" delay={80} isInView={isPricingInView} />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">6–10 screens</span>
+                  <AnimatedPrice value={149} suffix="/screen/mo" delay={80} isInView={isPricingInView} />
                 </div>
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">11\u201325 screens</span>
-                  <AnimatedPrice value={129} suffix="/ screen / month" delay={160} isInView={isPricingInView} />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">11–25 screens</span>
+                  <AnimatedPrice value={129} suffix="/screen/mo" delay={160} isInView={isPricingInView} />
                 </div>
-                <div className="flex flex-col gap-1 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">26\u2013100 screens</span>
-                  <AnimatedPrice value={99} suffix="/ screen / month" delay={240} isInView={isPricingInView} />
+                <div className="flex items-center justify-between pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">26–100 screens</span>
+                  <AnimatedPrice value={99} suffix="/screen/mo" delay={240} isInView={isPricingInView} />
                 </div>
               </div>
 
@@ -937,21 +937,21 @@ export default function TerraPage() {
               </div>
 
               <div className="flex-1 space-y-4">
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">1\u20135 screens</span>
-                  <AnimatedPrice value={1788} suffix="/ screen / year" delay={0} isInView={isPricingInView} formatWithComma />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">1–5 screens</span>
+                  <AnimatedPrice value={1788} suffix="/screen/yr" delay={0} isInView={isPricingInView} formatWithComma />
                 </div>
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">6\u201310 screens</span>
-                  <AnimatedPrice value={1488} suffix="/ screen / year" delay={80} isInView={isPricingInView} formatWithComma />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">6–10 screens</span>
+                  <AnimatedPrice value={1488} suffix="/screen/yr" delay={80} isInView={isPricingInView} formatWithComma />
                 </div>
-                <div className="flex flex-col gap-1 border-b border-white/10 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">11\u201325 screens</span>
-                  <AnimatedPrice value={1308} suffix="/ screen / year" delay={160} isInView={isPricingInView} formatWithComma />
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">11–25 screens</span>
+                  <AnimatedPrice value={1308} suffix="/screen/yr" delay={160} isInView={isPricingInView} formatWithComma />
                 </div>
-                <div className="flex flex-col gap-1 pb-4 md:flex-row md:items-center md:justify-between">
-                  <span className="font-sans text-[15px] text-[#94a3b8]">26\u2013100 screens</span>
-                  <AnimatedPrice value={1008} suffix="/ screen / year" delay={240} isInView={isPricingInView} formatWithComma />
+                <div className="flex items-center justify-between pb-4">
+                  <span className="whitespace-nowrap font-sans text-[13px] text-[#94a3b8] sm:text-[15px]">26–100 screens</span>
+                  <AnimatedPrice value={1008} suffix="/screen/yr" delay={240} isInView={isPricingInView} formatWithComma />
                 </div>
               </div>
 

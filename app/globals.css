@@ -13,6 +13,12 @@ html, body {
   max-width: 100vw;
 }
 
+/* Prevent orphan words — when text wraps, ensure at least 3 words
+   carry to the next line instead of leaving a single word alone */
+p, h1, h2, h3, h4, h5, h6, span, li {
+  text-wrap: pretty;
+}
+
 /* ===========================================
    INTERACTIVE ELEMENT STACKING RULES
    Ensures all clickable elements are above decorative layers
