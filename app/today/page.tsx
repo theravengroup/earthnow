@@ -3,42 +3,24 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
-  Baby, Skull, Cloud, TreePine, Zap, Droplets, Search, Shield, 
-  GraduationCap, Camera, ChevronDown, Copy, Utensils
-} from "lucide-react";
+import { ChevronDown, Copy } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ShareButton } from "@/components/share-button";
 import { toast } from "sonner";
-
-// ============================================================================
-import { DAILY_RATES } from "@/lib/data/daily-rates";
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-// Get seconds since midnight UTC
-function getSecondsSinceMidnightUTC(): number {
-  const now = new Date();
-  const midnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  return (now.getTime() - midnightUTC.getTime()) / 1000;
-}
-
-// Format numbers with commas
-function formatNumber(num: number, decimals = 0): string {
-  return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-// Format with abbreviations (K, M, B, T)
-function formatAbbreviated(num: number): string {
-  if (num >= 1e12) return (num / 1e12).toFixed(1) + "T";
-  if (num >= 1e9) return (num / 1e9).toFixed(1) + "B";
-  if (num >= 1e6) return (num / 1e6).toFixed(1) + "M";
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + "K";
-  return formatNumber(num);
-}
+import {
+  getSecondsSinceMidnightUTC,
+  formatNumber,
+  formatAbbreviated,
+  HERO_STAT_TEMPLATES,
+  STAT_CARDS,
+  CONTRAST_PAIRS,
+  LiveStat,
+  BreathingDot,
+  StatCard,
+  ContrastCard,
+  type HeroStatResult,
+} from "@/components/today/shared";
 
 // Get current date formatted
 function getCurrentDate(): { dayOfWeek: string; fullDate: string; isoDate: string } {
@@ -56,118 +38,6 @@ function getYearsAgo(year: number | string): number {
   const numYear = typeof year === 'number' ? year : currentYear;
   return currentYear - numYear;
 }
-
-// ============================================================================
-// HERO STAT TEMPLATES
-// ============================================================================
-type HeroStatResult = { text: string; highlight1: string; mid: string; highlight2: string | null; end: string };
-const HERO_STAT_TEMPLATES: Array<(...args: number[]) => HeroStatResult> = [
-  (births: number, deaths: number) => ({
-    text: `So far today, `,
-    highlight1: formatNumber(births),
-    mid: ` people have been born and `,
-    highlight2: formatNumber(deaths),
-    end: ` have died.`
-  }),
-  (co2: number) => ({
-    text: `Humanity has released `,
-    highlight1: formatAbbreviated(co2),
-    mid: ` tonnes of CO₂ since midnight.`,
-    highlight2: null,
-    end: ``
-  }),
-  (military: number, education: number) => ({
-    text: `The world has spent `,
-    highlight1: `$${formatAbbreviated(military)}`,
-    mid: ` on military and `,
-    highlight2: `$${formatAbbreviated(education)}`,
-    end: ` on education today.`
-  }),
-  (births: number, treesLost: number) => ({
-    text: `Since midnight: `,
-    highlight1: formatNumber(births),
-    mid: ` new lives, `,
-    highlight2: formatNumber(treesLost),
-    end: ` hectares of forest lost.`
-  }),
-  (searches: number) => ({
-    text: `Google has processed `,
-    highlight1: formatAbbreviated(searches),
-    mid: ` searches since midnight.`,
-    highlight2: null,
-    end: ``
-  }),
-  (photos: number, deaths: number) => ({
-    text: `Today: `,
-    highlight1: formatAbbreviated(photos),
-    mid: ` photos taken, `,
-    highlight2: formatNumber(deaths),
-    end: ` lives ended.`
-  }),
-  (water: number) => ({
-    text: `Humanity has used `,
-    highlight1: formatAbbreviated(water),
-    mid: ` liters of water today.`,
-    highlight2: null,
-    end: ``
-  }),
-  (births: number, co2: number) => ({
-    text: ``,
-    highlight1: formatNumber(births),
-    mid: ` new humans today. Each one will emit ~4 tonnes of CO₂ per year.`,
-    highlight2: null,
-    end: ``
-  }),
-  (foodWasted: number) => ({
-    text: `So far today, `,
-    highlight1: formatAbbreviated(foodWasted),
-    mid: ` tonnes of food have been wasted.`,
-    highlight2: null,
-    end: ``
-  }),
-  (energy: number) => ({
-    text: `The planet has generated `,
-    highlight1: formatAbbreviated(energy),
-    mid: ` MWh of energy since midnight.`,
-    highlight2: null,
-    end: ``
-  }),
-];
-
-// ============================================================================
-// STAT CARD DATA
-// ============================================================================
-const STAT_CARDS = [
-  // Row 1
-  { icon: Baby, label: "Births Today", color: "#22c55e", dailyRate: DAILY_RATES.births, abbreviated: false },
-  { icon: Skull, label: "Deaths Today", color: "#ef4444", dailyRate: DAILY_RATES.deaths, abbreviated: false },
-  { icon: Baby, label: "Population Growth", color: "#eab308", dailyRate: DAILY_RATES.populationGrowth, abbreviated: false },
-  { icon: Cloud, label: "CO₂ Emitted (tonnes)", color: "#f97316", dailyRate: DAILY_RATES.co2Tonnes, abbreviated: true },
-  // Row 2
-  { icon: TreePine, label: "Trees Lost (hectares)", color: "#ef4444", dailyRate: DAILY_RATES.treesLostHectares, abbreviated: false },
-  { icon: Zap, label: "Energy Generated (MWh)", color: "#06b6d4", dailyRate: DAILY_RATES.energyMWh, abbreviated: true },
-  { icon: Droplets, label: "Water Used (liters)", color: "#3b82f6", dailyRate: DAILY_RATES.waterLiters, abbreviated: true },
-  { icon: Utensils, label: "Food Wasted (tonnes)", color: "#f97316", dailyRate: DAILY_RATES.foodWastedTonnes, abbreviated: true },
-  // Row 3
-  { icon: Search, label: "Google Searches", color: "#14b8a6", dailyRate: DAILY_RATES.googleSearches, abbreviated: true },
-  { icon: Shield, label: "Military Spending ($)", color: "#ef4444", dailyRate: DAILY_RATES.militarySpending, abbreviated: true, prefix: "$" },
-  { icon: GraduationCap, label: "Education Spending ($)", color: "#22c55e", dailyRate: DAILY_RATES.educationSpending, abbreviated: true, prefix: "$" },
-  { icon: Camera, label: "Photos Taken", color: "#a855f7", dailyRate: DAILY_RATES.photosTaken, abbreviated: true },
-];
-
-// ============================================================================
-// CONTRAST PAIRS (same pool as homepage)
-// ============================================================================
-const CONTRAST_PAIRS = [
-  { left: { label: "MEALS WASTED TODAY", dailyTotal: 3300000, color: "#f43f5e" }, right: { label: "HUNGER DEATHS TODAY", dailyTotal: 25000, color: "#f97316" } },
-  { left: { label: "MILITARY SPENDING TODAY ($)", dailyTotal: 6300000000, color: "#ef4444" }, right: { label: "EDUCATION SPENDING TODAY ($)", dailyTotal: 18000000000, color: "#22c55e" } },
-  { left: { label: "CO₂ EMITTED TODAY (TONNES)", dailyTotal: 115000000, color: "#eab308" }, right: { label: "TREES PLANTED TODAY", dailyTotal: 500000, color: "#22c55e" } },
-  { left: { label: "BIRTHS TODAY", dailyTotal: 385000, color: "#22c55e" }, right: { label: "SPECIES MOVED TOWARD EXTINCTION TODAY", dailyTotal: 150, color: "#ef4444" } },
-  { left: { label: "PHOTOS TAKEN TODAY", dailyTotal: 4700000000, color: "#f59e0b" }, right: { label: "FOREST LOST TODAY (HECTARES)", dailyTotal: 20000, color: "#ef4444" } },
-  { left: { label: "OIL PUMPED TODAY (BARRELS)", dailyTotal: 100000000, color: "#eab308" }, right: { label: "RENEWABLE ENERGY TODAY (MWH)", dailyTotal: 470000000, color: "#22c55e" } },
-  { left: { label: "AD SPENDING TODAY ($)", dailyTotal: 2700000000, color: "#f59e0b" }, right: { label: "MENTAL HEALTH CRISIS CALLS TODAY", dailyTotal: 1500000, color: "#a855f7" } },
-  { left: { label: "CORPORATE PROFITS TODAY ($)", dailyTotal: 137000000000, color: "#22c55e" }, right: { label: "HUNGER DEATHS TODAY", dailyTotal: 25000, color: "#f97316" } },
-];
 
 // ============================================================================
 // HISTORICAL ERA DATA
@@ -288,156 +158,6 @@ const HISTORICAL_CONTEXT = [
   { label: "Data Created Daily", bce10k: "0", ce1000: "0", y2000: "~12GB", today: "~2.5 quintillion bytes" },
 ];
   
-// ============================================================================
-// COMPONENTS
-// ============================================================================
-
-// Live ticking stat value
-function LiveStat({ 
-  dailyRate, 
-  abbreviated = false, 
-  prefix = "",
-  color,
-}: { 
-  dailyRate: number; 
-  abbreviated?: boolean; 
-  prefix?: string;
-  color: string;
-}) {
-  const [value, setValue] = useState(0);
-  
-  useEffect(() => {
-    const updateValue = () => {
-      const seconds = getSecondsSinceMidnightUTC();
-      setValue((dailyRate / 86400) * seconds);
-    };
-    
-    updateValue();
-    const interval = setInterval(updateValue, 1000);
-    return () => clearInterval(interval);
-  }, [dailyRate]);
-  
-  const formatted = abbreviated ? formatAbbreviated(value) : formatNumber(value);
-  
-  return (
-    <span 
-      className="font-mono text-[2rem] font-bold tabular-nums"
-      style={{ color }}
-    >
-      {prefix}{formatted}
-    </span>
-  );
-}
-
-// Breathing dot indicator
-function BreathingDot({ color, delay = 0 }: { color: string; delay?: number }) {
-  return (
-    <div
-      className="absolute right-3 top-3 h-2 w-2 rounded-full"
-      style={{
-        background: color,
-        boxShadow: `0 0 6px ${color}80`,
-        animation: `dot-breathe 3s ease-in-out infinite`,
-        animationDelay: `${delay}s`,
-      }}
-    />
-  );
-}
-
-// Stat Card Component
-function StatCard({ 
-  icon: Icon, 
-  label, 
-  color, 
-  dailyRate, 
-  abbreviated, 
-  prefix = "",
-  index,
-}: { 
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-  label: string; 
-  color: string; 
-  dailyRate: number; 
-  abbreviated: boolean;
-  prefix?: string;
-  index: number;
-}) {
-  return (
-    <div
-      className="relative rounded-xl p-5 text-center"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.08)",
-      }}
-    >
-      <BreathingDot color={color} delay={index * 0.5} />
-      <Icon 
-        className="mx-auto mb-3 h-6 w-6" 
-        style={{ color, opacity: 0.5 }} 
-      />
-      <LiveStat 
-        dailyRate={dailyRate} 
-        abbreviated={abbreviated} 
-        prefix={prefix}
-        color={color} 
-      />
-      <p 
-        className="mt-2 font-sans text-[0.75rem] uppercase tracking-widest"
-        style={{ color: "rgba(255,255,255,0.6)" }}
-      >
-        {label}
-      </p>
-    </div>
-  );
-}
-
-// Contrast Pair Card
-function ContrastCard({ 
-  label, 
-  dailyTotal, 
-  color 
-}: { 
-  label: string; 
-  dailyTotal: number; 
-  color: string;
-}) {
-  const [value, setValue] = useState(0);
-  
-  useEffect(() => {
-    const updateValue = () => {
-      const seconds = getSecondsSinceMidnightUTC();
-      setValue((dailyTotal / 86400) * seconds);
-    };
-    
-    updateValue();
-    const interval = setInterval(updateValue, 1000);
-    return () => clearInterval(interval);
-  }, [dailyTotal]);
-  
-  return (
-    <div
-      className="flex flex-col items-center justify-center rounded-2xl px-6 py-8 w-full"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: `1px solid ${color}40`,
-      }}
-    >
-      <span 
-        className="font-mono text-[2.5rem] font-bold tabular-nums md:text-[3rem]"
-        style={{ color }}
-      >
-        {formatAbbreviated(value)}
-      </span>
-      <span 
-        className="mt-2 text-center font-sans text-[0.7rem] uppercase tracking-widest"
-        style={{ color: "rgba(255,255,255,0.5)" }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
-
 // ============================================================================
 // ERA SCROLLER COMPONENT
 // ============================================================================
@@ -1204,7 +924,7 @@ export default function TodayPage() {
                       color={card.color}
                       dailyRate={card.dailyRate}
                       abbreviated={card.abbreviated}
-                      prefix={card.prefix}
+                      prefix={"prefix" in card ? card.prefix : undefined}
                       index={index}
                     />
                   );
@@ -1217,7 +937,7 @@ export default function TodayPage() {
                       color={card.color}
                       value={historicalValue}
                       abbreviated={card.abbreviated}
-                      prefix={card.prefix}
+                      prefix={"prefix" in card ? card.prefix : undefined}
                       index={index}
                       notInvented={notInvented}
                     />
