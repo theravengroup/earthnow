@@ -5,7 +5,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import { FloatingDonateButton } from '@/components/floating-donate-button'
 import { FooterSection } from '@/components/footer-section'
-import { WarningSuppressor } from '@/components/warning-suppressor'
 import './globals.css'
 
 const cormorantGaramond = Cormorant_Garamond({ 
@@ -84,7 +83,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${cormorantGaramond.variable} ${spaceMono.variable} font-sans antialiased`}>
-        <WarningSuppressor />
         {children}
         <FooterSection />
         <FloatingDonateButton />

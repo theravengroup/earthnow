@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import { z } from "zod";
-
-let resend: Resend;
-function getResend() {
-  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
-  return resend;
-}
+import { getResend } from "@/lib/resend";
 
 const schema = z.object({
   fullName: z.string().min(1, "Full name is required"),

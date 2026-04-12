@@ -3,20 +3,22 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-// Daily rates (same as homepage)
+import { DAILY_RATES as SHARED_RATES } from "@/lib/data/daily-rates";
+
+// Embed-specific key aliases (mapped from shared rates)
 const DAILY_RATES = {
-  population: 8100000000, // World population (static, but shown)
-  births: 385000,
-  deaths: 155000,
-  co2: 115000000,
-  trees: 20000,
-  energy: 1580000000,
-  water: 12000000000000,
-  waste: 3300000,
-  searches: 8500000000,
-  military: 6300000000,
-  education: 18000000000,
-  photos: 4700000000,
+  population: SHARED_RATES.population,
+  births: SHARED_RATES.births,
+  deaths: SHARED_RATES.deaths,
+  co2: SHARED_RATES.co2Tonnes,
+  trees: SHARED_RATES.treesLostHectares,
+  energy: SHARED_RATES.energyMWh,
+  water: SHARED_RATES.waterLiters,
+  waste: SHARED_RATES.foodWastedTonnes,
+  searches: SHARED_RATES.googleSearches,
+  military: SHARED_RATES.militarySpending,
+  education: SHARED_RATES.educationSpending,
+  photos: SHARED_RATES.photosTaken,
 };
 
 // Stat configuration
