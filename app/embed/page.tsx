@@ -186,13 +186,6 @@ function EmbedContent() {
           overflow: hidden;
           background: ${bgColor};
         }
-        @keyframes breathe {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.3); }
-        }
-        .breathing-dot {
-          animation: breathe 3s ease-in-out infinite;
-        }
       `}</style>
       
       <div 

@@ -74,6 +74,28 @@ select,
   100% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 0px currentColor; }
 }
 
+/* Simple dot breathing (today pages, embed) */
+@keyframes dot-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Embed dot breathing (slightly larger scale) */
+@keyframes dot-breathe-lg {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.breathing-dot {
+  animation: dot-breathe-lg 3s ease-in-out infinite;
+}
+
+/* Scroll-down indicator bob */
+@keyframes bob-up-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
 :root {
   --color-teal: #14b8a6;
   --color-bg: #0a0e17;
@@ -208,6 +230,24 @@ select,
   select:focus-visible {
     @apply ring-offset-0;
   }
+}
+
+/* Terra ticker scroll animation */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Terra device floating animation */
+@keyframes device-float {
+  0% { transform: translateY(-6px); }
+  100% { transform: translateY(6px); }
+}
+
+/* Terra LED pulse animation */
+@keyframes led-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }
 
 /* Star field animation */

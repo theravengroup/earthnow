@@ -337,7 +337,7 @@ function BreathingDot({ color, delay = 0 }: { color: string; delay?: number }) {
       style={{
         background: color,
         boxShadow: `0 0 6px ${color}80`,
-        animation: `breathe 3s ease-in-out infinite`,
+        animation: `dot-breathe 3s ease-in-out infinite`,
         animationDelay: `${delay}s`,
       }}
     />
@@ -555,7 +555,7 @@ function EraScroller({
                     style={{
                       background: "#2dd4bf",
                       boxShadow: "0 0 4px #2dd4bf",
-                      animation: "breathe 3s ease-in-out infinite",
+                      animation: "dot-breathe 3s ease-in-out infinite",
                     }}
                   />
                 )}
@@ -1014,20 +1014,6 @@ export default function TodayPage() {
   
   return (
     <>
-      <style jsx global>{`
-        @keyframes breathe {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-        @keyframes bobUpDown {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(8px); }
-        }
-        .date-scroller::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-      
       <UniversalNavbar />
       
       {/* Era Scroller Strip (includes Past Era Banner when viewing historical era) */}

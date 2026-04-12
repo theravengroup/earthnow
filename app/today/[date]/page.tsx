@@ -263,7 +263,7 @@ function BreathingDot({ color, delay = 0, isPast = false }: { color: string; del
       style={{
         background: color,
         boxShadow: `0 0 6px ${color}80`,
-        animation: isPast ? 'none' : `breathe 3s ease-in-out infinite`,
+        animation: isPast ? 'none' : `dot-breathe 3s ease-in-out infinite`,
         animationDelay: `${delay}s`,
         opacity: isPast ? 0.5 : 1,
       }}
@@ -648,13 +648,6 @@ export default function TodayDatePage() {
   
   return (
     <>
-      <style jsx global>{`
-        @keyframes breathe {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
-      
       <UniversalNavbar />
       
       {isPast && <PastDateBanner dateStr={fullDate} />}

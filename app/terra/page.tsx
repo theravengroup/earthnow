@@ -74,16 +74,6 @@ function LiveDataTicker() {
           </span>
         ))}
       </div>
-      <style jsx>{`
-        @keyframes ticker-scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </div>
   );
 }
@@ -222,24 +212,6 @@ function DeviceVisual() {
         Google TV Streamer
       </p>
 
-      <style jsx>{`
-        @keyframes device-float {
-          0% {
-            transform: translateY(-6px);
-          }
-          100% {
-            transform: translateY(6px);
-          }
-        }
-        @keyframes led-pulse {
-          0%, 100% {
-            opacity: 0.4;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-      `}</style>
     </motion.div>
   );
 }
