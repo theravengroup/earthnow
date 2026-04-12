@@ -199,7 +199,7 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
       
       {/* Trend indicator - hidden by default, visible on hover/tap */}
       <div
-        className="mt-1.5 font-mono text-[11px] md:text-[14px]"
+        className="mt-1.5 font-mono text-[11px] leading-tight md:text-[14px]"
         style={{
           color: 'rgba(120,255,170,0.8)',
           opacity: isHovered ? 0.8 : 0,
@@ -207,11 +207,10 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
           fontVariantNumeric: 'tabular-nums',
           fontFeatureSettings: '"tnum"',
           letterSpacing: '0.02em',
-          whiteSpace: 'nowrap',
-          height: 18,
+          minHeight: 18,
         }}
       >
-        ▲ +{trendDisplay}/min
+        ▲ +{trendDisplay} / min
       </div>
       
       {/* Label - slightly larger */}
