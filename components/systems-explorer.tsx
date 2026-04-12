@@ -733,6 +733,7 @@ const SystemDeepDivePanel = memo(function SystemDeepDivePanel({
           boxShadow: `0 0 15px ${accentColor}4D, inset 0 0 15px ${accentColor}0D`,
           borderRadius: 16,
 padding: 'clamp(20px, 4vw, 40px)',
+          overflow: 'hidden',
           transition: "border-color 0.3s ease, box-shadow 0.3s ease",
         }}
         >
@@ -780,9 +781,9 @@ padding: 'clamp(20px, 4vw, 40px)',
         
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[55%_22%_23%]">
           {/* Column 1: Tabbed Storytelling */}
-          <div>
+          <div className="min-w-0">
             {/* Tab buttons */}
-            <div className="mb-6 flex gap-6" role="tablist" aria-label={`${systemsConfig.find(s => s.id === systemId)?.title} system tabs`}>
+            <div className="mb-6 flex gap-6 overflow-x-auto" role="tablist" aria-label={`${systemsConfig.find(s => s.id === systemId)?.title} system tabs`}>
               {systemData.tabs.map((tab, i) => (
                 <button
                   key={tab.label}
@@ -804,6 +805,8 @@ padding: 'clamp(20px, 4vw, 40px)',
                     paddingBottom: 8,
                     cursor: "pointer",
                     transition: "color 200ms ease, border-color 200ms ease",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
                   }}
                 >
                   {tab.label}
