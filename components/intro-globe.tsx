@@ -1,23 +1,31 @@
 "use client";
 
-import { useRef, Suspense } from "react";
+import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
+import { nightLightsVertexShader, nightLightsFragmentShader } from "@/lib/globe-shaders";
 
 function Earth() {
   const meshRef = useRef<THREE.Mesh>(null);
-  
-  // Load the bright blue marble texture
-  const texture = useLoader(
+
+  const dayTexture = useLoader(
     THREE.TextureLoader,
-    "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg",
-    undefined,
-    () => {
-      // On error, texture will be undefined
-    }
+    "/earth-day.jpg"
+  );
+  const nightTexture = useLoader(
+    THREE.TextureLoader,
+    "/earth-night.jpg"
   );
 
-  // Slow rotation
+  const uniforms = useMemo(
+    () => ({
+      dayMap: { value: dayTexture },
+      nightMap: { value: nightTexture },
+      lightDir: { value: new THREE.Vector3(5, 3, 5).normalize() },
+    }),
+    [dayTexture, nightTexture]
+  );
+
   useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.001;
@@ -27,11 +35,38 @@ function Earth() {
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[2, 64, 64]} />
+      <shaderMaterial
+        vertexShader={nightLightsVertexShader}
+        fragmentShader={nightLightsFragmentShader}
+        uniforms={uniforms}
+      />
+    </mesh>
+  );
+}
+
+function Clouds() {
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  const cloudTexture = useLoader(
+    THREE.TextureLoader,
+    "/earth-clouds.png"
+  );
+
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.0013;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[2.01, 64, 64]} />
       <meshStandardMaterial
-        map={texture}
-        color={texture ? undefined : "#1a5a8c"}
-        emissive={texture ? "#112233" : "#0a2a4a"}
-        emissiveIntensity={0.15}
+        alphaMap={cloudTexture}
+        transparent
+        opacity={0.45}
+        color="#ffffff"
+        depthWrite={false}
       />
     </mesh>
   );
@@ -40,19 +75,19 @@ function Earth() {
 function Scene() {
   return (
     <>
-      {/* Bright ambient light for overall visibility */}
-      <ambientLight intensity={1.0} />
-      {/* Strong directional light for definition - positioned as specified */}
+      <ambientLight intensity={0.8} />
       <directionalLight position={[5, 3, 5]} intensity={1.5} />
-      {/* Additional fill light from opposite side */}
-      <directionalLight position={[-3, -1, -3]} intensity={0.4} />
-      <Suspense fallback={
-        <mesh>
-          <sphereGeometry args={[2, 64, 64]} />
-          <meshStandardMaterial color="#1a5a8c" />
-        </mesh>
-      }>
+      <directionalLight position={[-3, -1, -3]} intensity={0.3} />
+      <Suspense
+        fallback={
+          <mesh>
+            <sphereGeometry args={[2, 64, 64]} />
+            <meshStandardMaterial color="#1a5a8c" />
+          </mesh>
+        }
+      >
         <Earth />
+        <Clouds />
       </Suspense>
     </>
   );
@@ -60,11 +95,11 @@ function Scene() {
 
 export default function IntroGlobe() {
   return (
-    <div 
-      style={{ 
-        width: 280, 
-        height: 280, 
-        overflow: 'visible',
+    <div
+      style={{
+        width: 280,
+        height: 280,
+        overflow: "visible",
       }}
     >
       <Canvas

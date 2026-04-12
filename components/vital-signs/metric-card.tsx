@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { useGlobalTick } from "@/hooks/use-global-tick";
-import { formatNumber } from "@/lib/format";
+import { useCardIllumination } from "@/hooks/use-card-illumination";
+import { formatCardValue, formatRatePerMinute } from "@/lib/card-utils";
 
 export interface MetricCardProps {
   color: string;
@@ -33,6 +34,7 @@ export const MetricCard = React.memo(function MetricCard({
 }: MetricCardProps) {
   const { secondsSinceMidnight, isLoaded } = useGlobalTick();
   const [isHovered, setIsHovered] = useState(false);
+  const { isPoweredOn, cardRef } = useCardIllumination(index);
 
   // Calculate value from shared tick (or use static value)
   // baseValue supports cumulative all-time stats (e.g. "People Ever Lived" = 117B + daily growth)
@@ -41,33 +43,9 @@ export const MetricCard = React.memo(function MetricCard({
   // Staggered animation delay for the breathing dot (0.5s increments)
   const breatheDelay = `${index * 0.5}s`;
 
-  // Format value based on options
-  let formattedValue: string;
-  if (staticValue !== undefined && useAbbreviated) {
-    formattedValue = formatNumber(staticValue);
-  } else if (decimalPlaces !== undefined) {
-    formattedValue = value.toFixed(decimalPlaces);
-  } else if (useAbbreviated) {
-    formattedValue = formatNumber(value);
-  } else {
-    formattedValue = Math.floor(value).toLocaleString();
-  }
-  const displayValue = prefix ? `${prefix}${formattedValue}` : formattedValue;
-  
-  // Calculate rate per minute for trend display (handles up to trillions)
-  const ratePerMinute = ratePerSecond * 60;
-  const formattedRate = ratePerMinute >= 1000000000000
-    ? `${(ratePerMinute / 1000000000000).toFixed(1)}T`
-    : ratePerMinute >= 1000000000 
-      ? `${(ratePerMinute / 1000000000).toFixed(1)}B`
-      : ratePerMinute >= 1000000 
-        ? `${(ratePerMinute / 1000000).toFixed(1)}M`
-        : ratePerMinute >= 1000 
-          ? `${(ratePerMinute / 1000).toFixed(1)}K`
-          : ratePerMinute >= 1 
-            ? Math.floor(ratePerMinute).toLocaleString()
-            : ratePerMinute.toFixed(2);
-  const trendDisplay = prefix ? `${prefix}${formattedRate}` : formattedRate;
+  // Format value and rate for display
+  const displayValue = formatCardValue(value, { staticValue, useAbbreviated, decimalPlaces, prefix });
+  const trendDisplay = formatRatePerMinute(ratePerSecond, prefix);
   
   // Determine trend direction and color
   const isIncrease = ratePerSecond > 0;
@@ -87,15 +65,22 @@ export const MetricCard = React.memo(function MetricCard({
   const hoverGlow = `0 0 40px ${color}26`;
 
   return (
-    <div 
-      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl p-5"
+    <div
+      ref={cardRef}
+      className="group relative flex flex-col justify-between overflow-hidden rounded-sm p-5"
       style={{
         alignSelf: 'stretch',
         height: '100%',
-        background: `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`,
-        border: '1px solid rgba(255,255,255,0.15)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.03), 0 12px 40px rgba(0,0,0,0.5)',
-        transition: 'box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease',
+        background: isPoweredOn
+          ? `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`
+          : 'linear-gradient(180deg, rgba(10,15,25,0.95) 0%, rgba(6,9,18,0.98) 100%)',
+        border: isPoweredOn ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(255,255,255,0.06)',
+        boxShadow: isPoweredOn
+          ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.03), 0 12px 40px rgba(0,0,0,0.5)'
+          : 'inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 24px rgba(0,0,0,0.4)',
+        transition: 'box-shadow 0.8s ease, background 0.8s ease, border 0.8s ease, opacity 0.8s ease, filter 0.8s ease',
+        opacity: isPoweredOn ? 1 : 0.35,
+        filter: isPoweredOn ? 'brightness(1) saturate(1)' : 'brightness(0.6) saturate(0.2)',
       }}
       onPointerEnter={(e) => {
         if (e.pointerType === 'mouse') {
@@ -115,6 +100,32 @@ export const MetricCard = React.memo(function MetricCard({
       }}
       onClick={() => setIsHovered(prev => !prev)}
     >
+      {/* HUD corner brackets */}
+      {/* Top-left */}
+      <div className="pointer-events-none absolute left-0 top-0" style={{
+        width: 14, height: 14,
+        borderTop: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        borderLeft: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+      {/* Top-right */}
+      <div className="pointer-events-none absolute right-0 top-0" style={{
+        width: 14, height: 14,
+        borderTop: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        borderRight: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+      {/* Bottom-right */}
+      <div className="pointer-events-none absolute bottom-0 right-0" style={{
+        width: 14, height: 14,
+        borderBottom: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        borderRight: `1.5px solid ${isPoweredOn ? color : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+
       {/* TOP: Status dot with slow breathing animation */}
       <div className="flex-shrink-0">
         <div
@@ -124,8 +135,13 @@ export const MetricCard = React.memo(function MetricCard({
             height: 10,
             backgroundColor: color,
             color: color,
-            animation: 'breathe 4s ease-in-out infinite',
+            animationName: isPoweredOn ? 'breathe' : 'none',
+            animationDuration: '4s',
+            animationTimingFunction: 'ease-in-out',
+            animationIterationCount: 'infinite',
             animationDelay: breatheDelay,
+            opacity: isPoweredOn ? 1 : 0.3,
+            transition: 'opacity 0.8s ease',
           }}
         />
       </div>

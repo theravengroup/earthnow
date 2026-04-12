@@ -2,16 +2,21 @@
 // EarthNow - Real-time planetary data visualization
 // Last updated: March 2026
 
-import React, { useEffect, useState, useRef, useCallback, Suspense, createContext, useContext, useMemo } from "react";
+import React, { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Users, Utensils, Heart, Zap, Globe, Cpu, Droplet, TreePine, Car, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand } from "lucide-react";
+import { Users, Utensils, Heart, Zap, Cpu, TreePine, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand, Satellite, Orbit } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
 import { ExpandToggleLink } from "@/components/interactive-link";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ContrastMoment } from "@/components/contrast-moment";
-import { CinematicIntroWrapper, ReplayIntroLink } from "@/components/cinematic-intro";
+import { CinematicIntroWrapper, ReplayIntroLink, useIntro } from "@/components/cinematic-intro";
+import { RevealGate, GlobeRevealGate } from "@/components/reveal-gate";
+import { Counter } from "@/components/hero-ticker/counter";
+import { SystemCard, systemsData } from "@/components/system-card";
+import { WhileYouWereHereSection } from "@/components/while-you-were-here";
+import { ShuffleCountdown } from "@/components/vital-signs/shuffle-countdown";
 
 // Dynamically import heavy below-fold components to reduce initial JS bundle
 const SystemsExplorer = dynamic(
@@ -50,7 +55,7 @@ import {
 import { CIVILIZATION_SIGNAL_POOL, type CivilizationSignal } from "@/lib/data/civilization-signals";
 import { heroTickerPairings } from "@/lib/data/hero-ticker";
 import { StarField } from "@/components/hero/star-field";
-import { GlobalTickProvider, useGlobalTick, getSecondsSinceLocalMidnight } from "@/hooks/use-global-tick";
+import { GlobalTickProvider, useGlobalTick } from "@/hooks/use-global-tick";
 import { formatNumber } from "@/lib/format";
 import { toast } from "sonner";
 import { MetricCard } from "@/components/vital-signs/metric-card";
@@ -67,6 +72,7 @@ import {
 } from "@/components/impact/lifetime-impact";
 import { drawRoundRect, formatLargeNumber, formatTime, formatTimeWithUnit, PER_SECOND_RATES, type ShareMomentState } from "@/lib/canvas/generate-share-card";
 
+
 // Dynamically import the globe component with SSR disabled
 const EarthGlobe = dynamic(
   () => import("@/components/earth-globe").catch(() => {
@@ -82,84 +88,6 @@ const EarthGlobe = dynamic(
 
 
 
-// Pre-computed satellite dots positions
-const SATELLITE_DOTS: Array<{ left: number; top: number; size: number }> = [
-  { left: 38, top: 16, size: 2 }, { left: 52, top: 17, size: 2 }, { left: 45, top: 15, size: 3 },
-  { left: 41, top: 18, size: 2 }, { left: 58, top: 16, size: 1 }, { left: 49, top: 19, size: 2 },
-  { left: 36, top: 17, size: 2 }, { left: 55, top: 18, size: 2 }, { left: 43, top: 16, size: 3 },
-  { left: 61, top: 17, size: 2 }, { left: 39, top: 19, size: 1 }, { left: 47, top: 15, size: 2 },
-  { left: 53, top: 19, size: 2 }, { left: 37, top: 16, size: 2 }, { left: 59, top: 18, size: 1 },
-  { left: 44, top: 17, size: 2 }, { left: 50, top: 16, size: 3 }, { left: 40, top: 18, size: 2 },
-  { left: 56, top: 15, size: 2 }, { left: 48, top: 18, size: 2 }, { left: 35, top: 17, size: 1 },
-  { left: 62, top: 16, size: 2 }, { left: 42, top: 19, size: 2 }, { left: 54, top: 17, size: 2 },
-  { left: 46, top: 16, size: 3 }, { left: 38, top: 18, size: 2 }, { left: 57, top: 19, size: 1 },
-  { left: 51, top: 15, size: 2 }, { left: 41, top: 17, size: 2 }, { left: 60, top: 18, size: 2 },
-  { left: 36, top: 19, size: 2 }, { left: 63, top: 17, size: 1 }, { left: 45, top: 18, size: 2 },
-  { left: 52, top: 16, size: 2 }, { left: 39, top: 15, size: 3 }, { left: 58, top: 17, size: 2 },
-  { left: 43, top: 19, size: 2 }, { left: 49, top: 17, size: 2 },
-];
-
-
-
-
-
-
-// Counter Component for Ticker
-// Uses shared global tick for efficient timer management
-function Counter({
-  icon: Icon,
-  color,
-  label,
-  baseValue,
-  incrementPerSecond,
-  useAbbreviated = false,
-  isStatic = false,
-}: {
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-  color: string;
-  label: string;
-  baseValue: number;
-  incrementPerSecond: number;
-  useAbbreviated?: boolean;
-  isStatic?: boolean;
-}) {
-  const { secondsSinceMidnight, isLoaded } = useGlobalTick();
-  
-  // Calculate value from shared tick (or use static value)
-  const value = isStatic ? baseValue : baseValue + (secondsSinceMidnight * incrementPerSecond);
-
-  // Generate text shadow glow based on color
-  const textShadow = `0 0 10px ${color}, 0 0 40px ${color}4d`;
-  const displayValue = useAbbreviated ? formatNumber(value) : Math.floor(value).toLocaleString();
-
-  return (
-    <div className="flex flex-col items-center justify-center text-center" style={{ width: '100%', height: '100%' }}>
-      <Icon className="h-5 w-5 shrink-0 mb-2" style={{ color }} />
-      <span
-        className="font-mono text-xl font-semibold tabular-nums"
-        style={{ 
-          color, 
-          textShadow,
-          opacity: isLoaded ? 1 : 0,
-          transition: 'opacity 300ms ease',
-        }}
-        suppressHydrationWarning
-      >
-        {displayValue}
-      </span>
-      <span 
-        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[#768a9e]"
-        style={{
-          maxWidth: '100%',
-          lineHeight: 1.3,
-          wordWrap: 'break-word',
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
 
 
 
@@ -179,482 +107,19 @@ function Counter({
 
 
 
-// System Card Component for Explore the Systems section
-function SystemCard({
-  icon: Icon,
-  title,
-  tagline,
-  gradientFrom,
-  gradientTo,
-  stats,
-}: {
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-  title: string;
-  tagline: string;
-  gradientFrom: string;
-  gradientTo: string;
-  stats: { label: string; dailyTotal: number; color: string; abbreviated?: boolean }[];
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [statValues, setStatValues] = useState(() => 
-    stats.map(() => 0)
-  );
 
-  // Delay initial sync until after hydration completes using double rAF
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const secondsSinceMidnight = getSecondsSinceLocalMidnight();
-        setStatValues(stats.map(stat => (stat.dailyTotal / 86400) * secondsSinceMidnight));
-        
-        interval = setInterval(() => {
-          setStatValues(prev => 
-            prev.map((val, i) => val + (stats[i].dailyTotal / 86400))
-          );
-        }, 1000);
-      });
-    });
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [stats]);
 
-  return (
-    <div
-      className="group relative flex h-[400px] flex-col overflow-hidden rounded-2xl transition-all duration-300"
-      style={{
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
-        border: '1px solid rgba(255,255,255,0.12)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.4)',
-        transform: isHovered ? 'scale(1.02)' : 'scale(1)',
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Top gradient accent bar */}
-      <div
-        className="w-full shrink-0 transition-all duration-300"
-        style={{
-          height: isHovered ? '8px' : '4px',
-          minHeight: '4px',
-          background: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
-        }}
-      />
 
-      {/* Card content */}
-      <div className="flex flex-1 flex-col p-6">
-        {/* Icon with glow */}
-        <div
-          className="mb-4 h-10 w-10"
-          style={{
-            filter: `drop-shadow(0 0 12px ${gradientFrom}60)`,
-          }}
-        >
-          <Icon className="h-10 w-10" style={{ color: gradientFrom }} />
-        </div>
 
-        {/* Title */}
-        <h3 className="mb-2 font-serif text-[22px] font-semibold text-white">
-          {title}
-        </h3>
 
-        {/* Tagline */}
-        <p className="mb-auto text-[14px] leading-relaxed text-[#94a3b8]">
-          {tagline}
-        </p>
 
-        {/* Stats at bottom */}
-        <div className="mt-6 flex flex-col gap-3">
-          {stats.map((stat, i) => {
-            const displayValue = stat.abbreviated 
-              ? formatNumber(statValues[i]) 
-              : Math.floor(statValues[i]).toLocaleString();
-            return (
-              <div key={stat.label} className="flex flex-col">
-                <span
-                  className="font-mono text-[16px] font-semibold tabular-nums"
-                  style={{
-                    color: stat.color,
-                    textShadow: `0 0 8px ${stat.color}4d`,
-                  }}
-                  suppressHydrationWarning
-                >
-                  {displayValue}
-                </span>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-[#94a3b8]">
-                  {stat.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
-// Explore the Systems data
-const systemsData = [
-  {
-    icon: Users,
-    title: "People",
-    tagline: "8.1 billion stories. 385,000 new ones beginning today.",
-    gradientFrom: "#22c55e",
-    gradientTo: "#14b8a6",
-    stats: [
-      { label: "Births Today", dailyTotal: 380000, color: "#22c55e", abbreviated: false },
-      { label: "Deaths Today", dailyTotal: 155000, color: "#ef4444", abbreviated: false },
-      { label: "Net Growth Today", dailyTotal: 225000, color: "#10b981", abbreviated: false },
-    ],
-  },
-  {
-    icon: Zap,
-    title: "Energy",
-    tagline: "The engine of civilization. 600 exajoules annually.",
-    gradientFrom: "#eab308",
-    gradientTo: "#f59e0b",
-    stats: [
-      { label: "Energy Used Today (MWh)", dailyTotal: 1580000000, color: "#eab308", abbreviated: true },
-      { label: "Renewables Today (MWh)", dailyTotal: 470000000, color: "#22c55e", abbreviated: true },
-      { label: "Oil Pumped Today (barrels)", dailyTotal: 100000000, color: "#f97316", abbreviated: true },
-    ],
-  },
-  {
-    icon: Globe,
-    title: "Planet",
-    tagline: "4.5 billion years old. 8.7 million species. One home.",
-    gradientFrom: "#14b8a6",
-    gradientTo: "#06b6d4",
-    stats: [
-      { label: "CO₂ Today (tonnes)", dailyTotal: 115000000, color: "#eab308", abbreviated: true },
-      { label: "Forest Lost Today (hectares)", dailyTotal: 20000, color: "#ef4444", abbreviated: false },
-      { label: "Plastic Produced Today (tonnes)", dailyTotal: 1000000, color: "#768a9e", abbreviated: false },
-    ],
-  },
-  {
-    icon: Utensils,
-    title: "Food",
-    tagline: "11 billion tons produced. One-third never reaches a plate.",
-    gradientFrom: "#f43f5e",
-    gradientTo: "#fb7185",
-    stats: [
-      { label: "Food Produced Today (tonnes)", dailyTotal: 9900000, color: "#22c55e", abbreviated: true },
-      { label: "Food Wasted Today (tonnes)", dailyTotal: 3300000, color: "#f43f5e", abbreviated: true },
-      { label: "Hunger Deaths Today", dailyTotal: 25000, color: "#f97316", abbreviated: false },
-    ],
-  },
-  {
-    icon: Cpu,
-    title: "Technology",
-    tagline: "5 billion connected. Reshaping every system.",
-    gradientFrom: "#8b5cf6",
-    gradientTo: "#a78bfa",
-    stats: [
-      { label: "Google Searches Today", dailyTotal: 8500000000, color: "#3b82f6", abbreviated: true },
-      { label: "Emails Sent Today", dailyTotal: 300000000000, color: "#06b6d4", abbreviated: true },
-      { label: "Smartphones Sold Today", dailyTotal: 3800000, color: "#8b5cf6", abbreviated: true },
-    ],
-  },
-];
-
-// While You Were Here Section Component
-const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileYouWereHereSection(_, forwardedRef) {
-  const internalRef = useRef<HTMLDivElement>(null);
-  const sectionRef = (forwardedRef as React.RefObject<HTMLDivElement>) || internalRef;
-  const [phase, setPhase] = useState<'hidden' | 'narrative' | 'counters'>('hidden');
-  const [values, setValues] = useState({
-    births: 0,
-    deaths: 0,
-    co2: 0,
-    forest: 0,
-    searches: 0,
-  });
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const startTimeRef = useRef<number>(Date.now());
-  const glowRef = useRef<HTMLDivElement>(null);
-  const pulseBoostTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastPulseTimeRef = useRef<number>(0);
-  
-  // Track time on page - starts when component mounts
-  useEffect(() => {
-    startTimeRef.current = Date.now();
-    const timer = setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - startTimeRef.current) / 1000));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-  
-  // Trigger glow pulse boost (debounced)
-  const triggerGlowPulse = React.useCallback(() => {
-    const now = Date.now();
-    // Debounce: only trigger if 150ms has passed since last pulse
-    if (now - lastPulseTimeRef.current < 150) return;
-    lastPulseTimeRef.current = now;
-    
-    if (glowRef.current) {
-      // Clear any pending timeout
-      if (pulseBoostTimeoutRef.current) {
-        clearTimeout(pulseBoostTimeoutRef.current);
-      }
-      
-      // Add boost class
-      glowRef.current.classList.add('pulse-boost');
-      
-      // Remove after 200ms
-      pulseBoostTimeoutRef.current = setTimeout(() => {
-        glowRef.current?.classList.remove('pulse-boost');
-      }, 200);
-    }
-  }, []);
-  
-  // Format elapsed time as "X minutes Y seconds" or "Y seconds"
-  const formatElapsedTime = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    if (minutes === 0) {
-      return `${seconds} second${seconds !== 1 ? 's' : ''}`;
-    }
-    return `${minutes} minute${minutes !== 1 ? 's' : ''} ${seconds} second${seconds !== 1 ? 's' : ''}`;
-  };
-
-  // Phase 1: Section comes into view -> show narrative
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && phase === 'hidden') {
-          setPhase('narrative');
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [phase]);
-
-  // Phase 2: After narrative appears, show counters after 1 second delay
-  useEffect(() => {
-    if (phase === 'narrative') {
-      const timer = setTimeout(() => {
-        setPhase('counters');
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [phase]);
-
-  // Phase 3: Start counting when counters are visible
-  useEffect(() => {
-    if (phase !== 'counters') return;
-
-    const interval = setInterval(() => {
-      setValues((prev) => ({
-        births: prev.births + 4.3,
-        deaths: prev.deaths + 1.8,
-        co2: prev.co2 + 1170,
-        forest: prev.forest + 0.5,
-        searches: prev.searches + 99000,
-      }));
-      // Trigger synchronized glow pulse
-      triggerGlowPulse();
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [phase, triggerGlowPulse]);
-
-  type HeroStat = { key: string; label: string; color: string; value: number; decimals?: number };
-
-  // Top row: 3 items (larger)
-  const topRowStats: HeroStat[] = [
-    { key: "births", label: "Births", color: "#14b8a6", value: values.births },
-    { key: "co2", label: "CO₂ Emitted (tonnes)", color: "#f59e0b", value: values.co2 },
-    { key: "forest", label: "Forest Lost (hectares)", color: "#22c55e", value: values.forest, decimals: 1 },
-  ];
-
-  // Bottom row: 2 items (slightly smaller)
-  const bottomRowStats: HeroStat[] = [
-    { key: "deaths", label: "Deaths", color: "#94a3b8", value: values.deaths },
-    { key: "searches", label: "Google Searches", color: "#8b5cf6", value: values.searches },
-  ];
-
-  return (
-    <motion.section
-      ref={sectionRef}
-      id="while-you-were-here"
-      className="relative flex items-center justify-center overflow-hidden bg-[#0a0e17] px-6 pb-24 pt-16"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
-    >
-      {/* Ambient breathing glow behind metrics - pulses with telemetry updates */}
-      <div 
-        ref={glowRef}
-        className="ambient-glow-breathing pointer-events-none absolute left-1/2 top-1/2"
-        style={{
-          width: '900px',
-          height: '450px',
-          background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.08) 0%, rgba(20,184,166,0.03) 35%, transparent 60%)',
-        }}
-      />
-      
-      <div className="relative z-10 mx-auto w-full max-w-[1100px] text-center">
-        {/* Narrative Heading */}
-        <motion.h2 
-          className="font-serif text-[32px] font-medium text-[#e2e8f0] md:text-[44px]"
-          initial={{ opacity: 0 }}
-          animate={phase !== 'hidden' ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          While you were here
-        </motion.h2>
-        
-        {/* Live Timer */}
-        <motion.div 
-          className="mt-6"
-          initial={{ opacity: 0 }}
-          animate={phase !== 'hidden' ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <span 
-            className="font-mono text-[20px] md:text-[24px]"
-            style={{ color: 'rgba(255,255,255,0.6)' }}
-          >
-            ({formatElapsedTime(elapsedSeconds)})
-          </span>
-        </motion.div>
-        
-        {/* Continuation */}
-        <motion.p 
-          className="mt-4 font-serif text-[32px] font-medium text-white md:text-[44px]"
-          initial={{ opacity: 0 }}
-          animate={phase !== 'hidden' ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.1 }}
-        >
-          the planet kept moving.
-        </motion.p>
-
-        {/* Metrics Grid - 3+2 Layout */}
-        <motion.div 
-          className="relative mt-[60px] flex flex-col items-center"
-          initial={{ opacity: 0 }}
-          animate={phase === 'counters' ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          {/* Top Row - 3 items (larger) */}
-          <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
-            {topRowStats.map((stat, index) => (
-              <motion.div 
-                key={stat.key} 
-                className="flex flex-col items-center"
-                initial={{ opacity: 0 }}
-                animate={phase === 'counters' ? { opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-              >
-                <span
-                  className="font-mono text-[48px] font-bold tabular-nums leading-none md:text-[60px]"
-                  style={{ color: stat.color }}
-                >
-                  {stat.decimals 
-                    ? stat.value.toFixed(stat.decimals)
-                    : Math.floor(stat.value).toLocaleString()
-                  }
-                </span>
-                <span className="mt-3 text-[12px] uppercase tracking-wider text-[#94a3b8] md:text-[14px]">
-                  {stat.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-          
-          {/* Bottom Row - 2 items (slightly smaller, centered) */}
-          <div className="mt-12 grid w-full max-w-[600px] grid-cols-1 gap-10 md:mt-14 md:grid-cols-2 md:gap-8">
-            {bottomRowStats.map((stat, index) => (
-              <motion.div 
-                key={stat.key} 
-                className="flex flex-col items-center"
-                initial={{ opacity: 0 }}
-                animate={phase === 'counters' ? { opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-              >
-                <span
-                  className="font-mono text-[40px] font-bold tabular-nums leading-none md:text-[48px]"
-                  style={{ color: stat.color }}
-                >
-                  {stat.decimals 
-                    ? stat.value.toFixed(stat.decimals)
-                    : Math.floor(stat.value).toLocaleString()
-                  }
-                </span>
-                <span className="mt-3 text-[11px] uppercase tracking-wider text-[#94a3b8] md:text-[13px]">
-                  {stat.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Closing Line */}
-        <motion.div 
-          className="mt-[70px]"
-          initial={{ opacity: 0 }}
-          animate={phase === 'counters' ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 1.0 }}
-        >
-          <p 
-            className="font-serif text-[16px] italic md:text-[18px]"
-            style={{ color: '#768a9e' }}
-          >
-            Every second counts.
-          </p>
-        </motion.div>
-      </div>
-    </motion.section>
-  );
-});
 
 // Icon mapping for ticker
 const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock,
+  Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, Satellite, Orbit,
 };
 
-// Isolated countdown component — ticks every second without re-rendering the parent
-function ShuffleCountdown({ interval }: { interval: number }) {
-  const [countdown, setCountdown] = useState(interval);
-  useEffect(() => {
-    setCountdown(interval);
-    const tick = setInterval(() => {
-      setCountdown(prev => (prev <= 1 ? interval : prev - 1));
-    }, 1000);
-    return () => clearInterval(tick);
-  }, [interval]);
-
-  return (
-    <div className="mt-8 flex flex-col items-center gap-2.5" suppressHydrationWarning>
-      {/* Progress bar — wider and taller for visibility */}
-      <div className="overflow-hidden rounded-full" style={{ width: 180, height: 4, background: 'rgba(255,255,255,0.08)' }}>
-        <div
-          className="h-full rounded-full"
-          style={{
-            width: `${(countdown / interval) * 100}%`,
-            background: 'linear-gradient(90deg, rgba(20,184,166,0.6), #14b8a6)',
-            transition: 'width 1s linear',
-            boxShadow: '0 0 8px rgba(20,184,166,0.4)',
-          }}
-          suppressHydrationWarning
-        />
-      </div>
-      <span className="font-mono text-[13px]" style={{ color: 'rgba(148,163,184,0.85)', letterSpacing: '0.04em' }} suppressHydrationWarning>
-        new signals in {countdown}s
-      </span>
-    </div>
-  );
-}
 
 export default function Home() {
   const impactRef = useRef<HTMLDivElement>(null);
@@ -1180,26 +645,19 @@ export default function Home() {
   };
 
   const selectedPairing = heroTickerPairings[heroTickerIndex];
-  const tickerData = [
-    { 
-      label: selectedPairing.left.label, 
-      baseValue: (selectedPairing.left as { isStatic?: boolean }).isStatic ? selectedPairing.left.dailyTotal : 0, 
-      perSecond: (selectedPairing.left as { isStatic?: boolean }).isStatic ? 0 : selectedPairing.left.dailyTotal / 86400, 
-      color: selectedPairing.left.color, 
-      icon: selectedPairing.left.icon, 
-      abbreviated: selectedPairing.left.dailyTotal >= 1000000,
-      isStatic: (selectedPairing.left as { isStatic?: boolean }).isStatic || false,
-    },
-    { 
-      label: selectedPairing.right.label, 
-      baseValue: (selectedPairing.right as { isStatic?: boolean }).isStatic ? selectedPairing.right.dailyTotal : 0, 
-      perSecond: (selectedPairing.right as { isStatic?: boolean }).isStatic ? 0 : selectedPairing.right.dailyTotal / 86400, 
-      color: selectedPairing.right.color, 
-      icon: selectedPairing.right.icon, 
-      abbreviated: selectedPairing.right.dailyTotal >= 1000000,
-      isStatic: (selectedPairing.right as { isStatic?: boolean }).isStatic || false,
-    },
-  ];
+  const buildTickerItem = (item: typeof selectedPairing.left) => {
+    const hasBase = item.baseValue !== undefined;
+    return {
+      label: item.label,
+      baseValue: item.isStatic ? item.dailyTotal : (hasBase ? item.baseValue! : 0),
+      perSecond: item.isStatic ? 0 : item.dailyTotal / 86400,
+      color: item.color,
+      icon: item.icon,
+      abbreviated: !hasBase && item.dailyTotal >= 1000000,
+      isStatic: item.isStatic || false,
+    };
+  };
+  const tickerData = [buildTickerItem(selectedPairing.left), buildTickerItem(selectedPairing.right)];
 
   // Scroll-based active section detection (reverse loop approach)
   useEffect(() => {
@@ -1333,64 +791,19 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden px-4 md:min-h-screen">
-        {/* Satellite dots - clustered above the globe */}
-        <div className="pointer-events-none absolute inset-0 z-[2] hidden md:block">
-          {SATELLITE_DOTS.map((dot, i) => (
-            <div
-              key={`satellite-${i}`}
-              className="absolute rounded-full"
-              style={{
-                left: `${dot.left}%`,
-                top: `${dot.top}%`,
-                width: `${dot.size}px`,
-                height: `${dot.size}px`,
-                background: '#ef4444',
-                boxShadow: '0 0 4px rgba(239,68,68,0.6)',
-              }}
-            />
-          ))}
-          {/* Satellite label - below the dot cluster */}
-          <div 
-            className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-center font-mono"
-            style={{
-              top: '26%',
-            }}
-          >
-            <div className="leading-snug mb-1">
-              <div 
-                className="text-[14px]"
-                style={{
-                  color: '#ef4444',
-                  textShadow: '0 0 8px rgba(239,68,68,0.4)',
-                }}
-              >
-                12,952 active satellites in orbit
-              </div>
-            </div>
-            <div className="leading-snug mb-1">
-              <div 
-                className="text-[12px]"
-                style={{
-                  color: '#f97316',
-                  textShadow: '0 0 8px rgba(249,115,22,0.4)',
-                }}
-              >
-                6,000 tons of space debris
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* 3D Globe - centered with absolute positioning */}
-        <div 
+        <div
 className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
   style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <EarthGlobe />
+          <GlobeRevealGate>
+            <EarthGlobe />
+          </GlobeRevealGate>
         </div>
 
 {/* Brand Lockup - Pinned to top */}
-        <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center pt-8 md:pt-12">
+        <RevealGate phase="content" style={{ position: 'absolute', left: 0, right: 0, top: 0, zIndex: 10 }}>
+        <div className="flex flex-col items-center pt-8 md:pt-12">
           <motion.div
             className="flex flex-col items-center"
             initial={{ opacity: 0 }}
@@ -1447,17 +860,23 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
             >
-              Real-Time Earth Signal
+              Real-Time Earth Signals
             </motion.span>
+            {/* Replay Intro link - tight below subtitle */}
+            <div className="mt-2">
+              <ReplayIntroLink />
+            </div>
           </motion.div>
         </div>
-        
+        </RevealGate>
+
         {/* Text Content */}
+        <RevealGate phase="content" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
         <motion.div
-          className="relative z-10 flex flex-col items-center text-center"
+          className="flex flex-col items-center text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           <h1
               className="mb-6 font-serif font-bold leading-tight text-white"
@@ -1471,16 +890,33 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           </p>
 
           <div className="flex flex-col items-center gap-4 pb-8 md:pb-0">
-              <div className="flex w-full justify-center px-4">
+              <div className="flex justify-center gap-3 px-4 flex-col sm:flex-row items-center">
+                <motion.button
+                  onClick={() => document.getElementById('vital-signs')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-medium text-white transition-all duration-300"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    letterSpacing: '0.02em',
+                  }}
+                  whileHover={{
+                    scale: 1.03,
+                    borderColor: 'rgba(255,255,255,0.4)',
+                    boxShadow: '0 0 20px rgba(255,255,255,0.08)',
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Explore the Signals
+                </motion.button>
                 <motion.button
                   onClick={() => document.getElementById('your-impact')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="cta-primary w-full max-w-[320px] rounded-full px-8 py-4 text-[16px] font-semibold text-white transition-all duration-300"
+                  className="cta-primary whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300"
                   style={{
                     background: 'linear-gradient(135deg, #0f766e, #14b8a6)',
                     border: '1px solid rgba(20,184,166,0.4)',
                     letterSpacing: '0.02em',
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.03,
                     background: 'linear-gradient(135deg, #14b8a6, #06b6d4)',
                     boxShadow: '0 0 35px rgba(20,184,166,0.4), 0 4px 15px rgba(0,0,0,0.3)',
@@ -1490,20 +926,17 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   Your Lifetime Impact
                 </motion.button>
               </div>
-              
-              {/* Replay Intro link - below hero tagline */}
-              <div className="w-full text-center" style={{ position: 'relative', zIndex: 10 }}>
-                <ReplayIntroLink />
-              </div>
             </div>
           </motion.div>
+        </RevealGate>
 
         {/* Ticker Bar - Focused 2-card layout */}
+        <RevealGate phase="content" style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <motion.div
-          className="absolute bottom-0 left-0 right-0 hidden px-4 pb-6 pt-4 md:block"
+          className="hidden px-4 pb-6 pt-4 md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         >
           {/* Desktop layout */}
           <div className="mx-auto hidden max-w-2xl flex-col items-center md:flex">
@@ -1539,6 +972,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           
 
         </motion.div>
+        </RevealGate>
       </section>
 
       {/* Suspense boundary for Vital Signs Section */}

@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import { FloatingDonateButton } from '@/components/floating-donate-button'
+import { DustMotes } from '@/components/dust-motes'
 import { FooterSection } from '@/components/footer-section'
 import { SITE_URL, OG_IMAGE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_TITLE } from '@/lib/constants'
 import './globals.css'
@@ -107,6 +108,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${cormorantGaramond.variable} ${spaceMono.variable} font-sans antialiased`}>
+        <DustMotes />
         {children}
         <FooterSection />
         <FloatingDonateButton />
