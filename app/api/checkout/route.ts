@@ -75,8 +75,8 @@ export async function POST(request: Request) {
         metadata: { type: "donation", frequency: "monthly" },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const pi = invoice.payment_intent as Stripe.PaymentIntent;
+      const invoice = subscription.latest_invoice as Stripe.Invoice & { payment_intent: Stripe.PaymentIntent };
+      const pi = invoice.payment_intent;
 
       return NextResponse.json({ clientSecret: pi.client_secret });
     }
@@ -101,8 +101,8 @@ export async function POST(request: Request) {
         metadata: { type: "terra", plan },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const pi = invoice.payment_intent as Stripe.PaymentIntent;
+      const invoice = subscription.latest_invoice as Stripe.Invoice & { payment_intent: Stripe.PaymentIntent };
+      const pi = invoice.payment_intent;
 
       return NextResponse.json({ clientSecret: pi.client_secret });
     }
