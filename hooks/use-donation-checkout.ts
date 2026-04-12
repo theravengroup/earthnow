@@ -44,6 +44,13 @@ export function useDonationCheckout() {
           throw new Error(data.error || "Failed to start checkout");
         }
 
+        // Monthly donations redirect to Stripe Checkout
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        // One-time donations use embedded payment form
         setState({
           view: "checkout",
           clientSecret: data.clientSecret,
@@ -77,6 +84,12 @@ export function useDonationCheckout() {
 
         if (!res.ok) {
           throw new Error(data.error || "Failed to start checkout");
+        }
+
+        // Terra always redirects to Stripe Checkout
+        if (data.url) {
+          window.location.href = data.url;
+          return;
         }
 
         setState({
