@@ -41,24 +41,29 @@ const liveFeatures = [
   { title: "75+ Live Counters", desc: "Real-time data across population, climate, money, technology, and civilization." },
   { title: "Cinematic Intro", desc: "A different opening every visit. 40 unique stats, letter-by-letter animation." },
   { title: "5 System Deep-Dives", desc: "People, Energy, Planet, Food, Technology — each with tabbed storytelling." },
-  { title: "Lifetime Impact Calculator", desc: "Enter your birth year. See what the planet spent during your lifetime." },
+  { title: "Lifetime Impact Calculator", desc: "Enter your birth year. See what the planet spent — including poop produced." },
+  { title: "60 Civilization Signals", desc: "A living bento grid of humanity's vital signs, shuffling with animated transitions." },
   { title: "Contrast Moments", desc: "Juxtapositions that make you stop scrolling. Randomized every visit." },
   { title: "Daily Planet Briefing", desc: "earthnow.app/today — a living snapshot of the planet, updated every second." },
   { title: "Historical Time Machine", desc: "Scrub from 10,000 BCE to today. Watch civilization accelerate." },
   { title: "Shareable Moment Cards", desc: "Generate a cinematic snapshot of your visit. Copy, download, or share." },
-  { title: "Historical Timeline", desc: "How humanity learned to see the planet. From Eratosthenes to satellites." },
-  { title: "Stripe-Powered Support", desc: "One-time or monthly donations. Independent. Ad-free. No data sold." },
+  { title: "Historical Timeline", desc: "295 milestones across 12,000 years. Filterable. Shareable. Map-linked." },
+  { title: "Dynamic OG Images", desc: "Every page generates its own social preview card. Beautiful when shared." },
+  { title: "Styled Stripe Checkout", desc: "Dark-themed, on-site payments. One-time or monthly. Independent and ad-free." },
+  { title: "Mobile-First Design", desc: "Optimized for phones, tablets, and desktops. Responsive grids, touch-friendly." },
 ];
 
 // Building now data
 const buildingNow = [
   { title: "Embeddable Live Widget", desc: "A beautiful live counter that anyone can put on their website. Teachers, bloggers, newsrooms." },
-  { title: "Mobile Optimization", desc: "Making every section feel native on phones and tablets." },
   { title: "NASA Live Data Integration", desc: "Real satellite feeds. Real atmospheric readings. Real ocean temperatures." },
+  { title: "Particle Effect Visualizations", desc: "Data-driven particle systems that make the numbers feel alive. Births, emissions, energy — rendered as flowing particles." },
 ];
 
 // On the horizon data
 const onTheHorizon = [
+  { title: "AI-Powered Insights", desc: "Daily AI-generated planet summaries. Ask questions about the data. Trend analysis in plain language." },
+  { title: "Terra TV Apps", desc: "AppleTV and Android TV apps. Turn any screen into a living planet dashboard." },
   { title: "Guided Scroll Mode", desc: "Auto-scroll the homepage at documentary pace. Ambient music. Cinematic." },
   { title: "Region-Specific Views", desc: "Zoom into countries. Compare local data to global trends." },
   { title: "Educational Modules", desc: "Structured learning paths for classrooms and curious minds." },
