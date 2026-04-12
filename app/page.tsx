@@ -16,23 +16,23 @@ import { CinematicIntroWrapper, ReplayIntroLink } from "@/components/cinematic-i
 // Dynamically import heavy below-fold components to reduce initial JS bundle
 const SystemsExplorer = dynamic(
   () => import("@/components/systems-explorer").then((m) => ({ default: m.SystemsExplorer })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="min-h-[400px]" /> }
 );
 const ExpandedImpactSections = dynamic(
   () => import("@/components/expanded-impact-sections").then((m) => ({ default: m.ExpandedImpactSections })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="min-h-[300px]" /> }
 );
 const DonateSection = dynamic(
   () => import("@/components/donate-section").then((m) => ({ default: m.DonateSection })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="min-h-[400px]" /> }
 );
 const NowWhatSection = dynamic(
   () => import("@/components/now-what-section").then((m) => ({ default: m.NowWhatSection })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="min-h-[200px]" /> }
 );
 const ImpactShareCarousel = dynamic(
   () => import("@/components/impact-share-carousel").then((m) => ({ default: m.ImpactShareCarousel })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="min-h-[300px]" /> }
 );
 import { ACTION_POOL } from "./action-data";
 import { SYSTEMS_DEEP_DIVE } from "./systems-data";
@@ -69,13 +69,12 @@ import { drawRoundRect, formatLargeNumber, formatTime, formatTimeWithUnit, PER_S
 // Dynamically import the globe component with SSR disabled
 const EarthGlobe = dynamic(
   () => import("@/components/earth-globe").catch(() => {
-    // Return a fallback component if import fails
-    return { default: () => <div className="h-[650px] w-[650px] rounded-full bg-[#0d1f2d] mx-auto" /> };
+    return { default: () => <div className="aspect-square w-[400px] rounded-full bg-[#0d1f2d] mx-auto md:w-[650px]" /> };
   }),
   {
     ssr: false,
     loading: () => (
-      <div className="h-[650px] w-[650px] rounded-full bg-[#0d1f2d] mx-auto" />
+      <div className="aspect-square w-[400px] rounded-full bg-[#0d1f2d] mx-auto md:w-[650px]" />
     ),
   }
 );

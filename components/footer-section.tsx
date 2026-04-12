@@ -685,12 +685,11 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                     <AnimatePresence>
                       {formData.intent === "partnership" && (
                         <motion.p
-                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                          animate={{ opacity: 1, height: "auto", marginTop: -8 }}
-                          exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -4 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="text-[12px] italic text-[#768a9e]"
-                          style={{ marginBottom: -4 }}
+                          className="-mt-2 mb-[-4px] text-[12px] italic text-[#768a9e]"
                         >
                           Tell us what you&apos;re building or proposing.
                         </motion.p>
