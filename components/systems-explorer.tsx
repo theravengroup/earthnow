@@ -779,11 +779,11 @@ padding: 'clamp(20px, 4vw, 40px)',
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-[55%_22%_23%]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[55%_22%_23%]">
           {/* Column 1: Tabbed Storytelling */}
           <div className="min-w-0">
             {/* Tab buttons */}
-            <div className="mb-6 flex gap-6 overflow-x-auto" role="tablist" aria-label={`${systemsConfig.find(s => s.id === systemId)?.title} system tabs`}>
+            <div className="mb-6 flex gap-3 sm:gap-6" role="tablist" aria-label={`${systemsConfig.find(s => s.id === systemId)?.title} system tabs`}>
               {systemData.tabs.map((tab, i) => (
                 <button
                   key={tab.label}
@@ -794,10 +794,8 @@ padding: 'clamp(20px, 4vw, 40px)',
                   onClick={() => setActiveTab(i)}
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontSize: 14,
                     fontWeight: 500,
                     textTransform: "uppercase",
-                    letterSpacing: "0.06em",
                     color: activeTab === i ? "#ffffff" : "rgba(255,255,255,0.5)",
                     background: "none",
                     border: "none",
@@ -805,9 +803,8 @@ padding: 'clamp(20px, 4vw, 40px)',
                     paddingBottom: 8,
                     cursor: "pointer",
                     transition: "color 200ms ease, border-color 200ms ease",
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
                   }}
+                  className="text-[11px] tracking-[0.04em] sm:text-[14px] sm:tracking-[0.06em]"
                 >
                   {tab.label}
                 </button>
@@ -875,7 +872,7 @@ padding: 'clamp(20px, 4vw, 40px)',
           </div>
 
           {/* Column 2: Contrast + Action */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             {/* Contrast block */}
             <div className="mb-5">
               <p
@@ -956,7 +953,7 @@ padding: 'clamp(20px, 4vw, 40px)',
           </div>
 
           {/* Column 3: Connections */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <h4
               style={{
                 fontFamily: "var(--font-sans)",
