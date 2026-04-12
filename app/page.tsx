@@ -2127,69 +2127,92 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
 
           {/* Result Cards Grid */}
           <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <ImpactCard
-              value={calculatedImpact?.waterUsed ?? 0}
-              label="Gallons of Water Used"
-              color="#06b6d4"
-              abbreviated={true}
-              comparison={calculatedImpact ? `That's about ${((calculatedImpact.waterUsed) / 660000).toFixed(1)} Olympic swimming pools` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.co2Produced ?? 0}
-              label="Tonnes of CO₂ Produced"
-              color="#eab308"
-              abbreviated={false}
-              comparison={calculatedImpact ? `Equal to driving around the Earth ${((calculatedImpact.co2Produced * 1000 / 404) * 1000 / 24901).toFixed(1)} times` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.treesToOffset ?? 0}
-              label="Trees to Offset Your Carbon"
-              color="#22c55e"
-              abbreviated={false}
-              comparison={calculatedImpact ? "A small forest just for you" : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.mealsConsumed ?? 0}
-              label="Meals Consumed"
-              color="#f43f5e"
-              abbreviated={true}
-              comparison={calculatedImpact ? "That's 3 meals every single day" : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.poopProduced ?? 0}
-              label="Pounds of Poop Produced"
-              color="#a3744e"
-              abbreviated={true}
-              comparison={calculatedImpact ? `That's about ${(calculatedImpact.poopProduced / 2000).toFixed(1)} tons` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.energyUsed ?? 0}
-              label="kWh of Energy Used"
-              color="#f59e0b"
-              abbreviated={true}
-              comparison={calculatedImpact ? `Enough to power a home for ${(calculatedImpact.energyUsed / 10500).toFixed(1)} years` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.milesTraveled ?? 0}
-              label="Miles Traveled"
-              color="#8b5cf6"
-              abbreviated={true}
-              comparison={calculatedImpact ? `That's ${(calculatedImpact.milesTraveled / 238900).toFixed(1)} trips to the Moon` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.wasteProduced ?? 0}
-              label="Pounds of Waste Generated"
-              color="#ef4444"
-              abbreviated={true}
-              comparison={calculatedImpact ? `That's ${(calculatedImpact.wasteProduced / 2000).toFixed(1)} tons of trash` : undefined}
-            />
-            <ImpactCard
-              value={calculatedImpact?.plasticUsed ?? 0}
-              label="Pounds of Plastic Used"
-              color="#ec4899"
-              abbreviated={true}
-              comparison={calculatedImpact ? "None of it has decomposed yet" : undefined}
-            />
+            {(() => {
+              const cards = [
+                <ImpactCard
+                  key="water"
+                  value={calculatedImpact?.waterUsed ?? 0}
+                  label="Gallons of Water Used"
+                  color="#06b6d4"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? `That's about ${((calculatedImpact.waterUsed) / 660000).toFixed(1)} Olympic swimming pools` : undefined}
+                />,
+                <ImpactCard
+                  key="co2"
+                  value={calculatedImpact?.co2Produced ?? 0}
+                  label="Tonnes of CO₂ Produced"
+                  color="#eab308"
+                  abbreviated={false}
+                  comparison={calculatedImpact ? `Equal to driving around the Earth ${((calculatedImpact.co2Produced * 1000 / 404) * 1000 / 24901).toFixed(1)} times` : undefined}
+                />,
+                <ImpactCard
+                  key="trees"
+                  value={calculatedImpact?.treesToOffset ?? 0}
+                  label="Trees to Offset Your Carbon"
+                  color="#22c55e"
+                  abbreviated={false}
+                  comparison={calculatedImpact ? "A small forest just for you" : undefined}
+                />,
+                <ImpactCard
+                  key="meals"
+                  value={calculatedImpact?.mealsConsumed ?? 0}
+                  label="Meals Consumed"
+                  color="#f43f5e"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? "That's 3 meals every single day" : undefined}
+                />,
+                <ImpactCard
+                  key="poop"
+                  value={calculatedImpact?.poopProduced ?? 0}
+                  label="Pounds of Poop Produced"
+                  color="#a3744e"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? `That's about ${(calculatedImpact.poopProduced / 2000).toFixed(1)} tons` : undefined}
+                />,
+                <ImpactCard
+                  key="energy"
+                  value={calculatedImpact?.energyUsed ?? 0}
+                  label="kWh of Energy Used"
+                  color="#f59e0b"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? `Enough to power a home for ${(calculatedImpact.energyUsed / 10500).toFixed(1)} years` : undefined}
+                />,
+                <ImpactCard
+                  key="miles"
+                  value={calculatedImpact?.milesTraveled ?? 0}
+                  label="Miles Traveled"
+                  color="#8b5cf6"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? `That's ${(calculatedImpact.milesTraveled / 238900).toFixed(1)} trips to the Moon` : undefined}
+                />,
+                <ImpactCard
+                  key="waste"
+                  value={calculatedImpact?.wasteProduced ?? 0}
+                  label="Pounds of Waste Generated"
+                  color="#ef4444"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? `That's ${(calculatedImpact.wasteProduced / 2000).toFixed(1)} tons of trash` : undefined}
+                />,
+                <ImpactCard
+                  key="plastic"
+                  value={calculatedImpact?.plasticUsed ?? 0}
+                  label="Pounds of Plastic Used"
+                  color="#ec4899"
+                  abbreviated={true}
+                  comparison={calculatedImpact ? "None of it has decomposed yet" : undefined}
+                />,
+              ];
+              // Shuffle so the orphan tile varies per visit
+              for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+              }
+              return cards.map((card, idx) => (
+                <div key={card.key} className={idx === cards.length - 1 ? "sm:col-span-2 lg:col-span-1" : undefined}>
+                  {card}
+                </div>
+              ));
+            })()}
           </div>
 
           {/* Hidden canvas for impact card generation */}
