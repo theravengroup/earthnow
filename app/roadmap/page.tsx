@@ -44,20 +44,28 @@ const liveFeatures = [
   { title: "Lifetime Impact Calculator", desc: "Enter your birth year. See what the planet spent — including poop produced." },
   { title: "60 Civilization Signals", desc: "A living bento grid of humanity's vital signs, shuffling with animated transitions." },
   { title: "Contrast Moments", desc: "Juxtapositions that make you stop scrolling. Randomized every visit." },
+  { title: "\"While You Scrolled\" Interstitials", desc: "Live-ticking counters between sections. Balanced mix of hopeful, alarming, and fascinating." },
+  { title: "\"While You Were Here\" Tracker", desc: "Tracks your time on the page and shows what happened on Earth while you read." },
   { title: "Daily Planet Briefing", desc: "earthnow.app/today — a living snapshot of the planet, updated every second." },
   { title: "Historical Time Machine", desc: "Scrub from 10,000 BCE to today. Watch civilization accelerate." },
-  { title: "Shareable Moment Cards", desc: "Generate a cinematic snapshot of your visit. Copy, download, or share." },
   { title: "Historical Timeline", desc: "295 milestones across 12,000 years. Filterable. Shareable. Map-linked." },
+  { title: "Embeddable Live Widget", desc: "A web component anyone can embed. 22 stats, dark/light themes, configurable layout." },
+  { title: "Shareable Moment Cards", desc: "Generate a cinematic snapshot of your visit. Copy, download, or share." },
   { title: "Dynamic OG Images", desc: "Every page generates its own social preview card. Beautiful when shared." },
-  { title: "Styled Stripe Checkout", desc: "Dark-themed, on-site payments. One-time or monthly. Independent and ad-free." },
+  { title: "Integrated Stripe Payments", desc: "Native payment forms that feel like the site. One-time or monthly. No redirects." },
+  { title: "Terra Product Page", desc: "A dedicated page for the Terra ambient display with live data ticker and ordering." },
+  { title: "Ambient Audio Engine", desc: "Procedural ambient soundscape that plays on request. Sets the mood without interrupting." },
+  { title: "Cinematic Loading Sequence", desc: "Loading bar, globe reveal, navbar slide, audio prompt, content fade. A different arrival every time." },
+  { title: "Scroll-Triggered Card Illumination", desc: "Cards start dormant and power on with a staggered wave as you scroll. HUD-style corner brackets." },
+  { title: "Atmosphere & Dust Motes", desc: "Fresnel atmospheric glow on the globe. 18 floating dust motes drifting at different speeds for parallax depth." },
+  { title: "Particle Burst Effects", desc: "CSS-animated particles burst outward when Civilization Signals shuffle. Cinematic transitions." },
   { title: "Mobile-First Design", desc: "Optimized for phones, tablets, and desktops. Responsive grids, touch-friendly." },
 ];
 
 // Building now data
 const buildingNow = [
-  { title: "Embeddable Live Widget", desc: "A beautiful live counter that anyone can put on their website. Teachers, bloggers, newsrooms." },
-  { title: "NASA Live Data Integration", desc: "Real satellite feeds. Real atmospheric readings. Real ocean temperatures." },
-  { title: "Particle Effect Visualizations", desc: "Data-driven particle systems that make the numbers feel alive. Births, emissions, energy — rendered as flowing particles." },
+  { title: "Terra Hardware", desc: "A physical ambient display for lobbies, offices, and classrooms. Always-on planetary awareness. Pre-orders open." },
+  { title: "NASA & NOAA Live Feeds", desc: "Real satellite data. Real atmospheric readings. Real ocean temperatures. Verified by the agencies that measure the planet." },
 ];
 
 // On the horizon data
@@ -69,7 +77,6 @@ const onTheHorizon = [
   { title: "Educational Modules", desc: "Structured learning paths for classrooms and curious minds." },
   { title: "Scenario Simulators", desc: "What if we cut emissions by 50%? Model different futures." },
   { title: "Personalized Dashboards", desc: "Save your preferences. Track the metrics that matter to you." },
-  { title: "Ambient Display Mode", desc: "A 16:9 display product for lobbies, schools, and hospitals." },
   { title: "Classroom & Nonprofit Tools", desc: "Resources designed for educators and mission-driven organizations." },
 ];
 
@@ -96,7 +103,7 @@ export default function RoadmapPage() {
     <>
       {/* Navbar OUTSIDE overflow-hidden container for proper fixed positioning */}
       <UniversalNavbar />
-      
+
       <div className="noise-overlay relative min-h-screen overflow-hidden bg-[#0a0e17]" style={{ paddingTop: '64px' }}>
         {/* Star field background - decorative only, no interaction */}
         <div className="star-field pointer-events-none" style={{ zIndex: 0 }}>
@@ -117,7 +124,7 @@ export default function RoadmapPage() {
         </div>
 
         {/* Section 1 — Hero */}
-        <section 
+        <section
           className="relative flex flex-col items-center justify-center px-6 text-center"
           style={{ minHeight: "40vh", paddingTop: "12vh" }}
         >
@@ -126,17 +133,17 @@ export default function RoadmapPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 
+            <h1
               className="font-serif font-semibold text-white"
               style={{ fontSize: "clamp(32px, 3.5vw, 56px)" }}
             >
               The Roadmap
             </h1>
-            <p 
+            <p
               className="mx-auto mt-4 max-w-2xl font-serif italic"
-              style={{ 
-                fontSize: "clamp(14px, 1.3vw, 20px)", 
-                color: "rgba(255,255,255,0.6)" 
+              style={{
+                fontSize: "clamp(14px, 1.3vw, 20px)",
+                color: "rgba(255,255,255,0.6)"
               }}
             >
               EarthNow is being built in public. Here&apos;s where we are and where we&apos;re going.
@@ -148,7 +155,7 @@ export default function RoadmapPage() {
         <Suspense fallback={<div className="min-h-[400px] bg-[#0a0e17]" />}>
           <section className="relative px-6 py-16 md:px-12">
             <div className="mx-auto max-w-5xl">
-              <motion.div 
+              <motion.div
                 className="mb-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -177,15 +184,15 @@ export default function RoadmapPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
                   >
-                    <Check 
-                      className="mb-3 h-5 w-5" 
-                      style={{ color: "#2dd4bf", opacity: 0.8 }} 
+                    <Check
+                      className="mb-3 h-5 w-5"
+                      style={{ color: "#2dd4bf", opacity: 0.8 }}
                     />
                     <h3 className="mb-2 font-sans text-[16px] font-semibold text-white">
                       {item.title}
                     </h3>
-                    <p 
-                      className="font-sans text-[13px]" 
+                    <p
+                      className="font-sans text-[13px]"
                       style={{ color: "rgba(255,255,255,0.5)" }}
                     >
                       {item.desc}
@@ -201,7 +208,7 @@ export default function RoadmapPage() {
         <Suspense fallback={<div className="min-h-[200px] bg-[#0a0e17]" />}>
           <section className="relative px-6 py-16 md:px-12">
             <div className="mx-auto max-w-5xl">
-              <motion.div 
+              <motion.div
                 className="mb-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -216,7 +223,7 @@ export default function RoadmapPage() {
                 </p>
               </motion.div>
 
-              <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-3">
+              <div className="mx-auto grid max-w-2xl gap-5 md:grid-cols-2">
                 {buildingNow.map((item, index) => (
                   <motion.div
                     key={index}
@@ -236,8 +243,8 @@ export default function RoadmapPage() {
                     <h3 className="mb-2 font-sans text-[16px] font-semibold text-white">
                       {item.title}
                     </h3>
-                    <p 
-                      className="font-sans text-[13px]" 
+                    <p
+                      className="font-sans text-[13px]"
                       style={{ color: "rgba(255,255,255,0.5)" }}
                     >
                       {item.desc}
@@ -253,7 +260,7 @@ export default function RoadmapPage() {
         <Suspense fallback={<div className="min-h-[300px] bg-[#0a0e17]" />}>
           <section className="relative px-6 py-16 md:px-12">
             <div className="mx-auto max-w-3xl">
-              <motion.div 
+              <motion.div
                 className="mb-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -278,8 +285,8 @@ export default function RoadmapPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.06 }}
                   >
-                    <Circle 
-                      className="mt-1 h-4 w-4 shrink-0" 
+                    <Circle
+                      className="mt-1 h-4 w-4 shrink-0"
                       style={{ color: "rgba(255,255,255,0.2)" }}
                       strokeWidth={1.5}
                     />
@@ -287,8 +294,8 @@ export default function RoadmapPage() {
                       <h3 className="font-sans text-[16px] font-semibold text-white">
                         {item.title}
                       </h3>
-                      <p 
-                        className="mt-1 font-sans text-[13px]" 
+                      <p
+                        className="mt-1 font-sans text-[13px]"
                         style={{ color: "rgba(255,255,255,0.5)" }}
                       >
                         {item.desc}
@@ -307,9 +314,9 @@ export default function RoadmapPage() {
             <div className="mx-auto max-w-3xl text-center">
               <motion.p
                 className="font-serif italic"
-                style={{ 
-                  fontSize: "clamp(18px, 1.6vw, 26px)", 
-                  color: "rgba(255,255,255,0.8)" 
+                style={{
+                  fontSize: "clamp(18px, 1.6vw, 26px)",
+                  color: "rgba(255,255,255,0.8)"
                 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -319,7 +326,7 @@ export default function RoadmapPage() {
                 EarthNow is built by one person. No team. No VC. No ads. No data sales.
               </motion.p>
 
-              <motion.div 
+              <motion.div
                 className="mt-10 flex flex-col gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

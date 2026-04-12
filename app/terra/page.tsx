@@ -501,13 +501,7 @@ export default function TerraPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px 0px -200px 0px" }}
               transition={{ duration: 0.7, ease: "easeOut" }}
-              whileHover={{
-                y: -6,
-                scale: 1.01,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(20,184,166,0.15)",
-                borderColor: "rgba(20,184,166,0.5)",
-              }}
-              className="rounded-2xl p-8 transition-all duration-300"
+              className="terra-benefit-card rounded-2xl p-8"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 backdropFilter: "blur(12px)",
@@ -528,13 +522,7 @@ export default function TerraPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px 0px -200px 0px" }}
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-              whileHover={{
-                y: -6,
-                scale: 1.01,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(20,184,166,0.15)",
-                borderColor: "rgba(20,184,166,0.5)",
-              }}
-              className="rounded-2xl p-8 transition-all duration-300"
+              className="terra-benefit-card rounded-2xl p-8"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 backdropFilter: "blur(12px)",
@@ -555,13 +543,7 @@ export default function TerraPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px 0px -200px 0px" }}
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
-              whileHover={{
-                y: -6,
-                scale: 1.01,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(20,184,166,0.15)",
-                borderColor: "rgba(20,184,166,0.5)",
-              }}
-              className="rounded-2xl p-8 transition-all duration-300"
+              className="terra-benefit-card rounded-2xl p-8"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 backdropFilter: "blur(12px)",
@@ -1147,6 +1129,7 @@ export default function TerraPage() {
                     window.location.href = "/terra/thank-you";
                   }}
                   onBack={handleTerraClose}
+                  returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/terra/thank-you`}
                 />
               </div>
             </motion.div>
