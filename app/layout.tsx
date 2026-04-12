@@ -28,7 +28,6 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: 'EarthNow — The Planet. Right Now.',
   description: 'Real-time data on Earth\'s vital signs. See the patterns. Measure the impact. Join the signal.',
-  generator: 'v0.app',
   metadataBase: new URL('https://earthnow.app'),
   openGraph: {
     title: 'EarthNow — The Planet. Right Now.',
@@ -65,6 +64,31 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: "EarthNow",
+              url: "https://earthnow.app",
+              description:
+                "Real-time data on Earth's vital signs. See the patterns. Measure the impact. Join the signal.",
+              applicationCategory: "EducationalApplication",
+              operatingSystem: "Web",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              creator: {
+                "@type": "Organization",
+                name: "EarthNow",
+                url: "https://earthnow.app",
+              },
+            }),
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
