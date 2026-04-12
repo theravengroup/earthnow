@@ -79,8 +79,8 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
           <span style={{
             fontFamily: 'var(--font-serif)',
             fontStyle: 'italic',
-            fontSize: 15,
-            color: 'rgba(255,255,255,0.5)',
+            fontSize: 18,
+            color: 'rgba(255,255,255,0.7)',
             whiteSpace: 'nowrap',
           }}>
             happening at the same time
@@ -112,8 +112,8 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
             <p style={{
               fontFamily: 'var(--font-serif)',
               fontStyle: 'italic',
-              fontSize: 'clamp(15px, 2.5vw, 18px)',
-              color: 'rgba(255,255,255,0.5)',
+              fontSize: 'clamp(16px, 2.5vw, 19px)',
+              color: 'rgba(255,255,255,0.7)',
               margin: 0,
               textAlign: 'center',
             }}>

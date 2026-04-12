@@ -1527,7 +1527,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                 <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
-                <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', padding: '12px 0' }}>happening at the same time</span>
+                <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 18, color: 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap', padding: '12px 0' }}>happening at the same time</span>
                 <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
               </div>
             </div>

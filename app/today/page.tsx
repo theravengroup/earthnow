@@ -978,8 +978,8 @@ export default function TodayPage() {
                 <span style={{
                   fontFamily: 'var(--font-serif)',
                   fontStyle: 'italic',
-                  fontSize: 15,
-                  color: 'rgba(255,255,255,0.5)',
+                  fontSize: 18,
+                  color: 'rgba(255,255,255,0.7)',
                   whiteSpace: 'nowrap',
                   padding: '12px 0',
                 }}>
