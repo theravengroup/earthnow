@@ -779,7 +779,7 @@ padding: 'clamp(20px, 4vw, 40px)',
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[55%_22%_23%]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[11fr_4fr_5fr]">
           {/* Column 1: Tabbed Storytelling */}
           <div className="min-w-0">
             {/* Tab buttons */}
