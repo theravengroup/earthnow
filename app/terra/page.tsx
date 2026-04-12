@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { useDonationCheckout } from "@/hooks/use-donation-checkout";
 
@@ -27,27 +27,71 @@ function GradientDivider() {
 }
 
 // Live Data Ticker Component
-function LiveDataTicker() {
-  const tickerContent = [
-    "CO\u2082 TODAY \u00b7 60.94M TONNES",
-    "\u00b7",
-    "BIRTHS TODAY \u00b7 165.4K",
-    "\u00b7",
-    "FOREST LOST \u00b7 34.8K ACRES",
-    "\u00b7",
-    "OCEAN TEMP \u00b7 16.7\u00b0C",
-    "\u00b7",
-    "GLOBAL POPULATION \u00b7 8.1B",
-    "\u00b7",
-    "ENERGY TODAY \u00b7 687.78M MWH",
-    "\u00b7",
-    "PLASTIC TODAY \u00b7 478.8K TONNES",
-    "\u00b7",
-    "HUNGER DEATHS \u00b7 10.9K",
-    "\u00b7",
-  ];
+type TickerTone = "positive" | "negative" | "neutral";
+interface TickerItem { label: string; tone: TickerTone }
 
-  const duplicatedContent = [...tickerContent, ...tickerContent, ...tickerContent, ...tickerContent];
+const TICKER_POSITIVE: TickerItem[] = [
+  { label: "BIRTHS TODAY · 385K", tone: "positive" },
+  { label: "VACCINES TODAY · 40M", tone: "positive" },
+  { label: "TREES PLANTED TODAY · 501K", tone: "positive" },
+  { label: "RENEWABLE ENERGY · 90.5M MWH", tone: "positive" },
+  { label: "EDUCATION SPENDING · $18B TODAY", tone: "positive" },
+  { label: "CLEAN WATER DELIVERED · 12T LITERS", tone: "positive" },
+];
+
+const TICKER_NEGATIVE: TickerItem[] = [
+  { label: "CO₂ TODAY · 115M TONNES", tone: "negative" },
+  { label: "FOREST LOST · 49.4K ACRES", tone: "negative" },
+  { label: "PLASTIC IN OCEAN · 30.1K TONNES", tone: "negative" },
+  { label: "HUNGER DEATHS · 25K TODAY", tone: "negative" },
+  { label: "FOOD WASTED · 3.3M TONNES", tone: "negative" },
+  { label: "SOIL LOST · 205M TONNES", tone: "negative" },
+];
+
+const TICKER_NEUTRAL: TickerItem[] = [
+  { label: "GLOBAL POPULATION · 8.1B", tone: "neutral" },
+  { label: "OCEAN TEMP · 16.7°C", tone: "neutral" },
+  { label: "GOOGLE SEARCHES · 8.5B TODAY", tone: "neutral" },
+  { label: "EMAILS SENT · 350B TODAY", tone: "neutral" },
+  { label: "PHOTOS TAKEN · 4.7B TODAY", tone: "neutral" },
+  { label: "ENERGY TODAY · 1.58B MWH", tone: "neutral" },
+];
+
+const TONE_COLORS: Record<TickerTone, string> = {
+  positive: "#14b8a6",
+  negative: "#ef4444",
+  neutral: "#94a3b8",
+};
+
+function shuffleTicker<T>(arr: T[]): T[] {
+  const s = [...arr];
+  for (let i = s.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [s[i], s[j]] = [s[j], s[i]];
+  }
+  return s;
+}
+
+function LiveDataTicker() {
+  // Select a balanced mix: 3 positive, 2 negative, 3 neutral = 8 items
+  // Randomized on each page load so repeat visitors see different signals
+  const tickerItems = useMemo(() => {
+    const pos = shuffleTicker(TICKER_POSITIVE).slice(0, 3);
+    const neg = shuffleTicker(TICKER_NEGATIVE).slice(0, 2);
+    const neu = shuffleTicker(TICKER_NEUTRAL).slice(0, 3);
+    return shuffleTicker([...pos, ...neg, ...neu]);
+  }, []);
+
+  // Build display list with dot separators
+  const displayItems: { text: string; color: string }[] = [];
+  tickerItems.forEach((item, i) => {
+    displayItems.push({ text: item.label, color: TONE_COLORS[item.tone] });
+    if (i < tickerItems.length - 1) {
+      displayItems.push({ text: "·", color: "#4a5568" });
+    }
+  });
+
+  const duplicated = [...displayItems, ...displayItems, ...displayItems, ...displayItems];
 
   return (
     <div
@@ -65,12 +109,13 @@ function LiveDataTicker() {
           animation: "ticker-scroll 120s linear infinite",
         }}
       >
-        {duplicatedContent.map((item, index) => (
+        {duplicated.map((item, index) => (
           <span
             key={index}
-            className="px-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[#14b8a6]"
+            className="shrink-0 px-4 font-mono text-[11px] uppercase tracking-[0.15em]"
+            style={{ color: item.color }}
           >
-            {item}
+            {item.text}
           </span>
         ))}
       </div>

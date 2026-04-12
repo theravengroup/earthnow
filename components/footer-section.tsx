@@ -543,28 +543,32 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
               background: "linear-gradient(180deg, #0d1220 0%, #0a0e17 100%)",
               border: "1px solid rgba(255,255,255,0.08)",
               boxShadow: "0 0 60px rgba(0,0,0,0.5), 0 0 30px rgba(20,184,166,0.08)",
-              overflow: "visible",
+              maxHeight: "calc(100vh - 32px)",
+              overflowY: "auto",
             }}
           >
-            {/* Close button - positioned inside modal, top-left */}
-            <button
-              onClick={onClose}
-              className="absolute z-20 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
-              style={{
-                top: "16px",
-                left: "16px",
-                width: "44px",
-                height: "44px",
-                minWidth: "44px",
-                minHeight: "44px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                cursor: "pointer",
-              }}
-              aria-label="Close modal"
-            >
-              <X className="h-5 w-5 text-[#94a3b8]" />
-            </button>
+            {/* Close button - sticky so it stays visible when scrolling */}
+            <div className="sticky top-0 z-20" style={{ height: 0 }}>
+              <button
+                onClick={onClose}
+                className="flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                style={{
+                  position: "absolute",
+                  top: "16px",
+                  left: "16px",
+                  width: "44px",
+                  height: "44px",
+                  minWidth: "44px",
+                  minHeight: "44px",
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  cursor: "pointer",
+                }}
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5 text-[#94a3b8]" />
+              </button>
+            </div>
 
             {/* Content - extra top padding to avoid close button collision */}
             <div style={{ padding: "52px 20px 24px 20px" }}>
@@ -974,28 +978,34 @@ export function FooterSection() {
               Project
             </span>
             <div className="mt-3 flex flex-col items-start gap-2">
-              <Link 
-                href="/roadmap" 
+              <Link
+                href="/terra"
                 className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
               >
-                Roadmap
+                Terra
               </Link>
-              <Link 
-                href="/widget" 
+              <Link
+                href="/today"
+                className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
+              >
+                Timeline
+              </Link>
+              <Link
+                href="/widget"
                 className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
               >
                 Widget
               </Link>
-              <InteractiveLink onClick={() => setActiveModal("about")} className="text-[13px]">
-                About
-              </InteractiveLink>
-              <InteractiveLink onClick={() => setActiveModal("privacy")} className="text-[13px]">
-                Privacy Policy
-              </InteractiveLink>
+              <Link
+                href="/roadmap"
+                className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
+              >
+                Roadmap
+              </Link>
             </div>
           </motion.div>
 
-          {/* Column 4 - Connect */}
+          {/* Column 4 - Company */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1003,11 +1013,17 @@ export function FooterSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <span className="text-[11px] font-semibold uppercase tracking-wide text-[#94a3b8]">
-              Connect
+              Company
             </span>
             <div className="mt-3 flex flex-col items-start gap-2">
+              <InteractiveLink onClick={() => setActiveModal("about")} className="text-[13px]">
+                About
+              </InteractiveLink>
               <InteractiveLink onClick={() => setActiveModal("contact")} className="text-[13px]">
                 Contact
+              </InteractiveLink>
+              <InteractiveLink onClick={() => setActiveModal("privacy")} className="text-[13px]">
+                Privacy Policy
               </InteractiveLink>
             </div>
           </motion.div>

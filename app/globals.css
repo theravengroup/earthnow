@@ -4,11 +4,18 @@
 @custom-variant pointer-fine (@media (pointer: fine));
 @custom-variant pointer-coarse (@media (pointer: coarse));
 
-html, body {
+html {
   /* Use 'clip' instead of 'hidden' — 'hidden' implicitly sets overflow-y:auto
      which creates a scroll container and breaks position:sticky on descendants.
      'clip' clips horizontal overflow without creating a new scroll container. */
   overflow-x: clip;
+  max-width: 100vw;
+}
+
+body {
+  /* iOS Safari ignores overflow-x:clip on html in some cases.
+     hidden on body acts as a fallback to prevent horizontal scroll. */
+  overflow-x: hidden;
   max-width: 100vw;
 }
 
@@ -245,6 +252,12 @@ select,
   select:focus-visible {
     @apply ring-offset-0;
   }
+}
+
+/* While-you-scrolled interstitial pulse */
+@keyframes interstitial-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
 }
 
 /* Terra ticker scroll animation */

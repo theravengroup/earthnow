@@ -16,6 +16,7 @@ import { RevealGate, GlobeRevealGate } from "@/components/reveal-gate";
 import { Counter } from "@/components/hero-ticker/counter";
 import { SystemCard, systemsData } from "@/components/system-card";
 import { WhileYouWereHereSection } from "@/components/while-you-were-here";
+import { WhileYouScrolled, useRandomInterstitials } from "@/components/while-you-scrolled";
 import { ShuffleCountdown } from "@/components/vital-signs/shuffle-countdown";
 
 // Dynamically import heavy below-fold components to reduce initial JS bundle
@@ -148,6 +149,7 @@ export default function Home() {
 
   // Random hero ticker pairing - selected once on mount
   const [heroTickerIndex, setHeroTickerIndex] = useState<number>(0);
+  const interstitials = useRandomInterstitials(4);
   useEffect(() => {
     setHeroTickerIndex(Math.floor(Math.random() * heroTickerPairings.length));
   }, []);
@@ -1184,6 +1186,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       </motion.section>
       </Suspense>
 
+      <WhileYouScrolled interstitial={interstitials[0]} />
+
       {/* Suspense boundary for Systems Explorer Section */}
       <Suspense fallback={<div className="min-h-[400px] bg-[#0a0e17]" />}>
       {/* Explore the Systems Section */}
@@ -1464,6 +1468,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </div>
       </motion.section>
       </Suspense>
+
+      <WhileYouScrolled interstitial={interstitials[1]} />
 
       {/* Suspense boundary for Lifetime Impact Calculator */}
       <Suspense fallback={<div className="min-h-[500px] bg-[#0a0e17]" />}>
@@ -1762,6 +1768,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </div>
       </motion.section>
 
+      <WhileYouScrolled interstitial={interstitials[2]} />
+
       {/* Transition Section - Invitation to Observe */}
       <motion.section
         className="relative flex flex-col items-center justify-center px-6 pt-8 sm:pt-[60px] text-center"
@@ -1809,6 +1817,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
 
       {/* Now What? Section - after Personal Impact Calculator */}
       <NowWhatSection key="now-what" />
+
+      <WhileYouScrolled interstitial={interstitials[3]} />
 
       {/* Suspense boundary for WhileYouWereHere and Support sections */}
       <Suspense fallback={<div className="min-h-[400px] bg-[#0a0e17]" />}>
