@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Lock, Download, Copy, Check, Share2 } from "lucide-react";
 import { useDonationCheckout } from "@/hooks/use-donation-checkout";
-import { StripePaymentForm } from "@/components/stripe-payment-form";
+
+const StripePaymentForm = dynamic(
+  () => import("@/components/stripe-payment-form").then((m) => ({ default: m.StripePaymentForm })),
+  { ssr: false }
+);
 
 interface DonateModalProps {
   isOpen: boolean;

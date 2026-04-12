@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Share2, Copy, Download, Check } from "lucide-react";
 import { toast } from "sonner";
 import { formatNumber } from "@/lib/format";
 import { useDonationCheckout } from "@/hooks/use-donation-checkout";
-import { StripePaymentForm } from "@/components/stripe-payment-form";
+
+const StripePaymentForm = dynamic(
+  () => import("@/components/stripe-payment-form").then((m) => ({ default: m.StripePaymentForm })),
+  { ssr: false }
+);
 import {
   drawRoundRect,
   formatLargeNumber,

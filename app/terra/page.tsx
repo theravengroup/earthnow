@@ -1,12 +1,16 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import dynamic from "next/dynamic";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { useDonationCheckout } from "@/hooks/use-donation-checkout";
-import { StripePaymentForm } from "@/components/stripe-payment-form";
-import { AnimatePresence } from "framer-motion";
+
+const StripePaymentForm = dynamic(
+  () => import("@/components/stripe-payment-form").then((m) => ({ default: m.StripePaymentForm })),
+  { ssr: false }
+);
 import { X, Tv, Smartphone, Box, Wifi, Check } from "lucide-react";
 
 // Gradient Divider Component

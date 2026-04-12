@@ -7,15 +7,32 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Users, Utensils, Heart, Zap, Globe, Cpu, Droplet, TreePine, Car, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand } from "lucide-react";
-import { ExpandedImpactSections } from "@/components/expanded-impact-sections";
-import { SystemsExplorer } from "@/components/systems-explorer";
 import { ExpandToggleLink } from "@/components/interactive-link";
 import { UniversalNavbar } from "@/components/universal-navbar";
-import { DonateSection } from "@/components/donate-section";
-import { CinematicIntroWrapper, ReplayIntroLink } from "@/components/cinematic-intro";
 import { ContrastMoment } from "@/components/contrast-moment";
-import { NowWhatSection } from "@/components/now-what-section";
-import { ImpactShareCarousel } from "@/components/impact-share-carousel";
+import { CinematicIntroWrapper, ReplayIntroLink } from "@/components/cinematic-intro";
+
+// Dynamically import heavy below-fold components to reduce initial JS bundle
+const SystemsExplorer = dynamic(
+  () => import("@/components/systems-explorer").then((m) => ({ default: m.SystemsExplorer })),
+  { ssr: false }
+);
+const ExpandedImpactSections = dynamic(
+  () => import("@/components/expanded-impact-sections").then((m) => ({ default: m.ExpandedImpactSections })),
+  { ssr: false }
+);
+const DonateSection = dynamic(
+  () => import("@/components/donate-section").then((m) => ({ default: m.DonateSection })),
+  { ssr: false }
+);
+const NowWhatSection = dynamic(
+  () => import("@/components/now-what-section").then((m) => ({ default: m.NowWhatSection })),
+  { ssr: false }
+);
+const ImpactShareCarousel = dynamic(
+  () => import("@/components/impact-share-carousel").then((m) => ({ default: m.ImpactShareCarousel })),
+  { ssr: false }
+);
 import { ACTION_POOL } from "./action-data";
 import { SYSTEMS_DEEP_DIVE } from "./systems-data";
 import { CONTRAST_DATA, type ContrastEntry } from "@/lib/data/contrast-data";
