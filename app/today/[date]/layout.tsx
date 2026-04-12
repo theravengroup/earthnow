@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SITE_URL, SITE_NAME, OG_IMAGE_URL } from '@/lib/constants'
+import { SITE_URL, SITE_NAME } from '@/lib/constants'
 
 interface Props {
   params: Promise<{ date: string }>;
@@ -47,21 +47,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `So far today: ${approxBirths} born, ${approxDeaths} died, ${approxCO2} of CO₂ released. See the planet in real time.`,
       url: `${SITE_URL}/today/${date}`,
       siteName: SITE_NAME,
-      images: [
-        {
-          url: OG_IMAGE_URL,
-          width: 1200,
-          height: 630,
-          alt: `Today on Earth — ${dateStr} — EarthNow`,
-        },
-      ],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: `Today on Earth — ${dateStr}`,
       description: `So far today: ${approxBirths} born, ${approxDeaths} died, ${approxCO2} of CO₂ released. See the planet in real time.`,
-      images: [OG_IMAGE_URL],
     },
     alternates: {
       canonical: `${SITE_URL}/today/${date}`,
