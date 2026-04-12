@@ -20,6 +20,18 @@ const DAILY_RATES = {
   military: SHARED_RATES.militarySpending,
   education: SHARED_RATES.educationSpending,
   photos: SHARED_RATES.photosTaken,
+  emails: SHARED_RATES.emailsSent,
+  internet: SHARED_RATES.internetDataPB,
+  creditcards: SHARED_RATES.creditCardTransactions,
+  aitokens: SHARED_RATES.aiTokensProcessed,
+  treesplanted: SHARED_RATES.treesPlanted,
+  renewable: SHARED_RATES.renewableEnergyMWh,
+  plastic: SHARED_RATES.plasticEnteringOceans,
+  icelost: SHARED_RATES.iceLostTonnes,
+  soillost: SHARED_RATES.soilLostTonnes,
+  flights: SHARED_RATES.flightsInAir,
+  vaccines: SHARED_RATES.vaccinesAdministered,
+  hunger: SHARED_RATES.hungerDeaths,
 };
 
 // Stat configuration
@@ -36,6 +48,18 @@ const STAT_CONFIG: Record<string, { label: string; color: string; abbreviated: b
   military: { label: "Military Spending ($)", color: "#ef4444", abbreviated: true, prefix: "$" },
   education: { label: "Education Spending ($)", color: "#22c55e", abbreviated: true, prefix: "$" },
   photos: { label: "Photos Taken", color: "#a855f7", abbreviated: true },
+  emails: { label: "Emails Sent", color: "#8b5cf6", abbreviated: true },
+  internet: { label: "Internet Data (PB)", color: "#06b6d4", abbreviated: true },
+  creditcards: { label: "Credit Card Transactions", color: "#eab308", abbreviated: true },
+  aitokens: { label: "AI Tokens Processed", color: "#8b5cf6", abbreviated: true },
+  treesplanted: { label: "Trees Planted", color: "#22c55e", abbreviated: false },
+  renewable: { label: "Renewable Energy (MWh)", color: "#14b8a6", abbreviated: true },
+  plastic: { label: "Plastic Entering Oceans (t)", color: "#ef4444", abbreviated: false },
+  icelost: { label: "Ice Lost (tonnes)", color: "#3b82f6", abbreviated: true },
+  soillost: { label: "Soil Lost (tonnes)", color: "#a3744e", abbreviated: true },
+  flights: { label: "Flights in the Air", color: "#94a3b8", abbreviated: true, isStatic: true },
+  vaccines: { label: "Vaccines Administered", color: "#22c55e", abbreviated: true },
+  hunger: { label: "Hunger Deaths", color: "#ef4444", abbreviated: false },
 };
 
 // Formatting functions

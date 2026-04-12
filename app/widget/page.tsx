@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Copy, Check, GraduationCap, Newspaper, LayoutDashboard } from "lucide-react";
@@ -11,65 +11,53 @@ import { SITE_URL } from "@/lib/constants";
 
 // Available stats with their display info
 const AVAILABLE_STATS = [
+  // Core planetary
   { key: "population", label: "World Population", color: "#22c55e" },
   { key: "births", label: "Births Today", color: "#22c55e" },
   { key: "deaths", label: "Deaths Today", color: "#ef4444" },
-  { key: "co2", label: "CO₂ Today", color: "#f97316" },
+  { key: "co2", label: "CO₂ Emitted", color: "#f97316" },
   { key: "trees", label: "Forest Lost", color: "#ef4444" },
   { key: "energy", label: "Energy Generated", color: "#06b6d4" },
   { key: "water", label: "Water Used", color: "#3b82f6" },
   { key: "waste", label: "Food Wasted", color: "#f97316" },
+  // Technology & economy
   { key: "searches", label: "Google Searches", color: "#14b8a6" },
+  { key: "photos", label: "Photos Taken", color: "#a855f7" },
+  { key: "emails", label: "Emails Sent", color: "#8b5cf6" },
+  { key: "internet", label: "Internet Data (PB)", color: "#06b6d4" },
+  { key: "creditcards", label: "Credit Card Transactions", color: "#eab308" },
+  { key: "aitokens", label: "AI Tokens Processed", color: "#8b5cf6" },
+  // Environment
+  { key: "treesplanted", label: "Trees Planted", color: "#22c55e" },
+  { key: "renewable", label: "Renewable Energy (MWh)", color: "#14b8a6" },
+  { key: "plastic", label: "Plastic Entering Oceans", color: "#ef4444" },
+  { key: "icelost", label: "Ice Lost (tonnes)", color: "#3b82f6" },
+  { key: "soillost", label: "Soil Lost (tonnes)", color: "#a3744e" },
+  // Society
   { key: "military", label: "Military Spending", color: "#ef4444" },
   { key: "education", label: "Education Spending", color: "#22c55e" },
-  { key: "photos", label: "Photos Taken", color: "#a855f7" },
+  { key: "flights", label: "Flights in the Air", color: "#94a3b8" },
+  { key: "vaccines", label: "Vaccines Administered", color: "#22c55e" },
+  { key: "hunger", label: "Hunger Deaths", color: "#ef4444" },
 ];
 
 export default function WidgetPage() {
   // Configuration state
-  const [selectedStats, setSelectedStats] = useState<string[]>(["population", "co2", "births"]);
+  const [selectedStats, setSelectedStats] = useState<string[]>(["population", "co2"]);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [layout, setLayout] = useState<"horizontal" | "vertical">("horizontal");
-  const [showBranding, setShowBranding] = useState(true);
+  const showBranding = true; // Branding is always shown
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  
-  // Generate embed URL
-  const embedUrl = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set("stats", selectedStats.join(","));
-    params.set("theme", theme);
-    params.set("layout", layout);
-    if (!showBranding) params.set("brand", "false");
-    return `${SITE_URL}/embed?${params.toString()}`;
-  }, [selectedStats, theme, layout, showBranding]);
-  
-  // Calculate dimensions
-  const dimensions = useMemo(() => {
-    const statCount = selectedStats.length;
-    if (layout === "horizontal") {
-      // ~200px per stat + padding
-      const width = Math.max(200, statCount * 180 + 48);
-      const height = showBranding ? 100 : 80;
-      return { width, height };
-    } else {
-      // Vertical layout
-      const width = 220;
-      const height = statCount * 60 + (showBranding ? 44 : 32);
-      return { width, height };
-    }
-  }, [selectedStats.length, layout, showBranding]);
-  
-  // Generate embed code
+
+  const maxStats = 8;
+
+  // Generate embed code (web component)
   const embedCode = useMemo(() => {
-    return `<iframe src="${embedUrl}" 
-  width="${dimensions.width}" height="${dimensions.height}" 
-  frameborder="0" 
-  style="border: none; border-radius: 8px;"
-  title="EarthNow Live Counter">
-</iframe>`;
-  }, [embedUrl, dimensions]);
-  
+    const statsStr = selectedStats.join(",");
+    return `<script src="${SITE_URL}/widget.js"><\/script>\n<earth-now stats="${statsStr}" theme="${theme}" layout="${layout}"></earth-now>`;
+  }, [selectedStats, theme, layout]);
+
   // Handle stat toggle
   const toggleStat = (key: string) => {
     if (selectedStats.includes(key)) {
@@ -77,8 +65,8 @@ export default function WidgetPage() {
         setSelectedStats(selectedStats.filter(s => s !== key));
       }
     } else {
-      if (selectedStats.length >= 4) {
-        toast.error("Maximum 4 stats per widget");
+      if (selectedStats.length >= maxStats) {
+        toast.error("Maximum 8 stats per widget");
         return;
       }
       setSelectedStats([...selectedStats, key]);
@@ -98,15 +86,25 @@ export default function WidgetPage() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  // Create preview URL for iframe
-  const previewUrl = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set("stats", selectedStats.join(","));
-    params.set("theme", theme);
-    params.set("layout", layout);
-    if (!showBranding) params.set("brand", "false");
-    return `/embed?${params.toString()}`;
-  }, [selectedStats, theme, layout, showBranding]);
+  // Load the web component script for live preview
+  const previewRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!document.querySelector('script[src="/widget.js"]')) {
+      const script = document.createElement('script');
+      script.src = '/widget.js';
+      document.head.appendChild(script);
+    }
+  }, []);
+
+  // Update the preview element when config changes
+  useEffect(() => {
+    if (!previewRef.current) return;
+    const el = previewRef.current.querySelector('earth-now') || document.createElement('earth-now');
+    el.setAttribute('stats', selectedStats.join(','));
+    el.setAttribute('theme', theme);
+    el.setAttribute('layout', layout);
+    if (!el.parentElement) previewRef.current.appendChild(el);
+  }, [selectedStats, theme, layout]);
 
   return (
     <>
@@ -159,10 +157,13 @@ export default function WidgetPage() {
                     backdropFilter: "blur(12px)",
                   }}
                 >
-                  <h3 className="mb-4 font-sans text-[16px] font-medium text-white">
-                    Choose Your Stats <span className="text-[12px] text-[#768a9e]">(1-4)</span>
+                  <h3 className="mb-1 font-sans text-[16px] font-medium text-white">
+                    Choose Your Stats
                   </h3>
-                  <div className="grid grid-cols-3 gap-2">
+                  <p className="mb-4 text-[12px] text-[#768a9e]">
+                    Pick up to 8 stats. They display in pairs of two.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
                     {AVAILABLE_STATS.map((stat) => {
                       const isSelected = selectedStats.includes(stat.key);
                       return (
@@ -243,42 +244,6 @@ export default function WidgetPage() {
                   </div>
                 </div>
 
-                {/* Branding Toggle */}
-                <div
-                  className="rounded-2xl p-6"
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    backdropFilter: "blur(12px)",
-                  }}
-                >
-                  <h3 className="mb-4 font-sans text-[16px] font-medium text-white">Show EarthNow Branding</h3>
-                  <div className="flex gap-2">
-                    {(["On", "Off"] as const).map((opt) => {
-                      const isOn = opt === "On";
-                      const isSelected = showBranding === isOn;
-                      return (
-                        <button
-                          key={opt}
-                          onClick={() => setShowBranding(isOn)}
-                          className="rounded-full px-5 py-2 text-[14px] font-medium transition-all duration-150"
-                          style={{
-                            background: isSelected ? "#14b8a6" : "transparent",
-                            border: isSelected ? "1px solid #14b8a6" : "1px solid rgba(255,255,255,0.2)",
-                            color: isSelected ? "white" : "#94a3b8",
-                          }}
-                        >
-                          {opt}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {!showBranding && (
-                    <p className="mt-3 text-[11px] italic" style={{ color: "rgba(255,255,255,0.3)" }}>
-                      We&apos;d appreciate it if you kept the branding, but it&apos;s your call.
-                    </p>
-                  )}
-                </div>
               </div>
 
               {/* Right Column - Live Preview */}
@@ -291,43 +256,36 @@ export default function WidgetPage() {
                 }}
               >
                 {/* Fake browser chrome */}
-                <div 
-                  className="mb-4 flex w-full max-w-md items-center gap-2 rounded-lg px-4 py-2"
-                  style={{ 
-                    background: theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                  }}
-                >
-                  <div className="flex gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
-                  </div>
-                  <div 
-                    className="ml-3 flex-1 rounded px-3 py-1 text-center text-[11px]"
-                    style={{ 
+                <div className="flex w-full max-w-md flex-col overflow-hidden rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div
+                    className="flex items-center gap-2 px-4 py-2.5"
+                    style={{
                       background: theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                      color: theme === "dark" ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)",
                     }}
                   >
-                    yourwebsite.com
+                    <div className="flex gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                      <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                      <div className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                    </div>
+                    <div
+                      className="ml-3 flex-1 rounded px-3 py-1 text-center text-[11px]"
+                      style={{
+                        background: theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                        color: theme === "dark" ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)",
+                      }}
+                    >
+                      yourwebsite.com
+                    </div>
                   </div>
-                </div>
 
-                {/* Preview iframe */}
-                <div 
-                  className="flex items-center justify-center rounded-lg p-8"
-                  style={{ 
-                    background: theme === "dark" ? "#0a0e17" : "#ffffff",
-                    minWidth: "100%",
-                  }}
-                >
-                  <iframe
-                    key={previewUrl}
-                    src={previewUrl}
-                    width={Math.min(dimensions.width, 500)}
-                    height={dimensions.height}
-                    style={{ border: "none", borderRadius: "8px" }}
-                    title="Widget Preview"
+                  {/* Live web component preview */}
+                  <div
+                    ref={previewRef}
+                    className="flex items-center justify-center p-8"
+                    style={{
+                      background: theme === "dark" ? "#0a0e17" : "#ffffff",
+                    }}
                   />
                 </div>
               </div>

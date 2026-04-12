@@ -529,7 +529,7 @@ export function EventSharePopover({
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex ${buttonSizeClass} items-center justify-center rounded-full opacity-100 md:opacity-0 transition-all duration-200 hover:bg-white/10 md:group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/20`}
+        className={`flex ${buttonSizeClass} items-center justify-center rounded-full opacity-100 lg:opacity-0 transition-all duration-200 hover:bg-white/10 lg:group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/20`}
         style={{ color: eraColor }}
         aria-label="Share this moment"
         aria-expanded={isOpen}

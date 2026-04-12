@@ -748,7 +748,7 @@ padding: 'clamp(20px, 4vw, 40px)',
         }}>
           <div style={{
             width: 3,
-            height: 28,
+            alignSelf: 'stretch',
             borderRadius: 2,
             background: accentColor,
             boxShadow: `0 0 8px ${accentColor}80`,
