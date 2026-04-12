@@ -7,6 +7,7 @@ import {
   Baby, Skull, Cloud, TreePine, Zap, Droplets, Search, Shield, 
   GraduationCap, Camera, ChevronDown, Copy, Utensils
 } from "lucide-react";
+import { SITE_URL } from "@/lib/constants";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ShareButton } from "@/components/share-button";
 import { toast } from "sonner";
@@ -750,7 +751,7 @@ function ShareLinkSection({
   const [copied, setCopied] = useState(false);
   const [liveStats, setLiveStats] = useState({ births: 0, deaths: 0, co2: 0, population: 0 });
   
-  const shareUrl = `https://earthnow.app/today`;
+  const shareUrl = `${SITE_URL}/today`;
   const displayUrl = `earthnow.app/today`;
   
   useEffect(() => {

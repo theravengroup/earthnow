@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Users, Utensils, Heart, Zap, Globe, Cpu, Droplet, TreePine, Car, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand } from "lucide-react";
+import { SITE_URL } from "@/lib/constants";
 import { ExpandToggleLink } from "@/components/interactive-link";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ContrastMoment } from "@/components/contrast-moment";
@@ -1088,19 +1089,19 @@ export default function Home() {
           await navigator.share({
             title: 'My Lifetime Impact',
             text: summary,
-            url: 'https://earthnow.app',
+            url: SITE_URL,
             files: [new File([blob], 'earthnow-impact.png', { type: 'image/png' })]
           });
         } else {
           await navigator.share({
             title: 'My Lifetime Impact',
             text: summary,
-            url: 'https://earthnow.app'
+            url: SITE_URL,
           });
         }
         setImpactShareMenuOpen(false);
       } else {
-        await navigator.clipboard.writeText('https://earthnow.app');
+        await navigator.clipboard.writeText(SITE_URL);
         toast.success('Link copied', { description: 'Share link copied to clipboard', duration: 2000 });
         setImpactShareMenuOpen(false);
       }

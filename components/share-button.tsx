@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Share2, Copy, Download, Link, Mail } from "lucide-react";
 import { toast } from "sonner";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
 interface ShareButtonProps {
   // What to share
@@ -19,8 +20,8 @@ interface ShareButtonProps {
 
 export function ShareButton({
   text,
-  url = "https://earthnow.app",
-  title = "EarthNow",
+  url = SITE_URL,
+  title = SITE_NAME,
   getImageBlob,
   label = "Share",
   size = "sm",

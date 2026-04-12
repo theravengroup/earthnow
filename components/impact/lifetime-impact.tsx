@@ -7,6 +7,7 @@ import { Share2, Copy, Download, Check } from "lucide-react";
 import { toast } from "sonner";
 import { formatNumber } from "@/lib/format";
 import { useDonationCheckout } from "@/hooks/use-donation-checkout";
+import { SITE_URL } from "@/lib/constants";
 
 const StripePaymentForm = dynamic(
   () => import("@/components/stripe-payment-form").then((m) => ({ default: m.StripePaymentForm })),
@@ -848,14 +849,14 @@ export const ShareMomentSection = () => {
             await navigator.share({
               title: "My Moment on Earth",
               text: summary,
-              url: "https://earthnow.app",
+              url: SITE_URL,
               files: [file],
             });
           } else {
             await navigator.share({
               title: "My Moment on Earth",
               text: summary,
-              url: "https://earthnow.app",
+              url: SITE_URL,
             });
           }
           setShareMenuOpen(false);

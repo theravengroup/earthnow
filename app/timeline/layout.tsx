@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Timeline — Earth's Story in Data | EarthNow",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     title: "Timeline — Earth's Story in Data",
     description:
       "Explore key moments in Earth's history through real-time data.",
-    url: "https://earthnow.app/timeline",
+    url: `${SITE_URL}/timeline`,
   },
 };
 

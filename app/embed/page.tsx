@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { SITE_URL } from "@/lib/constants";
 
 import { DAILY_RATES as SHARED_RATES } from "@/lib/data/daily-rates";
 
@@ -226,7 +227,7 @@ function EmbedContent() {
         {/* Branding */}
         {brand && (
           <a
-            href="https://earthnow.app?ref=widget"
+            href={`${SITE_URL}?ref=widget`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center"

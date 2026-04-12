@@ -7,6 +7,7 @@ import { Copy, Check, GraduationCap, Newspaper, LayoutDashboard } from "lucide-r
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { DonateSection } from "@/components/donate-section";
 import { toast } from "sonner";
+import { SITE_URL } from "@/lib/constants";
 
 // Available stats with their display info
 const AVAILABLE_STATS = [
@@ -40,7 +41,7 @@ export default function WidgetPage() {
     params.set("theme", theme);
     params.set("layout", layout);
     if (!showBranding) params.set("brand", "false");
-    return `https://earthnow.app/embed?${params.toString()}`;
+    return `${SITE_URL}/embed?${params.toString()}`;
   }, [selectedStats, theme, layout, showBranding]);
   
   // Calculate dimensions
@@ -92,7 +93,7 @@ export default function WidgetPage() {
   };
   
   const handleCopyLink = async () => {
-    await navigator.clipboard.writeText("https://earthnow.app");
+    await navigator.clipboard.writeText(SITE_URL);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
   };

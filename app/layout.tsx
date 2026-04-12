@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import { FloatingDonateButton } from '@/components/floating-donate-button'
 import { FooterSection } from '@/components/footer-section'
+import { SITE_URL, OG_IMAGE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_TITLE } from '@/lib/constants'
 import './globals.css'
 
 const cormorantGaramond = Cormorant_Garamond({ 
@@ -26,29 +27,29 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'EarthNow — The Planet. Right Now.',
-  description: 'Real-time data on Earth\'s vital signs. See the patterns. Measure the impact. Join the signal.',
-  metadataBase: new URL('https://earthnow.app'),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: 'EarthNow — The Planet. Right Now.',
-    description: 'Real-time data on Earth\'s vital signs. See the patterns. Measure the impact. Join the signal.',
-    url: 'https://earthnow.app',
-    siteName: 'EarthNow',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: 'https://jddfmej7wr6ktfhc.public.blob.vercel-storage.com/earthnow-og.png',
+        url: OG_IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: 'EarthNow — The Planet. Right Now.',
+        alt: SITE_TITLE,
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EarthNow — The Planet. Right Now.',
-    description: 'Real-time data on Earth\'s vital signs. See the patterns. Measure the impact. Join the signal.',
-    images: ['https://jddfmej7wr6ktfhc.public.blob.vercel-storage.com/earthnow-og.png'],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE_URL],
   },
   icons: {
     icon: '/favicon.svg',
@@ -70,10 +71,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              name: "EarthNow",
-              url: "https://earthnow.app",
-              description:
-                "Real-time data on Earth's vital signs. See the patterns. Measure the impact. Join the signal.",
+              name: SITE_NAME,
+              url: SITE_URL,
+              description: SITE_DESCRIPTION,
               applicationCategory: "EducationalApplication",
               operatingSystem: "Web",
               offers: {
@@ -83,8 +83,8 @@ export default function RootLayout({
               },
               creator: {
                 "@type": "Organization",
-                name: "EarthNow",
-                url: "https://earthnow.app",
+                name: SITE_NAME,
+                url: SITE_URL,
               },
             }),
           }}

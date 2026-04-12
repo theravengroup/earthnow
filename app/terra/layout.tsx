@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Terra — Real-Time Planetary Display | EarthNow",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     title: "Terra — Real-Time Planetary Display",
     description:
       "A stunning real-time planetary dashboard for lobbies and shared spaces.",
-    url: "https://earthnow.app/terra",
+    url: `${SITE_URL}/terra`,
   },
 };
 

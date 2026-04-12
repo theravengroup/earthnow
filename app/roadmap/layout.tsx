@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Roadmap — EarthNow",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     title: "Roadmap — EarthNow",
     description:
       "What we're building next at EarthNow. Explore upcoming features and platform improvements.",
-    url: "https://earthnow.app/roadmap",
+    url: `${SITE_URL}/roadmap`,
   },
 };
 

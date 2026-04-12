@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SITE_URL, SITE_NAME, OG_IMAGE_URL } from '@/lib/constants'
 
 interface Props {
   params: Promise<{ date: string }>;
@@ -44,11 +45,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `Today on Earth — ${dateStr}`,
       description: `So far today: ${approxBirths} born, ${approxDeaths} died, ${approxCO2} of CO₂ released. See the planet in real time.`,
-      url: `https://earthnow.app/today/${date}`,
-      siteName: 'EarthNow',
+      url: `${SITE_URL}/today/${date}`,
+      siteName: SITE_NAME,
       images: [
         {
-          url: 'https://jddfmej7wr6ktfhc.public.blob.vercel-storage.com/earthnow-og.png',
+          url: OG_IMAGE_URL,
           width: 1200,
           height: 630,
           alt: `Today on Earth — ${dateStr} — EarthNow`,
@@ -60,10 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: `Today on Earth — ${dateStr}`,
       description: `So far today: ${approxBirths} born, ${approxDeaths} died, ${approxCO2} of CO₂ released. See the planet in real time.`,
-      images: ['https://jddfmej7wr6ktfhc.public.blob.vercel-storage.com/earthnow-og.png'],
+      images: [OG_IMAGE_URL],
     },
     alternates: {
-      canonical: `https://earthnow.app/today/${date}`,
+      canonical: `${SITE_URL}/today/${date}`,
     },
   };
 }

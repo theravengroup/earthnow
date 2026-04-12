@@ -3,6 +3,7 @@
 import { useMemo, useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Share2, Download, Copy, Check, X } from "lucide-react";
+import { SITE_URL } from "@/lib/constants";
 import { ACTION_POOL } from "@/app/action-data";
 
 // Helper to bold numbers in stat text
@@ -285,7 +286,7 @@ export function NowWhatSection() {
         await navigator.share({
           title: activeAction.title,
           text: `${activeAction.stat}\n\n${activeAction.voice}`,
-          url: "https://earthnow.app",
+          url: SITE_URL,
         });
         return;
       } catch {
