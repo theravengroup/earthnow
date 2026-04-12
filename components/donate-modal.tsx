@@ -322,8 +322,10 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                   </div>
 
                   {/* Donation Type Toggle */}
-                  <div className="mb-5 flex justify-center gap-2">
+                  <div className="mb-5 flex justify-center gap-2" role="radiogroup" aria-label="Donation frequency">
                     <button
+                      role="radio"
+                      aria-checked={donationType === "one-time"}
                       onClick={() => handleDonationTypeChange("one-time")}
                       className="rounded-full px-5 py-2 text-[13px] font-medium transition-all duration-200"
                       style={{
@@ -336,6 +338,8 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                       One-Time
                     </button>
                     <button
+                      role="radio"
+                      aria-checked={donationType === "monthly"}
                       onClick={() => handleDonationTypeChange("monthly")}
                       className="rounded-full px-5 py-2 text-[13px] font-medium transition-all duration-200"
                       style={{

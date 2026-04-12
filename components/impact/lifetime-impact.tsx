@@ -214,8 +214,10 @@ export function SupportSection() {
       </h3>
 
       {/* Donation Type Toggle */}
-      <div className="mb-6 flex justify-center gap-2">
+      <div className="mb-6 flex justify-center gap-2" role="radiogroup" aria-label="Donation frequency">
         <button
+          role="radio"
+          aria-checked={donationType === "one-time"}
           onClick={() => setDonationType("one-time")}
           className={`rounded-full px-5 py-2 text-[13px] font-medium transition-all ${
             donationType === "one-time"
@@ -226,6 +228,8 @@ export function SupportSection() {
           One-time
         </button>
         <button
+          role="radio"
+          aria-checked={donationType === "monthly"}
           onClick={() => setDonationType("monthly")}
           className={`rounded-full px-5 py-2 text-[13px] font-medium transition-all ${
             donationType === "monthly"

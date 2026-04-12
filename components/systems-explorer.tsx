@@ -782,10 +782,14 @@ padding: 'clamp(20px, 4vw, 40px)',
           {/* Column 1: Tabbed Storytelling */}
           <div>
             {/* Tab buttons */}
-            <div className="mb-6 flex gap-6">
+            <div className="mb-6 flex gap-6" role="tablist" aria-label={`${systemsConfig.find(s => s.id === systemId)?.title} system tabs`}>
               {systemData.tabs.map((tab, i) => (
                 <button
                   key={tab.label}
+                  role="tab"
+                  aria-selected={activeTab === i}
+                  aria-controls={`tabpanel-${systemId}-${i}`}
+                  id={`tab-${systemId}-${i}`}
                   onClick={() => setActiveTab(i)}
                   style={{
                     fontFamily: "var(--font-sans)",
@@ -811,6 +815,9 @@ padding: 'clamp(20px, 4vw, 40px)',
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
+                role="tabpanel"
+                id={`tabpanel-${systemId}-${activeTab}`}
+                aria-labelledby={`tab-${systemId}-${activeTab}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
