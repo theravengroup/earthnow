@@ -1164,14 +1164,14 @@ export default function TimelinePage() {
                               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
                             }}
                           >
-                            {/* Share popover */}
-                            <div className={`absolute top-3 ${isLeft ? 'left-3' : 'right-3'}`}>
+                            {/* Share popover - always top-right to avoid overlapping year/title text */}
+                            <div className="absolute right-3 top-3">
                               <EventSharePopover
                                 event={event}
                                 slug={slug}
                                 eraColor={era.color}
                                 categoryColor={getCategoryColor(event.category)}
-                                position={isLeft ? "left" : "right"}
+                                position="right"
                                 buttonSize="sm"
                               />
                             </div>

@@ -24,6 +24,15 @@ const requestSchema = z.discriminatedUnion("type", [
   terraSchema,
 ]);
 
+// EarthNow dark theme branding for Stripe Checkout
+const brandingSettings = {
+  display_name: "EarthNow",
+  background_color: "#0a0e17",
+  button_color: "#0f766e",
+  font_family: "inter" as const,
+  border_style: "rounded" as const,
+};
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -51,6 +60,7 @@ export async function POST(request: Request) {
           ],
           return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
           metadata: { type: "donation", frequency: "one-time" },
+          branding_settings: brandingSettings,
         });
 
         return NextResponse.json({ clientSecret: session.client_secret });
@@ -82,6 +92,7 @@ export async function POST(request: Request) {
         line_items: lineItems,
         return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         metadata: { type: "donation", frequency: "monthly" },
+        branding_settings: brandingSettings,
       });
 
       return NextResponse.json({ clientSecret: session.client_secret });
@@ -100,6 +111,7 @@ export async function POST(request: Request) {
         line_items: [{ price: priceId, quantity }],
         return_url: `${origin}/terra/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         metadata: { type: "terra", plan },
+        branding_settings: brandingSettings,
       });
 
       return NextResponse.json({ clientSecret: session.client_secret });

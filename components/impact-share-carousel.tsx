@@ -14,6 +14,7 @@ interface ImpactData {
   milesTraveled: number;
   wasteProduced: number;
   plasticUsed: number;
+  poopProduced: number;
   daysLived: number;
 }
 
@@ -132,6 +133,13 @@ export function ImpactShareCarousel({
       unit: "pounds.",
       context: "None of it has decomposed yet. None of it will in your lifetime.",
       color: "#ff80ab", // pink
+    },
+    {
+      intro: "My body has produced",
+      value: formatNumber(calculatedImpact.poopProduced),
+      unit: "pounds of poop.",
+      context: `That's about ${(calculatedImpact.poopProduced / 2000).toFixed(1)} tons. You're welcome, Earth.`,
+      color: "#a3744e", // brown
     },
     {
       intro: "I've been alive for",
