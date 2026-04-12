@@ -819,8 +819,8 @@ export default function TerraPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-            className="mt-6 text-center font-sans italic text-[#768a9e]"
-            style={{ fontSize: "15px" }}
+            className="mt-6 text-center font-sans italic text-[#94a3b8]"
+            style={{ fontSize: "16px" }}
           >
             No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
           </motion.p>

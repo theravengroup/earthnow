@@ -137,7 +137,7 @@ export function DonateSection({
               </div>
 
               {/* Small Contribution Encouragement */}
-              <p className="mb-4 text-center text-[13px] italic text-[#768a9e]">
+              <p className="mb-4 text-center text-[15px] italic text-[#94a3b8]">
                 Even small contributions make a real difference.
               </p>
 

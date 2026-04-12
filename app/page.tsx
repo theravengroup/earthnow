@@ -2061,7 +2061,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           </div>
 
           {/* Disclaimer Note */}
-          <p className="mx-auto mb-10 max-w-2xl text-center text-[14px] italic text-[#768a9e]">
+          <p className="mx-auto mb-10 max-w-2xl text-center text-[16px] italic text-[#94a3b8]">
             These calculations represent the average human&apos;s environmental footprint based on global consumption data. Individual impact varies by country, lifestyle, and consumption habits.
           </p>
 
