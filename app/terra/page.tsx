@@ -452,10 +452,10 @@ export default function TerraPage() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-6 md:grid-cols-3">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0], delay: 0 }}
+              viewport={{ once: true, margin: "0px 0px -200px 0px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
               whileHover={{
                 y: -6,
                 scale: 1.01,
@@ -479,10 +479,10 @@ export default function TerraPage() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0], delay: 0.12 }}
+              viewport={{ once: true, margin: "0px 0px -200px 0px" }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
               whileHover={{
                 y: -6,
                 scale: 1.01,
@@ -506,10 +506,10 @@ export default function TerraPage() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0], delay: 0.24 }}
+              viewport={{ once: true, margin: "0px 0px -200px 0px" }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
               whileHover={{
                 y: -6,
                 scale: 1.01,
