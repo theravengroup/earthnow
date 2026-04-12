@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useGlobalTick } from "@/hooks/use-global-tick";
-import { formatNumber } from "@/lib/format";
+import { useCardIllumination } from "@/hooks/use-card-illumination";
+import { formatCardValue, formatRatePerMinute } from "@/lib/card-utils";
 
 export interface MetricCardProps {
   color: string;
@@ -33,33 +34,7 @@ export const MetricCard = React.memo(function MetricCard({
 }: MetricCardProps) {
   const { secondsSinceMidnight, isLoaded } = useGlobalTick();
   const [isHovered, setIsHovered] = useState(false);
-  const [isPoweredOn, setIsPoweredOn] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Scroll-triggered "power on" — card illuminates when it enters the viewport
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const delay = index * 120;
-            setTimeout(() => setIsPoweredOn(true), delay);
-            observer.disconnect();
-            return;
-          }
-        }
-      },
-      { threshold: 0.05, rootMargin: "0px 0px 80px 0px" }
-    );
-    // Small delay to ensure layout is settled before observing
-    const raf = requestAnimationFrame(() => observer.observe(el));
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-    };
-  }, [index]);
+  const { isPoweredOn, cardRef } = useCardIllumination(index);
 
   // Calculate value from shared tick (or use static value)
   // baseValue supports cumulative all-time stats (e.g. "People Ever Lived" = 117B + daily growth)
@@ -68,33 +43,9 @@ export const MetricCard = React.memo(function MetricCard({
   // Staggered animation delay for the breathing dot (0.5s increments)
   const breatheDelay = `${index * 0.5}s`;
 
-  // Format value based on options
-  let formattedValue: string;
-  if (staticValue !== undefined && useAbbreviated) {
-    formattedValue = formatNumber(staticValue);
-  } else if (decimalPlaces !== undefined) {
-    formattedValue = value.toFixed(decimalPlaces);
-  } else if (useAbbreviated) {
-    formattedValue = formatNumber(value);
-  } else {
-    formattedValue = Math.floor(value).toLocaleString();
-  }
-  const displayValue = prefix ? `${prefix}${formattedValue}` : formattedValue;
-  
-  // Calculate rate per minute for trend display (handles up to trillions)
-  const ratePerMinute = ratePerSecond * 60;
-  const formattedRate = ratePerMinute >= 1000000000000
-    ? `${(ratePerMinute / 1000000000000).toFixed(1)}T`
-    : ratePerMinute >= 1000000000 
-      ? `${(ratePerMinute / 1000000000).toFixed(1)}B`
-      : ratePerMinute >= 1000000 
-        ? `${(ratePerMinute / 1000000).toFixed(1)}M`
-        : ratePerMinute >= 1000 
-          ? `${(ratePerMinute / 1000).toFixed(1)}K`
-          : ratePerMinute >= 1 
-            ? Math.floor(ratePerMinute).toLocaleString()
-            : ratePerMinute.toFixed(2);
-  const trendDisplay = prefix ? `${prefix}${formattedRate}` : formattedRate;
+  // Format value and rate for display
+  const displayValue = formatCardValue(value, { staticValue, useAbbreviated, decimalPlaces, prefix });
+  const trendDisplay = formatRatePerMinute(ratePerSecond, prefix);
   
   // Determine trend direction and color
   const isIncrease = ratePerSecond > 0;

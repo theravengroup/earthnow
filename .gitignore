@@ -5,3 +5,6 @@ dev.log
 .env.local
 .env*.local
 tsconfig.tsbuildinfo
+
+# Claude Code worktrees (nested git repos that confuse deploy platforms)
+.claude/
