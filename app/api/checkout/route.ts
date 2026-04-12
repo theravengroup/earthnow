@@ -71,12 +71,15 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice"],
+        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "donation", frequency: "monthly" },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const clientSecret = invoice?.confirmation_secret?.client_secret;
+      // Stripe API returns payment_intent on the expanded invoice, but the
+      // v22 SDK types don't include it. Access via runtime shape.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const invoice = subscription.latest_invoice as any;
+      const clientSecret = invoice?.payment_intent?.client_secret as string | undefined;
       if (!clientSecret) {
         throw new Error("Subscription created but no client secret returned");
       }
@@ -100,12 +103,13 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice"],
+        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "terra", plan },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const clientSecret = invoice?.confirmation_secret?.client_secret;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const invoice = subscription.latest_invoice as any;
+      const clientSecret = invoice?.payment_intent?.client_secret as string | undefined;
       if (!clientSecret) {
         throw new Error("Subscription created but no client secret returned");
       }
