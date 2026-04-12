@@ -260,6 +260,7 @@ export function ExpandedImpactSections({ birthYear }: { birthYear: number | "" }
   const poundsTrash = yearsLived * WASTE_CONSTANTS.POUNDS_TRASH_PER_YEAR;
   const tonsTrash = poundsTrash / 2000;
   const poundsPlastic = yearsLived * WASTE_CONSTANTS.POUNDS_PLASTIC_PER_YEAR;
+  const poundsPoop = yearsLived * WASTE_CONSTANTS.POUNDS_POOP_PER_YEAR;
   
   // Energy calculations
   const totalKwh = yearsLived * ENERGY_CONSTANTS.KWH_PER_YEAR;
@@ -396,7 +397,7 @@ export function ExpandedImpactSections({ birthYear }: { birthYear: number | "" }
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <MetricCard
               value={poundsTrash}
               label="Pounds of Waste"
@@ -412,6 +413,14 @@ export function ExpandedImpactSections({ birthYear }: { birthYear: number | "" }
               icon={Recycle}
               color="#f97316"
               delay={0.25}
+            />
+            <MetricCard
+              value={poundsPoop}
+              label="Pounds of Poop"
+              microcopy="Your body's most consistent output"
+              icon={Droplets}
+              color="#a3744e"
+              delay={0.3}
             />
           </div>
         </div>

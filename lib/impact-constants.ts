@@ -74,6 +74,12 @@ export const WASTE_CONSTANTS = {
   // E-waste: ~46 lbs/year per person in developed countries
   // Source: Global E-waste Monitor
   POUNDS_EWASTE_PER_YEAR: 46,
+
+  // Human feces: ~1 oz (0.0625 lbs) per bowel movement, avg 1-2x/day
+  // ~14 oz/day = ~0.875 lbs/day = ~320 lbs/year
+  // Source: Medical literature (average ~128g/day or ~0.28 lbs/day)
+  // Using 0.28 lbs/day = ~102 lbs/year
+  POUNDS_POOP_PER_YEAR: 102,
 };
 
 // ============================================

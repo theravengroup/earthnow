@@ -677,6 +677,7 @@ export default function Home() {
     co2Released: number;
     wasteProduced: number;
     plasticUsed: number;
+    poopProduced: number;
     daysLived: number;
   } | null>(null);
 
@@ -1267,6 +1268,7 @@ export default function Home() {
       co2Released: daysAlive * 115000000, // tonnes
       wasteProduced: daysAlive * 4.4, // pounds per day average
       plasticUsed: daysAlive * 0.3, // pounds per day average
+      poopProduced: daysAlive * 0.28, // pounds per day average (~102 lbs/year)
       daysLived: daysAlive,
     });
   };
@@ -2119,7 +2121,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           </div>
 
           {/* Result Cards Grid */}
-          <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <ImpactCard
               value={calculatedImpact?.waterUsed ?? 0}
               label="Gallons of Water Used"
@@ -2149,6 +2151,13 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               comparison={calculatedImpact ? "That's 3 meals every single day" : undefined}
             />
             <ImpactCard
+              value={calculatedImpact?.poopProduced ?? 0}
+              label="Pounds of Poop Produced"
+              color="#a3744e"
+              abbreviated={true}
+              comparison={calculatedImpact ? `That's about ${(calculatedImpact.poopProduced / 2000).toFixed(1)} tons` : undefined}
+            />
+            <ImpactCard
               value={calculatedImpact?.energyUsed ?? 0}
               label="kWh of Energy Used"
               color="#f59e0b"
@@ -2161,6 +2170,20 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               color="#8b5cf6"
               abbreviated={true}
               comparison={calculatedImpact ? `That's ${(calculatedImpact.milesTraveled / 238900).toFixed(1)} trips to the Moon` : undefined}
+            />
+            <ImpactCard
+              value={calculatedImpact?.wasteProduced ?? 0}
+              label="Pounds of Waste Generated"
+              color="#ef4444"
+              abbreviated={true}
+              comparison={calculatedImpact ? `That's ${(calculatedImpact.wasteProduced / 2000).toFixed(1)} tons of trash` : undefined}
+            />
+            <ImpactCard
+              value={calculatedImpact?.plasticUsed ?? 0}
+              label="Pounds of Plastic Used"
+              color="#ec4899"
+              abbreviated={true}
+              comparison={calculatedImpact ? "None of it has decomposed yet" : undefined}
             />
           </div>
 
