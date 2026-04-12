@@ -55,6 +55,7 @@ import { formatNumber } from "@/lib/format";
 import { toast } from "sonner";
 import { MetricCard } from "@/components/vital-signs/metric-card";
 import { CivilizationSignalCard } from "@/components/vital-signs/civilization-signal-card";
+import { ShuffleParticles } from "@/components/vital-signs/shuffle-particles";
 import { ExpandableSystemSection, VitalSignsPulseGlow, RowHeader } from "@/components/vital-signs/expandable-system-section";
 import { PlanetaryBalanceIndicator } from "@/components/vital-signs/planetary-balance";
 import {
@@ -709,6 +710,7 @@ export default function Home() {
   const SHUFFLE_INTERVAL = 60;
   const [shuffleKey, setShuffleKey] = useState(0);
   const [shufflePhase, setShufflePhase] = useState<'idle' | 'fading-out' | 'fading-in'>('idle');
+  const [particleKey, setParticleKey] = useState(0);
   const shuffleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -721,9 +723,10 @@ export default function Home() {
     setShufflePhase('fading-out');
 
     shuffleTimeoutRef.current = setTimeout(() => {
-      // Phase 2: Swap data while invisible
+      // Phase 2: Swap data while invisible + trigger particle burst
       setDisplayedSignals(buildCivAssignment());
       setShuffleKey(k => k + 1);
+      setParticleKey(k => k + 1);
       setShufflePhase('fading-in');
 
       shuffleTimeoutRef.current = setTimeout(() => {
@@ -1650,6 +1653,8 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
             </div>
 
 {/* Civilization Signals Grid — uniform 4 cols desktop, 2 cols mobile */}
+        <div className="relative">
+        <ShuffleParticles triggerKey={particleKey} />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
         {displayedSignals.map((signal, idx) => (
                   <CivilizationSignalCard
@@ -1668,6 +1673,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                     totalCards={displayedSignals.length}
                   />
               ))}
+            </div>
             </div>
             {/* Shuffle countdown — isolated component to avoid re-rendering the whole page every second */}
             <ShuffleCountdown key={shuffleKey} interval={SHUFFLE_INTERVAL} />

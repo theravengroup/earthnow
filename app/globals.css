@@ -70,6 +70,13 @@ select,
   display: none;
 }
 
+/* Shuffle particle burst animation */
+@keyframes shuffle-particle {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  60% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+}
+
 /* Vital Signs card dot breathing animation */
 @keyframes breathe {
   0% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 0px currentColor; }
