@@ -635,18 +635,21 @@ function ShuffleCountdown({ interval }: { interval: number }) {
   }, [interval]);
 
   return (
-    <div className="mt-6 flex flex-col items-center gap-1.5" style={{ opacity: 0.4 }} suppressHydrationWarning>
-      <div className="overflow-hidden rounded-full bg-white/10" style={{ width: 120, height: 2 }}>
+    <div className="mt-8 flex flex-col items-center gap-2.5" suppressHydrationWarning>
+      {/* Progress bar — wider and taller for visibility */}
+      <div className="overflow-hidden rounded-full" style={{ width: 180, height: 4, background: 'rgba(255,255,255,0.08)' }}>
         <div
-          className="h-full rounded-full bg-[#14b8a6]"
+          className="h-full rounded-full"
           style={{
             width: `${(countdown / interval) * 100}%`,
+            background: 'linear-gradient(90deg, rgba(20,184,166,0.6), #14b8a6)',
             transition: 'width 1s linear',
+            boxShadow: '0 0 8px rgba(20,184,166,0.4)',
           }}
           suppressHydrationWarning
         />
       </div>
-      <span className="font-mono text-[11px] text-[#768a9e]" suppressHydrationWarning>
+      <span className="font-mono text-[13px]" style={{ color: 'rgba(148,163,184,0.85)', letterSpacing: '0.04em' }} suppressHydrationWarning>
         new signals in {countdown}s
       </span>
     </div>
@@ -1524,7 +1527,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                 <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
-                <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 12, color: 'rgba(255,255,255,0.3)', whiteSpace: 'nowrap', padding: '10px 0' }}>happening at the same time</span>
+                <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', padding: '12px 0' }}>happening at the same time</span>
                 <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
               </div>
             </div>

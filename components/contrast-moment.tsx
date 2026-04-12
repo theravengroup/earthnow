@@ -59,13 +59,15 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
         overflow: 'hidden',
       }}>
         {/* Stat 1 */}
-        <div style={{ padding: '24px 20px 20px' }}>
+        <div style={{ padding: '24px 24px 20px' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(18px, 3.5vw, 24px)',
             color: 'white',
             lineHeight: 1.5,
             margin: 0,
+            textAlign: 'center',
+            textWrap: 'balance',
           }}>
             {formatWithBoldNumbers(selectedContrast.stat1, '#22d3ee')}
           </p>
@@ -73,27 +75,29 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px' }}>
-          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.12)' }} />
           <span style={{
             fontFamily: 'var(--font-serif)',
             fontStyle: 'italic',
-            fontSize: 13,
-            color: 'rgba(255,255,255,0.35)',
+            fontSize: 15,
+            color: 'rgba(255,255,255,0.5)',
             whiteSpace: 'nowrap',
           }}>
             happening at the same time
           </span>
-          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.12)' }} />
         </div>
 
         {/* Stat 2 */}
-        <div style={{ padding: '20px 20px 16px' }}>
+        <div style={{ padding: '20px 24px 16px' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(18px, 3.5vw, 24px)',
             color: 'white',
             lineHeight: 1.5,
             margin: 0,
+            textAlign: 'center',
+            textWrap: 'balance',
           }}>
             {formatWithBoldNumbers(selectedContrast.stat2, '#f87171')}
           </p>
@@ -119,12 +123,12 @@ export function ContrastMoment({ pool }: ContrastMomentProps) {
         )}
 
         {/* Share button */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 24px 16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 24px 16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <ShareButton
             text={`${selectedContrast.stat1}\n\n${selectedContrast.stat2}${selectedContrast.voice ? `\n\n"${selectedContrast.voice}"` : ''}`}
             label="Share"
             size="sm"
-            align="right"
+            align="center"
           />
         </div>
       </div>

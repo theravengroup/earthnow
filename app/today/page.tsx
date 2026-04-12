@@ -978,10 +978,10 @@ export default function TodayPage() {
                 <span style={{
                   fontFamily: 'var(--font-serif)',
                   fontStyle: 'italic',
-                  fontSize: 13,
-                  color: 'rgba(255,255,255,0.35)',
+                  fontSize: 15,
+                  color: 'rgba(255,255,255,0.5)',
                   whiteSpace: 'nowrap',
-                  padding: '10px 0',
+                  padding: '12px 0',
                 }}>
                   happening at the same time
                 </span>
@@ -1000,7 +1000,7 @@ export default function TodayPage() {
               {/* Share button */}
               <div style={{
                 display: 'flex',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
                 padding: '10px 20px 14px',
                 borderTop: '1px solid rgba(255,255,255,0.05)',
               }}>
@@ -1008,7 +1008,7 @@ export default function TodayPage() {
                   text={`${selectedPair.left.label}: ${selectedPair.right.label}\n\nHappening at the same time.\n\nearthnow.app`}
                   label="Share"
                   size="sm"
-                  align="right"
+                  align="center"
                 />
               </div>
             </div>

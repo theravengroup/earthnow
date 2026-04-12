@@ -652,14 +652,138 @@ export default function TimelinePage() {
             - Uses viewport scroll (not internal scroll)
             ============================================ */}
         <section className="how-we-got-here-section relative">
+
+          {/* ========== MOBILE: Non-sticky title + map (scrolls away) ========== */}
+          <div
+            className="border-b border-white/10 px-6 pt-6 pb-4 md:hidden"
+            style={{
+              zIndex: 899,
+              background: '#0a0e17',
+            }}
+          >
+            <div className="mx-auto max-w-7xl">
+              <h1 className="font-serif text-[28px] font-semibold leading-tight text-white">
+                How We Got Here
+              </h1>
+              <p className="mt-1 text-[16px] text-[#14b8a6]">
+                12,000 Years of Discovery
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-[#94a3b8]">
+                <span>{filteredEvents.length} milestones</span>
+                <span>·</span>
+                <span>
+                  {activeFilters.length === 0
+                    ? 'All'
+                    : activeFilters.length === 1
+                      ? categories.find(c => c.id === activeFilters[0])?.label || 'Filtered'
+                      : `${activeFilters.length} Categories`
+                  }
+                </span>
+              </div>
+              {/* Mobile Map */}
+              <div className="mt-4">
+                <div className="mb-2">
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-white/40">
+                    Discovery Locations
+                  </span>
+                </div>
+                <div
+                  className="w-full overflow-hidden rounded-xl"
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <div className="relative w-full" style={{ aspectRatio: '2 / 1', maxHeight: '140px' }}>
+                    <svg
+                      viewBox="0 0 360 180"
+                      className="h-full w-full"
+                      preserveAspectRatio="xMidYMid meet"
+                    >
+                      <g>
+                        {Object.entries(WORLD_MAP_PATHS).map(([key, path]) => (
+                          <path
+                            key={key}
+                            d={path}
+                            fill="rgba(255,255,255,0.03)"
+                            stroke="rgba(255,255,255,0.12)"
+                            strokeWidth="0.5"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                          />
+                        ))}
+                      </g>
+                      {activeLocation && (() => {
+                        const { x, y } = latLngToXY(activeLocation.lat, activeLocation.lng);
+                        return (
+                          <g>
+                            <circle cx={x} cy={y} r="4" fill="none" stroke="rgba(20,184,166,0.8)" strokeWidth="1" className="animate-ping" />
+                            <circle cx={x} cy={y} r="3" fill="#14b8a6" style={{ filter: 'drop-shadow(0 0 4px rgba(20,184,166,0.8))' }} />
+                          </g>
+                        );
+                      })()}
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ========== MOBILE: Sticky filter bar only (compact) ========== */}
+          <div
+            className="sticky border-b border-white/10 px-6 py-3 md:hidden"
+            style={{
+              top: `${NAVBAR_HEIGHT}px`,
+              zIndex: 900,
+              background: '#0a0e17',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.8)',
+            }}
+          >
+            <div className="mx-auto max-w-7xl">
+              <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <button
+                  onClick={clearFilters}
+                  className="shrink-0 rounded-full px-3 py-1 text-[12px] font-medium transition-all duration-150"
+                  style={{
+                    background: activeFilters.length === 0 ? 'rgba(20,184,166,0.15)' : 'transparent',
+                    border: activeFilters.length === 0 ? '1px solid rgba(20,184,166,0.5)' : '1px solid rgba(255,255,255,0.12)',
+                    color: activeFilters.length === 0 ? '#14b8a6' : '#94a3b8',
+                    boxShadow: activeFilters.length === 0 ? '0 0 12px rgba(20,184,166,0.2)' : 'none',
+                  }}
+                >
+                  All
+                </button>
+                {categories.map(cat => {
+                  const isActive = activeFilters.includes(cat.id);
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => toggleFilter(cat.id)}
+                      className="shrink-0 rounded-full px-3 py-1 text-[12px] font-medium transition-all duration-150"
+                      style={{
+                        background: isActive ? `${cat.color}15` : 'transparent',
+                        border: `1px solid ${isActive ? cat.color : 'rgba(255,255,255,0.12)'}`,
+                        color: isActive ? cat.color : '#94a3b8',
+                        boxShadow: isActive ? `0 0 12px ${cat.color}25` : 'none',
+                      }}
+                    >
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* ========== DESKTOP/TABLET: Full sticky header (md+) ========== */}
           {/* ----------------------------------------
               LAYER 2: STICKY TIMELINE HEADER (z-[900])
               - Sticks at top: NAVBAR_HEIGHT (directly below navbar)
               - FULLY OPAQUE background - no transparency
               - Must visually occlude ALL content scrolling beneath
               ---------------------------------------- */}
-          <div 
-            className="sticky border-b border-white/10 px-6 py-6"
+          <div
+            className="sticky hidden border-b border-white/10 px-6 py-6 md:block"
             style={{
               top: `${NAVBAR_HEIGHT}px`,
               zIndex: 900,
@@ -670,25 +794,25 @@ export default function TimelinePage() {
             <div className="mx-auto max-w-7xl">
           {/* Two-column layout: Left (60%) = Controls, Right (40%) = Map */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] lg:gap-8">
-            
+
             {/* LEFT COLUMN - Title + Filters */}
             <div className="flex flex-col justify-between">
 {/* Title Block with Metadata */}
                 <div className="mb-4">
-                  <h1 className="font-serif text-[28px] font-semibold leading-tight text-white md:text-[36px]">
+                  <h1 className="font-serif text-[36px] font-semibold leading-tight text-white">
                     How We Got Here
                   </h1>
-                  <p className="mt-1 text-[16px] text-[#14b8a6] md:text-[18px]">
+                  <p className="mt-1 text-[18px] text-[#14b8a6]">
                     12,000 Years of Discovery
                   </p>
                   {/* Supporting metadata - milestone count and current filter state */}
                   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-[#94a3b8]">
                     <span>{filteredEvents.length} milestones</span>
-                    <span className="hidden sm:inline">·</span>
+                    <span>·</span>
                     <span>
                       Currently viewing:{' '}
                       <span className="text-white/70">
-                        {activeFilters.length === 0 
+                        {activeFilters.length === 0
                           ? 'All Milestones'
                           : activeFilters.length === 1
                             ? categories.find(c => c.id === activeFilters[0])?.label || 'Filtered'
@@ -701,7 +825,7 @@ export default function TimelinePage() {
 
               {/* Filters Row */}
               <div>
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-x-visible md:pb-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="flex flex-wrap items-center gap-2">
                   {/* All Button */}
                   <button
                     onClick={clearFilters}
@@ -743,7 +867,7 @@ export default function TimelinePage() {
               <div className="mb-2 text-[11px] font-medium uppercase tracking-wider text-white/40">
                 Discovery Locations
               </div>
-              <div 
+              <div
                 className="w-full overflow-hidden rounded-xl"
                 style={{
                   background: 'rgba(255,255,255,0.02)',
@@ -752,8 +876,8 @@ export default function TimelinePage() {
               >
                 {/* SVG World Map - compact 16:9 aspect */}
                 <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
-                  <svg 
-                    viewBox="0 0 360 180" 
+                  <svg
+                    viewBox="0 0 360 180"
                     className="h-full w-full"
                     preserveAspectRatio="xMidYMid meet"
                   >
@@ -771,7 +895,7 @@ export default function TimelinePage() {
                         />
                       ))}
                     </g>
-                    
+
                     {/* Trail markers (past discoveries - faint) */}
                     {markerTrail.map((marker, idx) => {
                       const { x, y } = latLngToXY(marker.lat, marker.lng);
@@ -786,7 +910,7 @@ export default function TimelinePage() {
                         />
                       );
                     })}
-                    
+
                     {/* Active marker with pulse */}
                     {activeLocation && (() => {
                       const { x, y } = latLngToXY(activeLocation.lat, activeLocation.lng);
@@ -826,54 +950,6 @@ export default function TimelinePage() {
               </div>
             </div>
           </div>
-          
-          {/* Mobile: Map appears below filters */}
-          <div className="mt-5 lg:hidden">
-            {/* Mobile Map Title */}
-            <div className="mb-2">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-white/40">
-                Discovery Locations
-              </span>
-            </div>
-            <div 
-              className="w-full overflow-hidden rounded-xl"
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.06)',
-              }}
-            >
-              <div className="relative w-full" style={{ aspectRatio: '2 / 1', maxHeight: '140px' }}>
-                <svg 
-                  viewBox="0 0 360 180" 
-                  className="h-full w-full"
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  <g>
-                    {Object.entries(WORLD_MAP_PATHS).map(([key, path]) => (
-                      <path
-                        key={key}
-                        d={path}
-                        fill="rgba(255,255,255,0.03)"
-                        stroke="rgba(255,255,255,0.12)"
-                        strokeWidth="0.5"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                      />
-                    ))}
-                  </g>
-                  {activeLocation && (() => {
-                    const { x, y } = latLngToXY(activeLocation.lat, activeLocation.lng);
-                    return (
-                      <g>
-                        <circle cx={x} cy={y} r="4" fill="none" stroke="rgba(20,184,166,0.8)" strokeWidth="1" className="animate-ping" />
-                        <circle cx={x} cy={y} r="3" fill="#14b8a6" style={{ filter: 'drop-shadow(0 0 4px rgba(20,184,166,0.8))' }} />
-                      </g>
-                    );
-                  })()}
-                </svg>
-              </div>
-            </div>
-            </div>
           </div>
           </div>
           {/* End of sticky header */}
