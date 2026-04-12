@@ -346,7 +346,7 @@ export default function TerraPage() {
           }}
         />
 
-        <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
+        <div className="relative flex h-full flex-col items-center justify-center px-6 pt-16 text-center sm:pt-0">
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
