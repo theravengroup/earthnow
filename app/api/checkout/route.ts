@@ -35,49 +35,56 @@ export async function POST(request: Request) {
       const { frequency, amount } = parsed;
 
       if (frequency === "one-time") {
-        // One-time donation → PaymentIntent (embedded form)
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: amount * 100,
-          currency: "usd",
-          metadata: {
-            type: "donation",
-            frequency: "one-time",
-          },
+        // One-time donation → Embedded Checkout Session (payment mode)
+        const session = await stripe.checkout.sessions.create({
+          ui_mode: "embedded_page",
+          mode: "payment",
+          line_items: [
+            {
+              price_data: {
+                currency: "usd",
+                product_data: { name: "EarthNow Donation" },
+                unit_amount: amount * 100,
+              },
+              quantity: 1,
+            },
+          ],
+          return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+          metadata: { type: "donation", frequency: "one-time" },
         });
 
-        return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+        return NextResponse.json({ clientSecret: session.client_secret });
       }
 
-      // Monthly donation → Checkout Session (redirect to Stripe)
+      // Monthly donation → Embedded Checkout Session (subscription mode)
       const priceId = MONTHLY_PRICE_IDS[amount];
 
-      const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
-        mode: "subscription",
-        success_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/#support`,
-        metadata: { type: "donation", frequency: "monthly" },
-      };
-
+      let lineItems;
       if (priceId) {
-        sessionParams.line_items = [{ price: priceId, quantity: 1 }];
+        lineItems = [{ price: priceId, quantity: 1 }];
       } else {
-        // Custom amount — use inline price_data
-        sessionParams.line_items = [
+        lineItems = [
           {
             price_data: {
               currency: "usd",
               product: MONTHLY_PRODUCT_ID,
               unit_amount: amount * 100,
-              recurring: { interval: "month" },
+              recurring: { interval: "month" as const },
             },
             quantity: 1,
           },
         ];
       }
 
-      const session = await stripe.checkout.sessions.create(sessionParams);
+      const session = await stripe.checkout.sessions.create({
+        ui_mode: "embedded_page",
+        mode: "subscription",
+        line_items: lineItems,
+        return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+        metadata: { type: "donation", frequency: "monthly" },
+      });
 
-      return NextResponse.json({ url: session.url });
+      return NextResponse.json({ clientSecret: session.client_secret });
     }
 
     if (parsed.type === "terra") {
@@ -88,14 +95,14 @@ export async function POST(request: Request) {
           : TERRA_PRICE_IDS.annual;
 
       const session = await stripe.checkout.sessions.create({
+        ui_mode: "embedded_page",
         mode: "subscription",
         line_items: [{ price: priceId, quantity }],
-        success_url: `${origin}/terra/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/terra`,
+        return_url: `${origin}/terra/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         metadata: { type: "terra", plan },
       });
 
-      return NextResponse.json({ url: session.url });
+      return NextResponse.json({ clientSecret: session.client_secret });
     }
 
     return NextResponse.json(
