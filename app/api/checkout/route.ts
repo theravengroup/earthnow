@@ -71,14 +71,17 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice.payment_intent"],
+        expand: ["latest_invoice"],
         metadata: { type: "donation", frequency: "monthly" },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice & { payment_intent: Stripe.PaymentIntent };
-      const pi = invoice.payment_intent;
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const clientSecret = invoice?.confirmation_secret?.client_secret;
+      if (!clientSecret) {
+        throw new Error("Subscription created but no client secret returned");
+      }
 
-      return NextResponse.json({ clientSecret: pi.client_secret });
+      return NextResponse.json({ clientSecret });
     }
 
     if (parsed.type === "terra") {
@@ -97,14 +100,17 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice.payment_intent"],
+        expand: ["latest_invoice"],
         metadata: { type: "terra", plan },
       });
 
-      const invoice = subscription.latest_invoice as Stripe.Invoice & { payment_intent: Stripe.PaymentIntent };
-      const pi = invoice.payment_intent;
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const clientSecret = invoice?.confirmation_secret?.client_secret;
+      if (!clientSecret) {
+        throw new Error("Subscription created but no client secret returned");
+      }
 
-      return NextResponse.json({ clientSecret: pi.client_secret });
+      return NextResponse.json({ clientSecret });
     }
 
     return NextResponse.json(
