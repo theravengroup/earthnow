@@ -148,8 +148,9 @@ export async function POST(request: Request) {
       );
     }
     console.error("Checkout error:", error);
+    const message = error instanceof Error ? error.message : "Failed to create payment";
     return NextResponse.json(
-      { error: "Failed to create payment" },
+      { error: message },
       { status: 500 }
     );
   }
