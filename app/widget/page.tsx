@@ -159,7 +159,7 @@ export default function WidgetPage() {
                   }}
                 >
                   <h3 className="mb-4 font-sans text-[16px] font-medium text-white">
-                    Choose Your Stats <span className="text-[12px] text-[#64748b]">(1-4)</span>
+                    Choose Your Stats <span className="text-[12px] text-[#768a9e]">(1-4)</span>
                   </h3>
                   <div className="grid grid-cols-3 gap-2">
                     {AVAILABLE_STATS.map((stat) => {
@@ -401,7 +401,7 @@ export default function WidgetPage() {
                   {copiedLink ? (
                     <Check className="h-3.5 w-3.5" style={{ color: "#14b8a6" }} />
                   ) : (
-                    <Copy className="h-3.5 w-3.5" style={{ color: "#64748b" }} />
+                    <Copy className="h-3.5 w-3.5" style={{ color: "#768a9e" }} />
                   )}
                 </button>
               </div>

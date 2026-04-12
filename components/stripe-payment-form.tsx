@@ -19,7 +19,7 @@ const appearance: Appearance = {
     colorBackground: "#0f1729",
     colorText: "#e2e8f0",
     colorTextSecondary: "#94a3b8",
-    colorTextPlaceholder: "#64748b",
+    colorTextPlaceholder: "#768a9e",
     colorDanger: "#ef4444",
     fontFamily: "system-ui, -apple-system, sans-serif",
     borderRadius: "8px",
@@ -186,8 +186,8 @@ function CheckoutForm({ amount, frequency, onComplete, onBack }: CheckoutFormPro
 
       {/* Security note */}
       <div className="flex items-center justify-center gap-1.5">
-        <Lock className="h-3 w-3 text-[#64748b]" />
-        <span className="text-[12px] tracking-wide text-[#64748b]">
+        <Lock className="h-3 w-3 text-[#768a9e]" />
+        <span className="text-[12px] tracking-wide text-[#768a9e]">
           Secured by Stripe
         </span>
       </div>
@@ -197,7 +197,7 @@ function CheckoutForm({ amount, frequency, onComplete, onBack }: CheckoutFormPro
         type="button"
         onClick={onBack}
         disabled={isProcessing}
-        className="w-full text-center text-[13px] text-[#64748b] transition-colors hover:text-[#94a3b8] disabled:opacity-50"
+        className="w-full text-center text-[13px] text-[#768a9e] transition-colors hover:text-[#94a3b8] disabled:opacity-50"
       >
         ← Change amount
       </button>

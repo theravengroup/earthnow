@@ -489,7 +489,7 @@ export function ImpactShareCarousel({
       {/* Regenerate option */}
       <button
         onClick={onRegenerate}
-        className="mt-6 text-[13px] text-[#64748b] transition-colors hover:text-white"
+        className="mt-6 text-[13px] text-[#768a9e] transition-colors hover:text-white"
       >
         Regenerate card
       </button>

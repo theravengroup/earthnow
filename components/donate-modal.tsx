@@ -97,7 +97,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
       year: 'numeric'
     });
     ctx.font = '18px -apple-system, BlinkMacSystemFont, sans-serif';
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#768a9e';
     ctx.fillText(`Joined EarthNow supporters · ${dateStr}`, width/2, 680);
 
     // Footer URL
@@ -268,6 +268,9 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed left-1/2 top-1/2 z-[101] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Support EarthNow"
             style={{
               maxWidth,
               background: "linear-gradient(180deg, rgba(20,25,35,0.98) 0%, rgba(10,14,23,0.98) 100%)",
@@ -411,14 +414,14 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                   {donationType === "one-time" && selectedAmount === "custom" && (
                     <div className="mb-4 flex justify-center">
                       <div className="relative w-full sm:w-auto">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b]">$</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#768a9e]">$</span>
                         <input
                           type="number"
                           value={customAmount}
                           onChange={(e) => setCustomAmount(e.target.value)}
                           placeholder="Enter amount"
                           min={1}
-                          className="w-full rounded-lg border py-3 pl-8 pr-4 text-center font-sans text-white placeholder-[#64748b] focus:outline-none focus:ring-2 focus:ring-teal-500 sm:w-[180px]"
+                          className="w-full rounded-lg border py-3 pl-8 pr-4 text-center font-sans text-white placeholder-[#768a9e] focus:outline-none focus:ring-2 focus:ring-teal-500 sm:w-[180px]"
                           style={{
                             background: "#1e293b",
                             borderColor: "#334155",
@@ -488,7 +491,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                     className="mt-4 flex items-center justify-center gap-1.5 text-center"
                     style={{ opacity: 0.6 }}
                   >
-                    <Lock className="h-3 w-3 text-[#64748b]" />
+                    <Lock className="h-3 w-3 text-[#768a9e]" />
                     <span className="text-[13px] tracking-wide text-[#94a3b8]">
                       Secure payments powered by Stripe
                     </span>
@@ -501,7 +504,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                         handleComplete();
                         setTimeout(() => generateSupportCard(), 100);
                       }}
-                      className="mt-4 w-full text-center text-[11px] text-[#64748b] hover:text-[#94a3b8]"
+                      className="mt-4 w-full text-center text-[11px] text-[#768a9e] hover:text-[#94a3b8]"
                     >
                       (Test: Show success view)
                     </button>
@@ -537,7 +540,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                     <h2 className="mt-3 font-serif text-[22px] font-semibold text-white">
                       Thank you for your support
                     </h2>
-                    <p className="mt-1 text-[13px] text-[#64748b]">
+                    <p className="mt-1 text-[13px] text-[#768a9e]">
                       You&apos;re helping build a real-time view of the planet.
                     </p>
                   </div>
@@ -611,7 +614,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                   {/* Done button */}
                   <button
                     onClick={handleClose}
-                    className="mt-5 w-full text-center text-[13px] text-[#64748b] transition-colors hover:text-white"
+                    className="mt-5 w-full text-center text-[13px] text-[#768a9e] transition-colors hover:text-white"
                   >
                     Done
                   </button>

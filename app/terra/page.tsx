@@ -211,7 +211,7 @@ function DeviceVisual() {
         className="mt-4 text-center font-mono uppercase"
         style={{
           fontSize: "10px",
-          color: "#64748b",
+          color: "#768a9e",
           letterSpacing: "0.1em",
         }}
       >
@@ -291,7 +291,7 @@ function AppWaitlistForm() {
         placeholder="your@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="flex-1 rounded-full px-4 py-2.5 text-[14px] text-white placeholder-[#64748b] outline-none transition-all focus:ring-1 focus:ring-[#14b8a6]"
+        className="flex-1 rounded-full px-4 py-2.5 text-[14px] text-white placeholder-[#768a9e] outline-none transition-all focus:ring-1 focus:ring-[#14b8a6]"
         style={{
           background: "rgba(255,255,255,0.05)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -643,7 +643,7 @@ export default function TerraPage() {
               </div>
 
               <div className="mt-auto pt-8">
-                <p className="mb-3 text-center font-sans text-[14px] text-[#64748b]">
+                <p className="mb-3 text-center font-sans text-[14px] text-[#768a9e]">
                   Starting at $179/screen/month. Scroll down for full pricing.
                 </p>
                 <a
@@ -702,7 +702,7 @@ export default function TerraPage() {
                   { icon: Wifi, label: "Same real-time data, same cinematic experience" },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-2.5">
-                    <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-[#64748b]" />
+                    <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-[#768a9e]" />
                     <span className="font-sans text-[14px] text-[#cbd5e1]">{item.label}</span>
                   </div>
                 ))}
@@ -730,7 +730,7 @@ export default function TerraPage() {
                         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
                       </svg>
                     </div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#64748b]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
                       Apple TV
                     </span>
                   </div>
@@ -748,7 +748,7 @@ export default function TerraPage() {
                         <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V7H6v11zM3.5 7C2.67 7 2 7.67 2 8.5v7c0 .83.67 1.5 1.5 1.5S5 16.33 5 15.5v-7C5 7.67 4.33 7 3.5 7zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" />
                       </svg>
                     </div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#64748b]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
                       Android TV
                     </span>
                   </div>
@@ -757,7 +757,7 @@ export default function TerraPage() {
 
               {/* Notify me */}
               <div className="mt-auto pt-8">
-                <p className="mb-3 font-sans text-[14px] text-[#64748b]">
+                <p className="mb-3 font-sans text-[14px] text-[#768a9e]">
                   Get notified when the apps are available:
                 </p>
                 <AppWaitlistForm />
@@ -826,7 +826,7 @@ export default function TerraPage() {
                 }}
               >
                 <span
-                  className="font-sans uppercase text-[#64748b]"
+                  className="font-sans uppercase text-[#768a9e]"
                   style={{ fontSize: "12px", letterSpacing: "0.08em" }}
                 >
                   {row.label}
@@ -843,7 +843,7 @@ export default function TerraPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-            className="mt-6 text-center font-sans italic text-[#64748b]"
+            className="mt-6 text-center font-sans italic text-[#768a9e]"
             style={{ fontSize: "15px" }}
           >
             No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
@@ -872,7 +872,7 @@ export default function TerraPage() {
             <h2 className="mt-4 font-serif text-[48px] text-white">
               Pricing
             </h2>
-            <p className="mx-auto mt-3 max-w-[520px] font-sans text-[16px] text-[#64748b]">
+            <p className="mx-auto mt-3 max-w-[520px] font-sans text-[16px] text-[#768a9e]">
               Device included with every subscription. Minimum 90-day commitment. Cancel anytime after that.
             </p>
           </motion.div>
@@ -994,7 +994,7 @@ export default function TerraPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
-            className="mt-10 text-center font-sans text-[14px] text-[#64748b]"
+            className="mt-10 text-center font-sans text-[14px] text-[#768a9e]"
           >
             100+ screens?{" "}
             <a
@@ -1058,7 +1058,7 @@ export default function TerraPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.25 }}
-            className="mt-8 font-sans text-[14px] text-[#64748b]"
+            className="mt-8 font-sans text-[14px] text-[#768a9e]"
           >
             Terra is a product of EarthNow —{" "}
             <Link
@@ -1093,6 +1093,9 @@ export default function TerraPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               className="fixed left-1/2 top-1/2 z-[101] w-[95%] max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Terra checkout"
               style={{
                 background: "linear-gradient(180deg, rgba(20,25,35,0.98) 0%, rgba(10,14,23,0.98) 100%)",
                 border: "1px solid rgba(255,255,255,0.1)",

@@ -135,7 +135,7 @@ function MetricCard({
       </div>
       
       {/* Label */}
-      <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[#64748b]">
+      <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[#768a9e]">
         {label}
       </div>
       
@@ -318,7 +318,7 @@ export function ExpandedImpactSections({ birthYear }: { birthYear: number | "" }
           <TimeBar label="Screens" years={yearsScreen} totalYears={yearsLived} color="#3b82f6" delay={0.3} />
           <TimeBar label="Eating" years={yearsEating} totalYears={yearsLived} color="#22c55e" delay={0.4} />
           
-          <p className="mt-6 text-center text-[13px] italic text-[#64748b]">
+          <p className="mt-6 text-center text-[13px] italic text-[#768a9e]">
             The rest is everything else: relationships, hobbies, wondering, wandering.
           </p>
         </div>

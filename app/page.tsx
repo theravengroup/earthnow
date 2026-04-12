@@ -130,7 +130,7 @@ function Counter({
         {displayValue}
       </span>
       <span 
-        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[#64748b]"
+        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[#768a9e]"
         style={{
           maxWidth: '100%',
           lineHeight: 1.3,
@@ -313,7 +313,7 @@ const systemsData = [
     stats: [
       { label: "CO₂ Today (tonnes)", dailyTotal: 115000000, color: "#eab308", abbreviated: true },
       { label: "Forest Lost Today (hectares)", dailyTotal: 20000, color: "#ef4444", abbreviated: false },
-      { label: "Plastic Produced Today (tonnes)", dailyTotal: 1000000, color: "#64748b", abbreviated: false },
+      { label: "Plastic Produced Today (tonnes)", dailyTotal: 1000000, color: "#768a9e", abbreviated: false },
     ],
   },
   {
@@ -590,7 +590,7 @@ const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileY
         >
           <p 
             className="font-serif text-[16px] italic md:text-[18px]"
-            style={{ color: '#64748b' }}
+            style={{ color: '#768a9e' }}
           >
             Every second counts.
           </p>
@@ -628,7 +628,7 @@ function ShuffleCountdown({ interval }: { interval: number }) {
           suppressHydrationWarning
         />
       </div>
-      <span className="font-mono text-[11px] text-[#64748b]" suppressHydrationWarning>
+      <span className="font-mono text-[11px] text-[#768a9e]" suppressHydrationWarning>
         new signals in {countdown}s
       </span>
     </div>
@@ -1596,7 +1596,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               <h3 className="mb-2 font-serif text-2xl font-semibold text-white md:text-3xl">
                 Civilization Signals
               </h3>
-              <p className="text-[14px] text-[#64748b] md:text-[15px]">
+              <p className="text-[14px] text-[#768a9e] md:text-[15px]">
                 The most powerful real-time indicators of humanity and the planet
               </p>
 {/* Device-aware hint text */}
@@ -1611,7 +1611,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
     </span>
   </div>
               {/* Sentiment color guide */}
-              <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-[#64748b]">
+              <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-[#768a9e]">
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-[2px] w-4 rounded-full bg-[#14b8a6]" />
                   Positive
@@ -1621,7 +1621,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   Challenging
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-[2px] w-4 rounded-full bg-[#64748b]" />
+                  <span className="inline-block h-[2px] w-4 rounded-full bg-[#768a9e]" />
                   Neutral
                 </span>
               </div>
@@ -1802,7 +1802,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               <p>
                 For thousands of years humanity slowly uncovered how the Earth works.
               </p>
-              <p className="text-[15px] text-[#64748b] md:text-[16px]">
+              <p className="text-[15px] text-[#768a9e] md:text-[16px]">
                 Astronomers measured its size.<br />
                 Scientists discovered the forces shaping climate.<br />
                 Explorers mapped the oceans and continents.
@@ -1886,7 +1886,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                         </span>
                         
                         {/* Title - hidden on mobile, visible on md+ */}
-                        <span className="mt-1 hidden max-w-[90px] text-center text-[11px] leading-snug text-[#64748b] transition-colors duration-300 group-hover:text-[#94a3b8] md:block md:text-[12px]">
+                        <span className="mt-1 hidden max-w-[90px] text-center text-[11px] leading-snug text-[#768a9e] transition-colors duration-300 group-hover:text-[#94a3b8] md:block md:text-[12px]">
                           {milestone.title}
                         </span>
                       </Link>
@@ -1965,7 +1965,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   <h3 className="mt-2 font-serif text-[17px] text-white">
                     {milestone.title}
                   </h3>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[#64748b]">
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#768a9e]">
                     {milestone.desc}
                   </p>
                 </motion.div>
@@ -2040,7 +2040,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           </div>
 
           {/* Disclaimer Note */}
-          <p className="mx-auto mb-10 max-w-2xl text-center text-[14px] italic text-[#64748b]">
+          <p className="mx-auto mb-10 max-w-2xl text-center text-[14px] italic text-[#768a9e]">
             These calculations represent the average human&apos;s environmental footprint based on global consumption data. Individual impact varies by country, lifestyle, and consumption habits.
           </p>
 
@@ -2188,7 +2188,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               transition={{ duration: 0.3 }}
             >
               <div className="h-12 w-12 animate-spin rounded-full border-2 border-[#14b8a6] border-t-transparent" />
-              <p className="text-[14px] text-[#64748b]">Creating your impact card...</p>
+              <p className="text-[14px] text-[#768a9e]">Creating your impact card...</p>
             </motion.div>
           )}
 

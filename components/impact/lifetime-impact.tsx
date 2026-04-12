@@ -264,7 +264,7 @@ export function SupportSection() {
               setSelectedAmount("custom");
             }}
             onFocus={() => setSelectedAmount("custom")}
-            className="w-full rounded-xl bg-white/5 py-3 pl-8 pr-4 text-[14px] text-white placeholder:text-[#64748b] focus:outline-none focus:ring-1 focus:ring-[#14b8a6]"
+            className="w-full rounded-xl bg-white/5 py-3 pl-8 pr-4 text-[14px] text-white placeholder:text-[#768a9e] focus:outline-none focus:ring-1 focus:ring-[#14b8a6]"
             style={{ border: "1px solid rgba(255,255,255,0.1)" }}
           />
         </div>
@@ -300,7 +300,7 @@ export function SupportSection() {
         )}
       </button>
 
-      <p className="mt-4 text-center text-[12px] text-[#64748b]">
+      <p className="mt-4 text-center text-[12px] text-[#768a9e]">
         100% goes toward keeping EarthNow free and ad-free
       </p>
     </div>
@@ -997,7 +997,7 @@ export const ShareMomentSection = () => {
           <h2 className="mb-4 font-serif text-[24px] font-medium text-white md:text-[32px]">
             Share Your Moment on Earth
           </h2>
-          <p className="mb-10 text-[14px] text-[#64748b] md:text-[15px]">
+          <p className="mb-10 text-[14px] text-[#768a9e] md:text-[15px]">
             Generate a cinematic snapshot of what happened on the planet during
             your visit.
           </p>
@@ -1133,7 +1133,7 @@ export const ShareMomentSection = () => {
                     style={{
                       fontFamily: "var(--font-sans)",
                       fontSize: 12,
-                      color: "#64748b",
+                      color: "#768a9e",
                       marginTop: 4,
                       display: "block",
                       letterSpacing: "0.1em",
@@ -1308,7 +1308,7 @@ export const ShareMomentSection = () => {
             transition={{ duration: 0.3 }}
           >
             <div className="h-12 w-12 animate-spin rounded-full border-2 border-[#14b8a6] border-t-transparent" />
-            <p className="text-[14px] text-[#64748b]">Creating your moment...</p>
+            <p className="text-[14px] text-[#768a9e]">Creating your moment...</p>
           </motion.div>
         )}
 
@@ -1464,7 +1464,7 @@ export const ShareMomentSection = () => {
             {/* Regenerate option */}
             <button
               onClick={handleRegenerate}
-              className="mt-6 text-[13px] text-[#64748b] transition-colors hover:text-white"
+              className="mt-6 text-[13px] text-[#768a9e] transition-colors hover:text-white"
             >
               Regenerate with current time
             </button>

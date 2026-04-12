@@ -163,7 +163,7 @@ async function generateShareCard(
     year: "numeric",
   });
   ctx.font = '400 18px -apple-system, BlinkMacSystemFont, sans-serif';
-  ctx.fillStyle = "#64748b";
+  ctx.fillStyle = "#768a9e";
   ctx.fillText(dateStr, w / 2, h - 130);
 
   // EarthNow.app
@@ -537,6 +537,9 @@ export function NowWhatSection() {
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               transition={{ duration: 0.25 }}
               className="fixed left-1/2 top-1/2 z-[101] w-[95%] max-w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Share this action"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(20,25,35,0.98) 0%, rgba(10,14,23,0.98) 100%)",
@@ -654,7 +657,7 @@ export function NowWhatSection() {
 
                 <button
                   onClick={() => setShareModalOpen(false)}
-                  className="mt-4 w-full text-center text-[13px] text-[#64748b] transition-colors hover:text-white"
+                  className="mt-4 w-full text-center text-[13px] text-[#768a9e] transition-colors hover:text-white"
                 >
                   Done
                 </button>

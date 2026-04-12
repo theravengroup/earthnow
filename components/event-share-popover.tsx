@@ -30,7 +30,7 @@ function getCategoryAccentColor(category: string): string {
     "Energy": "#f97316",
     "Global Cooperation": "#a855f7",
   };
-  return colors[category] || "#64748b";
+  return colors[category] || "#768a9e";
 }
 
 // Category tint color for Earth overlay (25% opacity)
@@ -565,7 +565,8 @@ export function EventSharePopover({
             borderRadius: "12px",
             boxShadow: "0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)",
           }}
-          role="menu"
+          role="dialog"
+          aria-modal="true"
           aria-label="Share options"
         >
           <div className="p-1.5">

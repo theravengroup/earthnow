@@ -430,7 +430,7 @@ function SystemDiagram({
               x={x}
               y={y + 18}
               textAnchor="middle"
-              fill={isHovered ? "#94a3b8" : "#64748b"}
+              fill={isHovered ? "#94a3b8" : "#768a9e"}
               fontSize="8"
               fontFamily="system-ui, sans-serif"
               style={{ transition: 'fill 150ms ease-out' }}
@@ -527,7 +527,7 @@ function SystemCard({
           <Icon 
             className="h-5 w-5" 
             style={{ 
-              color: isHovered ? system.accentColor : '#64748b',
+              color: isHovered ? system.accentColor : '#768a9e',
               transition: 'color 200ms ease-out',
             }} 
           />

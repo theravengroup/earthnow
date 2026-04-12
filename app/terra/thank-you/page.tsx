@@ -361,7 +361,7 @@ export default function TerraThankYouPage() {
 
       {/* Footer text */}
       <div className="mt-12 text-center">
-        <p className="font-sans text-[14px] text-[#64748b]">
+        <p className="font-sans text-[14px] text-[#768a9e]">
           Questions? Email{" "}
           <a
             href="mailto:terra@earthnow.app"
@@ -371,7 +371,7 @@ export default function TerraThankYouPage() {
           </a>
         </p>
         <p className="mt-4 font-sans text-[12px] text-[#475569]">
-          <Link href="/" className="hover:text-[#64748b] transition-colors">
+          <Link href="/" className="hover:text-[#768a9e] transition-colors">
             earthnow.app
           </Link>
         </p>

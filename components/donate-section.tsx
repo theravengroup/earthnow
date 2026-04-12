@@ -90,7 +90,7 @@ export function DonateSection({
               </p>
 
               {/* Social Proof */}
-              <p className="mb-8 text-center text-[15px] font-medium text-[#64748b]">
+              <p className="mb-8 text-center text-[15px] font-medium text-[#768a9e]">
                 Join the people helping keep EarthNow alive.
               </p>
 
@@ -128,7 +128,7 @@ export function DonateSection({
               </div>
 
               {/* Small Contribution Encouragement */}
-              <p className="mb-4 text-center text-[13px] italic text-[#64748b]">
+              <p className="mb-4 text-center text-[13px] italic text-[#768a9e]">
                 Even small contributions make a real difference.
               </p>
 
@@ -191,14 +191,14 @@ export function DonateSection({
               {donationType === "one-time" && selectedAmount === "custom" && (
                 <div className="mb-6 flex justify-center">
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b]">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#768a9e]">$</span>
                     <input
                       type="number"
                       value={customAmount}
                       onChange={(e) => setCustomAmount(e.target.value)}
                       placeholder="Enter amount"
                       min={1}
-                      className="w-[180px] rounded-lg border py-3 pl-8 pr-4 text-center font-sans text-white placeholder-[#64748b] focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="w-[180px] rounded-lg border py-3 pl-8 pr-4 text-center font-sans text-white placeholder-[#768a9e] focus:outline-none focus:ring-2 focus:ring-teal-500"
                       style={{
                         background: "#1e293b",
                         borderColor: "#334155",
@@ -249,7 +249,7 @@ export function DonateSection({
               </p>
 
               {/* Disclaimer */}
-              <p className="text-center text-[11px] text-[#64748b]">
+              <p className="text-center text-[11px] text-[#768a9e]">
                 Payments securely processed by Stripe. Monthly donations can be cancelled anytime.
                 EarthNow is a project of The Raven Group LLC.
               </p>

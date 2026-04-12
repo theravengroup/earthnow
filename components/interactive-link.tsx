@@ -23,7 +23,7 @@ export function InteractiveLink({ children, onClick, className = "" }: Interacti
         e.preventDefault();
         onClick();
       }}
-      className={`cursor-pointer text-[#64748b] no-underline transition-colors duration-200 hover:text-white hover:underline ${className}`}
+      className={`cursor-pointer text-[#768a9e] no-underline transition-colors duration-200 hover:text-white hover:underline ${className}`}
       style={{
         pointerEvents: "auto",
         position: "relative",

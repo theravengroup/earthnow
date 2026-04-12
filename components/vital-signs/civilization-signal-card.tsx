@@ -97,7 +97,7 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
   const textShadow = `0 0 20px ${displayColor}, 0 0 60px ${displayColor}4d`;
   
   // Sentiment top border color
-  const sentimentBorder = sentiment === 'positive' ? '#14b8a6' : sentiment === 'challenging' ? '#ef4444' : '#64748b';
+  const sentimentBorder = sentiment === 'positive' ? '#14b8a6' : sentiment === 'challenging' ? '#ef4444' : '#768a9e';
 
   // Accent tint for card background - slightly more visible
   const accentTint = `linear-gradient(135deg, ${color}1a 0%, transparent 60%)`;

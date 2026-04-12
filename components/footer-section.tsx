@@ -224,7 +224,7 @@ function FloatingInput({
           top: isActive ? "8px" : "50%",
           transform: isActive ? "translateY(0)" : "translateY(-50%)",
           fontSize: isActive ? "10px" : "14px",
-          color: isFocused ? "#14b8a6" : "#64748b",
+          color: isFocused ? "#14b8a6" : "#768a9e",
           fontWeight: isActive ? 500 : 400,
           letterSpacing: isActive ? "0.05em" : "0",
           textTransform: isActive ? "uppercase" : "none",
@@ -274,7 +274,7 @@ function FloatingTextarea({
         style={{
           top: isActive ? "10px" : "20px",
           fontSize: isActive ? "10px" : "14px",
-          color: isFocused ? "#14b8a6" : "#64748b",
+          color: isFocused ? "#14b8a6" : "#768a9e",
           fontWeight: isActive ? 500 : 400,
           letterSpacing: isActive ? "0.05em" : "0",
           textTransform: isActive ? "uppercase" : "none",
@@ -340,6 +340,9 @@ function FooterModal({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="fixed left-1/2 top-1/2 z-[101] w-[calc(100%-32px)] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
             style={{
               background: "linear-gradient(180deg, #0d1220 0%, #0a0e17 100%)",
               border: "1px solid rgba(255,255,255,0.08)",
@@ -368,7 +371,7 @@ function FooterModal({
             </button>
 
             {/* Content - extra top padding to avoid close button collision */}
-            <div 
+            <div
               className="max-h-[70vh] overflow-y-auto"
               style={{
                 padding: "52px 20px 24px 20px",
@@ -533,6 +536,9 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="fixed left-1/2 top-1/2 z-[101] w-[calc(100%-32px)] max-w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Contact EarthNow"
             style={{
               background: "linear-gradient(180deg, #0d1220 0%, #0a0e17 100%)",
               border: "1px solid rgba(255,255,255,0.08)",
@@ -567,7 +573,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 <h2 className="font-serif text-[22px] font-semibold text-white">
                   Contact EarthNow
                 </h2>
-                <p className="mt-2 text-[13px] text-[#64748b]">
+                <p className="mt-2 text-[13px] text-[#768a9e]">
                   Questions, ideas, or collaboration opportunities.
                 </p>
               </div>
@@ -596,7 +602,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   <p className="text-[16px] font-medium text-[#14b8a6]">
                     Message sent. We&apos;ll be in touch soon.
                   </p>
-                  <p className="mt-2 text-[13px] text-[#64748b]">
+                  <p className="mt-2 text-[13px] text-[#768a9e]">
                     Our team typically responds within 24–48 hours.
                   </p>
                   
@@ -637,7 +643,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                         className="pointer-events-none absolute left-4 text-[10px] font-medium uppercase tracking-[0.05em]"
                         style={{
                           top: "8px",
-                          color: formData.intent ? "#14b8a6" : "#64748b",
+                          color: formData.intent ? "#14b8a6" : "#768a9e",
                         }}
                       >
                         What is this about?
@@ -649,14 +655,14 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                         style={{
                           background: "rgba(255,255,255,0.03)",
                           borderColor: formData.intent ? "rgba(20,184,166,0.3)" : "rgba(255,255,255,0.1)",
-                          color: formData.intent ? "#ffffff" : "#64748b",
+                          color: formData.intent ? "#ffffff" : "#768a9e",
                         }}
                       >
                         {INTENT_OPTIONS.map((option) => (
                           <option 
                             key={option.value} 
                             value={option.value}
-                            style={{ background: "#0d1220", color: option.value ? "#ffffff" : "#64748b" }}
+                            style={{ background: "#0d1220", color: option.value ? "#ffffff" : "#768a9e" }}
                           >
                             {option.label}
                           </option>
@@ -665,7 +671,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                       {/* Dropdown arrow */}
                       <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
                         <svg 
-                          className="h-4 w-4 text-[#64748b]" 
+                          className="h-4 w-4 text-[#768a9e]" 
                           fill="none" 
                           viewBox="0 0 24 24" 
                           stroke="currentColor"
@@ -683,7 +689,7 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                           animate={{ opacity: 1, height: "auto", marginTop: -8 }}
                           exit={{ opacity: 0, height: 0, marginTop: 0 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="text-[12px] italic text-[#64748b]"
+                          className="text-[12px] italic text-[#768a9e]"
                           style={{ marginBottom: -4 }}
                         >
                           Tell us what you&apos;re building or proposing.
@@ -726,8 +732,8 @@ function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                     
                     {/* Confidence microcopy */}
                     <div className="mt-4 space-y-1.5 text-center">
-                      <p className="text-[12px] text-[#64748b]">Goes directly to our team</p>
-                      <p className="text-[12px] text-[#64748b]">Response within 24–48 hours</p>
+                      <p className="text-[12px] text-[#768a9e]">Goes directly to our team</p>
+                      <p className="text-[12px] text-[#768a9e]">Response within 24–48 hours</p>
                     </div>
                   </form>
                 </>
@@ -799,6 +805,9 @@ function AboutModal({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="fixed left-1/2 top-1/2 z-[101] w-[calc(100%-32px)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 rounded-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="About EarthNow"
             style={{
               background: "linear-gradient(180deg, #0d1220 0%, #0a0e17 100%)",
               border: "1px solid rgba(255,255,255,0.08)",
@@ -924,7 +933,7 @@ export function FooterSection() {
             <span className="font-serif text-[18px] font-bold text-white">
               EarthNow
             </span>
-            <p className="mt-2 text-[13px] text-[#64748b]">
+            <p className="mt-2 text-[13px] text-[#768a9e]">
               Real-time data on our living planet.
             </p>
             <p className="mt-4 text-[11px] text-[#4a5568]">
@@ -968,13 +977,13 @@ export function FooterSection() {
             <div className="mt-3 flex flex-col items-start gap-2">
               <Link 
                 href="/roadmap" 
-                className="text-[13px] text-[#64748b] transition-colors duration-200 hover:text-white"
+                className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
               >
                 Roadmap
               </Link>
               <Link 
                 href="/widget" 
-                className="text-[13px] text-[#64748b] transition-colors duration-200 hover:text-white"
+                className="text-[13px] text-[#768a9e] transition-colors duration-200 hover:text-white"
               >
                 Widget
               </Link>

@@ -438,11 +438,11 @@ function parseYear(yearStr: string): number {
 }
 
 function getEraColor(eraId: string): string {
-  return eras.find(e => e.id === eraId)?.color || "#64748b";
+  return eras.find(e => e.id === eraId)?.color || "#768a9e";
 }
 
 function getCategoryColor(categoryId: string): string {
-  return categories.find(c => c.id === categoryId)?.color || "#64748b";
+  return categories.find(c => c.id === categoryId)?.color || "#768a9e";
 }
 
 // ============================================

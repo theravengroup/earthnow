@@ -66,7 +66,7 @@ export function PlanetaryBalanceIndicator() {
         <h3 className="mb-1 font-serif text-xl font-semibold text-white md:text-2xl">
           Planetary Balance
         </h3>
-        <p className="text-[13px] text-[#64748b] md:text-[14px]">
+        <p className="text-[13px] text-[#768a9e] md:text-[14px]">
           Human activity vs Earth systems
         </p>
       </div>
@@ -108,7 +108,7 @@ export function PlanetaryBalanceIndicator() {
         <div className="mt-4 flex items-center justify-between">
           <div 
             className="flex items-center gap-2 font-mono text-[13px] md:text-[14px]"
-            style={{ color: '#64748b' }}
+            style={{ color: '#768a9e' }}
           >
             <span 
               style={{ 

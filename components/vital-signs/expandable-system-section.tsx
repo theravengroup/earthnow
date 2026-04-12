@@ -60,7 +60,7 @@ export function RowHeader({
         {title}
       </h3>
       {/* Subtitle */}
-      <p className="mt-1 text-[13px] font-light italic text-[#64748b]">
+      <p className="mt-1 text-[13px] font-light italic text-[#768a9e]">
         {subtitle}
       </p>
       {/* Interaction hint */}
