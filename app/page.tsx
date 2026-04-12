@@ -42,7 +42,6 @@ import { PlanetaryBalanceIndicator } from "@/components/vital-signs/planetary-ba
 import {
   AnimatedNumber,
   ImpactCard,
-  SupportSection,
   LiveTimeCounter,
   LiveStat,
   ShareMomentSection,

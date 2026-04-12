@@ -1101,6 +1101,7 @@ export default function TerraPage() {
             >
               <button
                 onClick={handleTerraClose}
+                aria-label="Close checkout"
                 className="absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full transition-all hover:scale-110 hover:bg-white/15"
                 style={{
                   background: "rgba(255,255,255,0.08)",

@@ -17,25 +17,6 @@ export interface MetricConfig {
   baseValue?: number;
 }
 
-// Civilization Signals - the most powerful indicators of humanity and the planet
-export const civilizationSignals: MetricConfig[] = [
-  { color: "#f59e0b", label: "Human Years of Life Lived Today", ratePerSecond: 8100000000 / 86400, useAbbreviated: true },
-  { color: "#92400e", label: "Tonnes of Soil Lost Today", ratePerSecond: 75000000000 / 365 / 86400, useAbbreviated: true },
-  { color: "#38bdf8", label: "Tonnes of Ice Lost Today", ratePerSecond: 1300000000000 / 365 / 86400, useAbbreviated: true },
-  { color: "#10b981", label: "Global GDP Generated Today ($)", ratePerSecond: 275000000000 / 86400, useAbbreviated: true, prefix: "$" },
-  { color: "#a855f7", label: "Hours of Human Attention Online Today", ratePerSecond: 12000000000 / 86400, useAbbreviated: true },
-  { color: "#ec4899", label: "AI Tokens Processed Today", ratePerSecond: AI_TOKENS_PER_SECOND, useAbbreviated: true },
-  { color: "#06b6d4", label: "Tonnes of Plastic Entering Oceans Today", ratePerSecond: 11000000 / 365 / 86400, useAbbreviated: false },
-  { color: "#3b82f6", label: "Total Human Hours Worked Today", ratePerSecond: 8000000000 * 8 / 86400, useAbbreviated: true },
-  { color: "#eab308", label: "Global Electricity Generated Today (MWh)", ratePerSecond: 77000000 / 86400, useAbbreviated: true },
-  { color: "#14b8a6", label: "Global Internet Data Flow Today (PB)", ratePerSecond: 500000 / 86400, useAbbreviated: true },
-  { color: "#22d3ee", label: "Global Flights in the Air Right Now", ratePerSecond: 0, staticValue: 12500, useAbbreviated: false, staticRateDisplay: "~12.5K at any moment" },
-  { color: "#ef4444", label: "Species Moved Toward Extinction Today", ratePerSecond: 0.10 / 60, decimalPlaces: 2, useAbbreviated: false },
-  { color: "#f97316", label: "Children Born into Poverty Today", ratePerSecond: 105 / 60, useAbbreviated: false },
-  { color: "#3b82f6", label: "Clean Water Used Today", ratePerSecond: 8333333 / 60, useAbbreviated: true },
-  { color: "#f472b6", label: "Money Spent on Advertising Today ($)", ratePerSecond: 1900000 / 60, useAbbreviated: true, prefix: "$" },
-];
-
 // Vital Signs metrics data
 export const vitalSignsRow1: MetricConfig[] = [
   { color: "#22c55e", label: "Births Today", ratePerSecond: 4.4 },
