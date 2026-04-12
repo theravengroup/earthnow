@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AmbientAudio } from "./ambient-audio";
+import { useIntro } from "./cinematic-intro";
 // Primary navigation links (left of divider)
 // Order: Past → Present → Personal Impact (narrative flow)
 const primaryNavLinks = [
@@ -30,6 +32,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
+  const { revealPhase } = useIntro();
 
   // Determine active page based on pathname
   const getActivePage = () => {
@@ -103,6 +106,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
     }
   };
 
+  // Navbar is visible once revealPhase reaches "navbar" or beyond
+  const navVisible = revealPhase === "navbar" || revealPhase === "content";
+
   return (
     <>
       {/* Fixed Navigation Bar - HIGHEST z-index (1000) to stay above ALL page content */}
@@ -112,7 +118,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
   zIndex: 1000,
   background: forceSolidBackground ? "rgba(10,14,23,0.98)" : (isScrolled ? "rgba(10,14,23,0.92)" : "rgba(0,0,0,0.15)"),
   borderBottom: "1px solid rgba(255,255,255,0.08)",
-  transition: "background 220ms ease, height 220ms ease-out",
+  transition: "background 220ms ease, height 220ms ease-out, opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+  opacity: navVisible ? 1 : 0,
+  transform: navVisible ? "translateY(0)" : "translateY(-100%)",
   }}
       >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
@@ -258,6 +266,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
             >
               Terra
             </Link>
+
+            {/* Ambient Audio Toggle */}
+            <AmbientAudio />
 
             {/* Scroll Progress Orbit Indicator - shows on all pages */}
             <div
@@ -432,6 +443,16 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
               </motion.div>
 
             </div>
+
+            {/* Ambient Audio Toggle - Mobile */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (primaryNavLinks.length + 1) * 0.05 }}
+              className="mt-6"
+            >
+              <AmbientAudio />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

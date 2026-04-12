@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useGlobalTick } from "@/hooks/use-global-tick";
 import { formatNumber } from "@/lib/format";
 
@@ -37,6 +37,32 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
 }: CivilizationSignalCardProps) {
   const { secondsSinceMidnight, isLoaded } = useGlobalTick();
   const [isHovered, setIsHovered] = useState(false);
+  const [isPoweredOn, setIsPoweredOn] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll-triggered "power on" — card illuminates when it enters the viewport
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const delay = index * 120;
+            setTimeout(() => setIsPoweredOn(true), delay);
+            observer.disconnect();
+            return;
+          }
+        }
+      },
+      { threshold: 0.05, rootMargin: "0px 0px 80px 0px" }
+    );
+    const raf = requestAnimationFrame(() => observer.observe(el));
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [index]);
 
   // Calculate value from shared tick (or use static value)
   const value = staticValue !== undefined ? staticValue : secondsSinceMidnight * ratePerSecond;
@@ -129,27 +155,39 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
 
   return (
     <div
-      className="group relative overflow-hidden rounded-2xl p-7"
+      ref={cardRef}
+      className="group relative overflow-hidden rounded-sm p-7"
       style={{
         height: '100%',
-        borderTop: `2px solid ${sentimentBorder}`,
-        background: `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`,
-        border: `1px solid rgba(255,255,255,0.18)`,
-        borderTopColor: sentimentBorder,
+        borderStyle: 'solid',
         borderTopWidth: 2,
-        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`,
-        opacity: shuffleOpacity,
-        transform: shuffleTransform,
-        filter: shuffleFilter,
+        borderTopColor: isPoweredOn ? sentimentBorder : 'rgba(255,255,255,0.04)',
+        borderRightWidth: 1,
+        borderRightColor: isPoweredOn ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.06)',
+        borderBottomWidth: 1,
+        borderBottomColor: isPoweredOn ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.06)',
+        borderLeftWidth: 1,
+        borderLeftColor: isPoweredOn ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.06)',
+        background: isPoweredOn
+          ? `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`
+          : 'linear-gradient(180deg, rgba(10,15,25,0.95) 0%, rgba(6,9,18,0.98) 100%)',
+        boxShadow: isPoweredOn
+          ? `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`
+          : 'inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 24px rgba(0,0,0,0.4)',
+        opacity: isAnimating ? shuffleOpacity : (isPoweredOn ? 1 : 0.35),
+        transform: isAnimating ? shuffleTransform : undefined,
+        filter: isAnimating ? shuffleFilter : (isPoweredOn ? 'brightness(1) saturate(1)' : 'brightness(0.6) saturate(0.2)'),
         transition: isAnimating
-          ? `opacity 0.6s ease ${staggerDelay}ms, transform 0.6s ease ${staggerDelay}ms, filter 0.6s ease ${staggerDelay}ms, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease`
-          : 'box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
+          ? `opacity 0.6s ease ${staggerDelay}ms, transform 0.6s ease ${staggerDelay}ms, filter 0.6s ease ${staggerDelay}ms, box-shadow 0.3s ease, background 0.3s ease, border-top-color 0.3s ease, border-right-color 0.3s ease, border-bottom-color 0.3s ease, border-left-color 0.3s ease`
+          : 'box-shadow 0.8s ease, background 0.8s ease, border-top-color 0.8s ease, border-right-color 0.8s ease, border-bottom-color 0.8s ease, border-left-color 0.8s ease, opacity 0.8s ease, filter 0.8s ease',
       }}
       onPointerEnter={(e) => {
         if (e.pointerType === 'mouse') {
           setIsHovered(true);
           e.currentTarget.style.background = `${hoverAccentTint}, linear-gradient(180deg, rgba(20,30,50,0.95) 0%, rgba(12,18,35,0.98) 100%)`;
-          e.currentTarget.style.borderColor = `rgba(255,255,255,0.28)`;
+          e.currentTarget.style.borderRightColor = `rgba(255,255,255,0.28)`;
+          e.currentTarget.style.borderBottomColor = `rgba(255,255,255,0.28)`;
+          e.currentTarget.style.borderLeftColor = `rgba(255,255,255,0.28)`;
           e.currentTarget.style.borderTopColor = sentimentBorder;
           e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 24px rgba(255,255,255,0.06), 0 20px 56px rgba(0,0,0,0.6), ${hoverGlow}`;
         }
@@ -158,13 +196,41 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
         if (e.pointerType === 'mouse') {
           setIsHovered(false);
           e.currentTarget.style.background = `${accentTint}, linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,15,30,0.98) 100%)`;
-          e.currentTarget.style.borderColor = `rgba(255,255,255,0.18)`;
+          e.currentTarget.style.borderRightColor = `rgba(255,255,255,0.18)`;
+          e.currentTarget.style.borderBottomColor = `rgba(255,255,255,0.18)`;
+          e.currentTarget.style.borderLeftColor = `rgba(255,255,255,0.18)`;
           e.currentTarget.style.borderTopColor = sentimentBorder;
           e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 24px rgba(255,255,255,0.04), 0 16px 48px rgba(0,0,0,0.5), 0 0 30px ${color}15`;
         }
       }}
       onClick={() => setIsHovered(prev => !prev)}
     >
+      {/* HUD corner brackets */}
+      {/* Top-left */}
+      <div className="pointer-events-none absolute left-0 top-0" style={{
+        width: 18, height: 18,
+        borderTop: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        borderLeft: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+      {/* Top-right */}
+      <div className="pointer-events-none absolute right-0 top-0" style={{
+        width: 18, height: 18,
+        borderTop: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        borderRight: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+      {/* Bottom-right */}
+      <div className="pointer-events-none absolute bottom-0 right-0" style={{
+        width: 18, height: 18,
+        borderBottom: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        borderRight: `1.5px solid ${isPoweredOn ? displayColor : 'rgba(255,255,255,0.1)'}`,
+        opacity: isPoweredOn ? 0.7 : 0.3,
+        transition: 'border-color 0.8s ease, opacity 0.8s ease',
+      }} />
+
       {/* Colored dot with breathing animation */}
       <div
         className="absolute left-4 top-4 rounded-full"
@@ -173,8 +239,13 @@ export const CivilizationSignalCard = React.memo(function CivilizationSignalCard
           height: 10,
           backgroundColor: color,
           color: color,
-          animation: 'breathe 4s ease-in-out infinite',
+          animationName: isPoweredOn ? 'breathe' : 'none',
+          animationDuration: '4s',
+          animationTimingFunction: 'ease-in-out',
+          animationIterationCount: 'infinite',
           animationDelay: breatheDelay,
+          opacity: isPoweredOn ? 1 : 0.3,
+          transition: 'opacity 0.8s ease',
         }}
       />
       

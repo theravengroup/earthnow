@@ -2,15 +2,20 @@
 
 import { useState, useEffect, useCallback, createContext, useContext, useMemo } from "react";
 
-// Context for managing intro replay from anywhere in the app
+// Reveal phases after intro completes — drives the cinematic sequenced load
+export type RevealPhase = "hidden" | "globe" | "navbar" | "content";
+
+// Context for managing intro replay and reveal sequencing from anywhere in the app
 interface IntroContextType {
   showReplayLink: boolean;
   triggerReplay: () => void;
+  revealPhase: RevealPhase;
 }
 
 const IntroContext = createContext<IntroContextType>({
   showReplayLink: false,
   triggerReplay: () => {},
+  revealPhase: "hidden",
 });
 
 export function useIntro() {
@@ -435,6 +440,22 @@ function CinematicIntro({ onComplete, replayKey }: { onComplete: () => void; rep
         }
         
         /* ========================================
+           LOADING BAR — fills across intro duration
+           ======================================== */
+        .intro-loading-bar {
+          width: 0%;
+          animation: loadingBarFill 7.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes loadingBarFill {
+          0%   { width: 0%; }
+          40%  { width: 35%; }
+          70%  { width: 65%; }
+          90%  { width: 85%; }
+          100% { width: 100%; }
+        }
+
+        /* ========================================
            RESPONSIVE
            ======================================== */
         @media (max-width: 768px) {
@@ -492,6 +513,32 @@ function CinematicIntro({ onComplete, replayKey }: { onComplete: () => void; rep
         </div>
       )}
 
+      {/* Cinematic loading bar — visible line at bottom, fills over the intro duration */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 32,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(320px, 60vw)",
+          height: "3px",
+          borderRadius: "2px",
+          zIndex: 10001,
+          background: "rgba(255,255,255,0.08)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          className="intro-loading-bar"
+          style={{
+            height: "100%",
+            borderRadius: "2px",
+            background: "linear-gradient(90deg, #14b8a6, #2dd4bf, #14b8a6)",
+            boxShadow: "0 0 16px rgba(20,184,166,0.6), 0 0 4px rgba(20,184,166,0.8)",
+          }}
+        />
+      </div>
+
       {/* Skip button */}
       {phase !== "fadeout" && (
         <button onClick={handleSkip} className="skip-button">
@@ -502,13 +549,14 @@ function CinematicIntro({ onComplete, replayKey }: { onComplete: () => void; rep
   );
 }
 
-// Wrapper component that handles first-visit logic
+// Wrapper component that handles first-visit logic and post-intro reveal sequencing
 export function CinematicIntroWrapper({ children }: { children: React.ReactNode }) {
   const [showIntro, setShowIntro] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
   const [showReplayLink, setShowReplayLink] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
+  const [revealPhase, setRevealPhase] = useState<RevealPhase>("hidden");
 
   useEffect(() => {
     setMounted(true);
@@ -516,6 +564,8 @@ export function CinematicIntroWrapper({ children }: { children: React.ReactNode 
     if (seen) {
       setShowReplayLink(true);
       setIntroComplete(true);
+      // Returning visitor — skip the sequence, everything visible immediately
+      setRevealPhase("content");
     } else {
       setShowIntro(true);
     }
@@ -524,13 +574,23 @@ export function CinematicIntroWrapper({ children }: { children: React.ReactNode 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
     setShowReplayLink(true);
-    // Don't set showIntro to false - keep overlay in DOM with visibility:hidden to avoid reflow
+
+    // Cinematic reveal sequence after intro overlay fades:
+    // Phase 1: Globe visible (immediate — it was rendering behind the overlay)
+    setRevealPhase("globe");
+
+    // Phase 2: Navbar slides in after 1.5s
+    setTimeout(() => setRevealPhase("navbar"), 1500);
+
+    // Phase 3: Content fades in after 3s (audio prompt triggers from here too)
+    setTimeout(() => setRevealPhase("content"), 3000);
   }, []);
 
   const handleReplay = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     setShowReplayLink(false);
     setIntroComplete(false);
+    setRevealPhase("hidden");
     setReplayKey((prev) => prev + 1);
     setShowIntro(true);
   }, []);
@@ -550,7 +610,7 @@ export function CinematicIntroWrapper({ children }: { children: React.ReactNode 
   }
 
   return (
-    <IntroContext.Provider value={{ showReplayLink, triggerReplay: handleReplay }}>
+    <IntroContext.Provider value={{ showReplayLink, triggerReplay: handleReplay, revealPhase }}>
       {children}
       {/* Always render the intro overlay - it uses visibility:hidden when complete to avoid reflow */}
       {showIntro && (

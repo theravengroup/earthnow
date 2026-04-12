@@ -4,6 +4,8 @@ export interface HeroTickerItem {
   color: string;
   icon: string;
   isStatic?: boolean;
+  /** Running total base — value = baseValue + (dailyTotal / 86400) * secondsSinceMidnight */
+  baseValue?: number;
 }
 
 export interface HeroTickerPairing {
@@ -38,4 +40,5 @@ export const heroTickerPairings: HeroTickerPairing[] = [
   { left: { label: "ICE MASS LOST TODAY (TONNES)", dailyTotal: 3600000000, color: "#06b6d4", icon: "Snowflake" }, right: { label: "AIR POLLUTION DEATHS TODAY", dailyTotal: 19000, color: "#ef4444", icon: "Wind" } },
   { left: { label: "CORPORATE PROFITS TODAY ($)", dailyTotal: 137000000000, color: "#22c55e", icon: "TrendingUp" }, right: { label: "HUNGER DEATHS TODAY", dailyTotal: 25000, color: "#f97316", icon: "Skull" } },
   { left: { label: "HUMAN YEARS LIVED TODAY", dailyTotal: 8100000000, color: "#14b8a6", icon: "Clock" }, right: { label: "WILDLIFE ANIMALS KILLED TODAY", dailyTotal: 3000000000, color: "#ef4444", icon: "Rabbit" } },
+  { left: { label: "ACTIVE SATELLITES IN ORBIT", dailyTotal: 7, color: "#14b8a6", icon: "Satellite", baseValue: 12952 }, right: { label: "TRACKED SPACE DEBRIS OBJECTS", dailyTotal: 10, color: "#768a9e", icon: "Orbit", baseValue: 36500 } },
 ];

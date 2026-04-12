@@ -6,12 +6,12 @@ import React, { useEffect, useState, useRef, useCallback, Suspense, createContex
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Users, Utensils, Heart, Zap, Globe, Cpu, Droplet, TreePine, Car, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand } from "lucide-react";
+import { Users, Utensils, Heart, Zap, Globe, Cpu, Droplet, TreePine, Car, Download, Copy, Check, Share2, Mouse, Shield, Mail, BookOpen, Flame, Search, Trees, Package, Fish, Cloud, Baby, Skull, Camera, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Wine, Dumbbell, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, HeartPulse, Hand, Satellite, Orbit } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
 import { ExpandToggleLink } from "@/components/interactive-link";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ContrastMoment } from "@/components/contrast-moment";
-import { CinematicIntroWrapper, ReplayIntroLink } from "@/components/cinematic-intro";
+import { CinematicIntroWrapper, ReplayIntroLink, useIntro, type RevealPhase } from "@/components/cinematic-intro";
 
 // Dynamically import heavy below-fold components to reduce initial JS bundle
 const SystemsExplorer = dynamic(
@@ -67,6 +67,50 @@ import {
 } from "@/components/impact/lifetime-impact";
 import { drawRoundRect, formatLargeNumber, formatTime, formatTimeWithUnit, PER_SECOND_RATES, type ShareMomentState } from "@/lib/canvas/generate-share-card";
 
+// Wrapper that reads reveal phase from inside the CinematicIntroWrapper provider
+// and applies cinematic fade/slide transitions to its children
+function RevealGate({ phase, children, style }: {
+  phase: "globe" | "navbar" | "content";
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
+  const { revealPhase } = useIntro();
+  const phaseOrder: RevealPhase[] = ["hidden", "globe", "navbar", "content"];
+  const currentIdx = phaseOrder.indexOf(revealPhase);
+  const targetIdx = phaseOrder.indexOf(phase);
+  const visible = currentIdx >= targetIdx;
+
+  return (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: "opacity 1s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1)",
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Wrapper specifically for the globe — scale-up + fade
+function GlobeRevealGate({ children }: { children: React.ReactNode }) {
+  const { revealPhase } = useIntro();
+  const visible = revealPhase !== "hidden";
+  return (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1)" : "scale(0.95)",
+        transition: "opacity 1.5s ease, transform 1.5s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 // Dynamically import the globe component with SSR disabled
 const EarthGlobe = dynamic(
   () => import("@/components/earth-globe").catch(() => {
@@ -82,22 +126,6 @@ const EarthGlobe = dynamic(
 
 
 
-// Pre-computed satellite dots positions
-const SATELLITE_DOTS: Array<{ left: number; top: number; size: number }> = [
-  { left: 38, top: 16, size: 2 }, { left: 52, top: 17, size: 2 }, { left: 45, top: 15, size: 3 },
-  { left: 41, top: 18, size: 2 }, { left: 58, top: 16, size: 1 }, { left: 49, top: 19, size: 2 },
-  { left: 36, top: 17, size: 2 }, { left: 55, top: 18, size: 2 }, { left: 43, top: 16, size: 3 },
-  { left: 61, top: 17, size: 2 }, { left: 39, top: 19, size: 1 }, { left: 47, top: 15, size: 2 },
-  { left: 53, top: 19, size: 2 }, { left: 37, top: 16, size: 2 }, { left: 59, top: 18, size: 1 },
-  { left: 44, top: 17, size: 2 }, { left: 50, top: 16, size: 3 }, { left: 40, top: 18, size: 2 },
-  { left: 56, top: 15, size: 2 }, { left: 48, top: 18, size: 2 }, { left: 35, top: 17, size: 1 },
-  { left: 62, top: 16, size: 2 }, { left: 42, top: 19, size: 2 }, { left: 54, top: 17, size: 2 },
-  { left: 46, top: 16, size: 3 }, { left: 38, top: 18, size: 2 }, { left: 57, top: 19, size: 1 },
-  { left: 51, top: 15, size: 2 }, { left: 41, top: 17, size: 2 }, { left: 60, top: 18, size: 2 },
-  { left: 36, top: 19, size: 2 }, { left: 63, top: 17, size: 1 }, { left: 45, top: 18, size: 2 },
-  { left: 52, top: 16, size: 2 }, { left: 39, top: 15, size: 3 }, { left: 58, top: 17, size: 2 },
-  { left: 43, top: 19, size: 2 }, { left: 49, top: 17, size: 2 },
-];
 
 
 
@@ -620,7 +648,7 @@ const WhileYouWereHereSection = React.forwardRef<HTMLDivElement>(function WhileY
 
 // Icon mapping for ticker
 const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock,
+  Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, Satellite, Orbit,
 };
 
 // Isolated countdown component — ticks every second without re-rendering the parent
@@ -1180,26 +1208,19 @@ export default function Home() {
   };
 
   const selectedPairing = heroTickerPairings[heroTickerIndex];
-  const tickerData = [
-    { 
-      label: selectedPairing.left.label, 
-      baseValue: (selectedPairing.left as { isStatic?: boolean }).isStatic ? selectedPairing.left.dailyTotal : 0, 
-      perSecond: (selectedPairing.left as { isStatic?: boolean }).isStatic ? 0 : selectedPairing.left.dailyTotal / 86400, 
-      color: selectedPairing.left.color, 
-      icon: selectedPairing.left.icon, 
-      abbreviated: selectedPairing.left.dailyTotal >= 1000000,
-      isStatic: (selectedPairing.left as { isStatic?: boolean }).isStatic || false,
-    },
-    { 
-      label: selectedPairing.right.label, 
-      baseValue: (selectedPairing.right as { isStatic?: boolean }).isStatic ? selectedPairing.right.dailyTotal : 0, 
-      perSecond: (selectedPairing.right as { isStatic?: boolean }).isStatic ? 0 : selectedPairing.right.dailyTotal / 86400, 
-      color: selectedPairing.right.color, 
-      icon: selectedPairing.right.icon, 
-      abbreviated: selectedPairing.right.dailyTotal >= 1000000,
-      isStatic: (selectedPairing.right as { isStatic?: boolean }).isStatic || false,
-    },
-  ];
+  const buildTickerItem = (item: typeof selectedPairing.left) => {
+    const hasBase = item.baseValue !== undefined;
+    return {
+      label: item.label,
+      baseValue: item.isStatic ? item.dailyTotal : (hasBase ? item.baseValue! : 0),
+      perSecond: item.isStatic ? 0 : item.dailyTotal / 86400,
+      color: item.color,
+      icon: item.icon,
+      abbreviated: !hasBase && item.dailyTotal >= 1000000,
+      isStatic: item.isStatic || false,
+    };
+  };
+  const tickerData = [buildTickerItem(selectedPairing.left), buildTickerItem(selectedPairing.right)];
 
   // Scroll-based active section detection (reverse loop approach)
   useEffect(() => {
@@ -1333,64 +1354,19 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden px-4 md:min-h-screen">
-        {/* Satellite dots - clustered above the globe */}
-        <div className="pointer-events-none absolute inset-0 z-[2] hidden md:block">
-          {SATELLITE_DOTS.map((dot, i) => (
-            <div
-              key={`satellite-${i}`}
-              className="absolute rounded-full"
-              style={{
-                left: `${dot.left}%`,
-                top: `${dot.top}%`,
-                width: `${dot.size}px`,
-                height: `${dot.size}px`,
-                background: '#ef4444',
-                boxShadow: '0 0 4px rgba(239,68,68,0.6)',
-              }}
-            />
-          ))}
-          {/* Satellite label - below the dot cluster */}
-          <div 
-            className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-center font-mono"
-            style={{
-              top: '26%',
-            }}
-          >
-            <div className="leading-snug mb-1">
-              <div 
-                className="text-[14px]"
-                style={{
-                  color: '#ef4444',
-                  textShadow: '0 0 8px rgba(239,68,68,0.4)',
-                }}
-              >
-                12,952 active satellites in orbit
-              </div>
-            </div>
-            <div className="leading-snug mb-1">
-              <div 
-                className="text-[12px]"
-                style={{
-                  color: '#f97316',
-                  textShadow: '0 0 8px rgba(249,115,22,0.4)',
-                }}
-              >
-                6,000 tons of space debris
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* 3D Globe - centered with absolute positioning */}
-        <div 
+        <div
 className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
   style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <EarthGlobe />
+          <GlobeRevealGate>
+            <EarthGlobe />
+          </GlobeRevealGate>
         </div>
 
 {/* Brand Lockup - Pinned to top */}
-        <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center pt-8 md:pt-12">
+        <RevealGate phase="content" style={{ position: 'absolute', left: 0, right: 0, top: 0, zIndex: 10 }}>
+        <div className="flex flex-col items-center pt-8 md:pt-12">
           <motion.div
             className="flex flex-col items-center"
             initial={{ opacity: 0 }}
@@ -1447,17 +1423,23 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
             >
-              Real-Time Earth Signal
+              Real-Time Earth Signals
             </motion.span>
+            {/* Replay Intro link - tight below subtitle */}
+            <div className="mt-2">
+              <ReplayIntroLink />
+            </div>
           </motion.div>
         </div>
-        
+        </RevealGate>
+
         {/* Text Content */}
+        <RevealGate phase="content" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
         <motion.div
-          className="relative z-10 flex flex-col items-center text-center"
+          className="flex flex-col items-center text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           <h1
               className="mb-6 font-serif font-bold leading-tight text-white"
@@ -1471,16 +1453,33 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           </p>
 
           <div className="flex flex-col items-center gap-4 pb-8 md:pb-0">
-              <div className="flex w-full justify-center px-4">
+              <div className="flex justify-center gap-3 px-4 flex-col sm:flex-row items-center">
+                <motion.button
+                  onClick={() => document.getElementById('vital-signs')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-medium text-white transition-all duration-300"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    letterSpacing: '0.02em',
+                  }}
+                  whileHover={{
+                    scale: 1.03,
+                    borderColor: 'rgba(255,255,255,0.4)',
+                    boxShadow: '0 0 20px rgba(255,255,255,0.08)',
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Explore the Signals
+                </motion.button>
                 <motion.button
                   onClick={() => document.getElementById('your-impact')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="cta-primary w-full max-w-[320px] rounded-full px-8 py-4 text-[16px] font-semibold text-white transition-all duration-300"
+                  className="cta-primary whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300"
                   style={{
                     background: 'linear-gradient(135deg, #0f766e, #14b8a6)',
                     border: '1px solid rgba(20,184,166,0.4)',
                     letterSpacing: '0.02em',
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.03,
                     background: 'linear-gradient(135deg, #14b8a6, #06b6d4)',
                     boxShadow: '0 0 35px rgba(20,184,166,0.4), 0 4px 15px rgba(0,0,0,0.3)',
@@ -1490,20 +1489,17 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   Your Lifetime Impact
                 </motion.button>
               </div>
-              
-              {/* Replay Intro link - below hero tagline */}
-              <div className="w-full text-center" style={{ position: 'relative', zIndex: 10 }}>
-                <ReplayIntroLink />
-              </div>
             </div>
           </motion.div>
+        </RevealGate>
 
         {/* Ticker Bar - Focused 2-card layout */}
+        <RevealGate phase="content" style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <motion.div
-          className="absolute bottom-0 left-0 right-0 hidden px-4 pb-6 pt-4 md:block"
+          className="hidden px-4 pb-6 pt-4 md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         >
           {/* Desktop layout */}
           <div className="mx-auto hidden max-w-2xl flex-col items-center md:flex">
@@ -1539,6 +1535,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           
 
         </motion.div>
+        </RevealGate>
       </section>
 
       {/* Suspense boundary for Vital Signs Section */}
