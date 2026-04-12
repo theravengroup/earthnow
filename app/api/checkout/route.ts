@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 import { z } from "zod";
 import { getStripe } from "@/lib/stripe";
 import {
@@ -24,78 +25,60 @@ const requestSchema = z.discriminatedUnion("type", [
   terraSchema,
 ]);
 
-// EarthNow dark theme branding for Stripe Checkout
-const brandingSettings = {
-  display_name: "EarthNow",
-  background_color: "#0a0e17",
-  button_color: "#0f766e",
-  font_family: "inter" as const,
-  border_style: "rounded" as const,
-};
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const parsed = requestSchema.parse(body);
     const stripe = getStripe();
-    const origin = request.headers.get("origin") || "https://www.earthnow.app";
 
     if (parsed.type === "donation") {
       const { frequency, amount } = parsed;
 
       if (frequency === "one-time") {
-        // One-time donation → Embedded Checkout Session (payment mode)
-        const session = await stripe.checkout.sessions.create({
-          ui_mode: "embedded_page",
-          mode: "payment",
-          line_items: [
-            {
-              price_data: {
-                currency: "usd",
-                product_data: { name: "EarthNow Donation" },
-                unit_amount: amount * 100,
-              },
-              quantity: 1,
-            },
-          ],
-          return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+        // One-time donation → PaymentIntent
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount * 100,
+          currency: "usd",
+          payment_method_types: ["card"],
           metadata: { type: "donation", frequency: "one-time" },
-          branding_settings: brandingSettings,
         });
 
-        return NextResponse.json({ clientSecret: session.client_secret });
+        return NextResponse.json({ clientSecret: paymentIntent.client_secret });
       }
 
-      // Monthly donation → Embedded Checkout Session (subscription mode)
+      // Monthly donation → Subscription (incomplete until payment confirmed)
+      const customer = await stripe.customers.create();
       const priceId = MONTHLY_PRICE_IDS[amount];
 
-      let lineItems;
+      let items: Stripe.SubscriptionCreateParams.Item[];
       if (priceId) {
-        lineItems = [{ price: priceId, quantity: 1 }];
+        items = [{ price: priceId, quantity: 1 }];
       } else {
-        lineItems = [
-          {
-            price_data: {
-              currency: "usd",
-              product: MONTHLY_PRODUCT_ID,
-              unit_amount: amount * 100,
-              recurring: { interval: "month" as const },
-            },
-            quantity: 1,
-          },
-        ];
+        // Subscriptions API doesn't support inline price_data — create a Price first
+        const price = await stripe.prices.create({
+          currency: "usd",
+          product: MONTHLY_PRODUCT_ID,
+          unit_amount: amount * 100,
+          recurring: { interval: "month" },
+        });
+        items = [{ price: price.id, quantity: 1 }];
       }
 
-      const session = await stripe.checkout.sessions.create({
-        ui_mode: "embedded_page",
-        mode: "subscription",
-        line_items: lineItems,
-        return_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items,
+        payment_behavior: "default_incomplete",
+        payment_settings: {
+          save_default_payment_method: "on_subscription",
+        },
+        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "donation", frequency: "monthly" },
-        branding_settings: brandingSettings,
       });
 
-      return NextResponse.json({ clientSecret: session.client_secret });
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const pi = invoice.payment_intent as Stripe.PaymentIntent;
+
+      return NextResponse.json({ clientSecret: pi.client_secret });
     }
 
     if (parsed.type === "terra") {
@@ -105,16 +88,23 @@ export async function POST(request: Request) {
           ? TERRA_PRICE_IDS.monthly
           : TERRA_PRICE_IDS.annual;
 
-      const session = await stripe.checkout.sessions.create({
-        ui_mode: "embedded_page",
-        mode: "subscription",
-        line_items: [{ price: priceId, quantity }],
-        return_url: `${origin}/terra/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+      const customer = await stripe.customers.create();
+
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId, quantity }],
+        payment_behavior: "default_incomplete",
+        payment_settings: {
+          save_default_payment_method: "on_subscription",
+        },
+        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "terra", plan },
-        branding_settings: brandingSettings,
       });
 
-      return NextResponse.json({ clientSecret: session.client_secret });
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const pi = invoice.payment_intent as Stripe.PaymentIntent;
+
+      return NextResponse.json({ clientSecret: pi.client_secret });
     }
 
     return NextResponse.json(

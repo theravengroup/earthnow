@@ -897,14 +897,14 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   onClick={() => document.getElementById('vital-signs')?.scrollIntoView({ behavior: 'smooth' })}
                   className="whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-medium text-white transition-all duration-300"
                   style={{
-                    background: 'transparent',
-                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'linear-gradient(135deg, #1e293b, #334155)',
+                    border: '1px solid rgba(255,255,255,0.12)',
                     letterSpacing: '0.02em',
                   }}
                   whileHover={{
                     scale: 1.03,
-                    borderColor: 'rgba(255,255,255,0.4)',
-                    boxShadow: '0 0 20px rgba(255,255,255,0.08)',
+                    borderColor: 'rgba(255,255,255,0.25)',
+                    boxShadow: '0 0 20px rgba(255,255,255,0.06)',
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
