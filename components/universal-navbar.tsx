@@ -157,8 +157,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                   <button
                     key={link.id}
                     onClick={() => handleLinkClick(link)}
+                    aria-current={isActive ? "true" : undefined}
                     className="nav-link group relative whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
-                    style={{ 
+                    style={{
                       color: isActive ? "white" : "#94a3b8",
                     }}
                     onMouseEnter={(e) => {
@@ -199,8 +200,9 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                 <Link
                   key={link.id}
                   href={link.href}
+                  aria-current={isActive ? "page" : undefined}
                   className="nav-link group relative whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
-                  style={{ 
+                  style={{
                     color: isActive ? "white" : "#94a3b8",
                   }}
                   onMouseEnter={(e) => {
@@ -370,6 +372,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => handleLinkClick(link)}
+                      aria-current={isActive ? "true" : undefined}
                       className="font-serif text-[22px] transition-colors duration-200 hover:text-[#14b8a6]"
                       style={{ color: isActive ? "#14b8a6" : "white" }}
                     >
@@ -388,6 +391,7 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                     <Link
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
                       className="font-serif text-[22px] text-white transition-colors duration-200 hover:text-[#14b8a6]"
                     >
                       {link.label}
