@@ -1872,7 +1872,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               marginBottom: "20px",
             }}
           >
-            Want Terra in your lobby?
+            Want EarthNow in your lobby?
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -1888,7 +1888,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               lineHeight: 1.6,
             }}
           >
-            Terra is a real-time planetary dashboard designed for lobby displays. Plug it in. Watch people stop and stare.
+            Terra is a real-time planetary display built for offices, lobbies, and public spaces. Plug it in. Watch people stop and stare.
           </motion.p>
           <motion.a
             initial={{ opacity: 0, y: 20 }}
@@ -1904,7 +1904,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               padding: "12px 32px",
             }}
           >
-            Learn About Terra →
+            Learn More About Terra →
           </motion.a>
         </div>
       </section>
