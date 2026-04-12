@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronDown, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { ShareButton } from "@/components/share-button";
@@ -873,17 +873,6 @@ export default function TodayPage() {
             </>
           )}
           
-          {/* Scroll indicator - 40px below stat */}
-          <motion.div 
-            className="mt-10"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown 
-              className="h-6 w-6" 
-              style={{ color: "rgba(255,255,255,0.3)" }} 
-            />
-          </motion.div>
         </section>
         
         {/* ================================================================

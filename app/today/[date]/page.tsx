@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ChevronDown, Copy, ArrowRight } from "lucide-react";
+import { Copy, ArrowRight } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
 import { UniversalNavbar } from "@/components/universal-navbar";
 import { toast } from "sonner";
@@ -432,16 +432,6 @@ export default function TodayDatePage() {
           </p>
           
           {/* Scroll indicator - 40px below stat */}
-          <motion.div 
-            className="mt-10"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown 
-              className="h-6 w-6" 
-              style={{ color: "rgba(255,255,255,0.3)" }} 
-            />
-          </motion.div>
         </section>
         
         {/* ================================================================
