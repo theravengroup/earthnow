@@ -107,7 +107,8 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
   };
 
   // Navbar is visible once revealPhase reaches "navbar" or beyond
-  const navVisible = revealPhase === "navbar" || revealPhase === "content";
+  // On non-homepage routes (no CinematicIntroWrapper), always show immediately
+  const navVisible = !isHomepage || revealPhase === "navbar" || revealPhase === "content";
 
   return (
     <>

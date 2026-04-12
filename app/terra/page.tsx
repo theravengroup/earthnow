@@ -537,91 +537,7 @@ export default function TerraPage() {
 
       <GradientDivider />
 
-      {/* IT Requirements Section */}
-      <section className="px-6 py-20 md:px-12">
-        <div className="mx-auto max-w-[900px]">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="text-center"
-          >
-            <p
-              className="font-mono uppercase text-[#14b8a6]"
-              style={{ fontSize: "11px", letterSpacing: "0.2em" }}
-            >
-              FOR IT DEPARTMENTS
-            </p>
-            <h2 className="mt-4 font-serif text-[48px] text-white">
-              Works With What You Already Have
-            </h2>
-            <p
-              className="mx-auto mt-4 max-w-[600px] font-sans text-[#94a3b8]"
-              style={{ fontSize: "18px" }}
-            >
-              Terra is designed to run on standard corporate infrastructure. No special hardware beyond the included streamer. No IT project.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="mx-auto mt-12 max-w-[700px]"
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(20,184,166,0.2)",
-              borderRadius: "16px",
-              padding: "8px 0",
-            }}
-          >
-            {[
-              { label: "Display", value: "Any HDMI-compatible TV or monitor" },
-              { label: "Resolution", value: "1080p minimum \u2014 4K recommended" },
-              { label: "Internet", value: "10 Mbps WiFi or faster" },
-              { label: "Network", value: "Standard HTTPS outbound only" },
-              { label: "Power", value: "Standard outlet near display" },
-              { label: "Operation", value: "Display on during business hours" },
-            ].map((row, index, arr) => (
-              <div
-                key={row.label}
-                className="flex flex-col gap-1 transition-colors duration-200 hover:bg-[rgba(20,184,166,0.04)] md:flex-row md:items-center md:justify-between"
-                style={{
-                  padding: "16px 24px",
-                  borderBottom: index < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
-                }}
-              >
-                <span
-                  className="font-sans uppercase text-[#768a9e]"
-                  style={{ fontSize: "12px", letterSpacing: "0.08em" }}
-                >
-                  {row.label}
-                </span>
-                <span className="font-sans text-[15px] text-white">
-                  {row.value}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-            className="mt-6 text-center font-sans italic text-[#94a3b8]"
-            style={{ fontSize: "16px" }}
-          >
-            No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
-          </motion.p>
-        </div>
-      </section>
-
-      <GradientDivider />
-
-      {/* Two Ways to Run Terra */}
+      {/* Terra Hardware Section */}
       <section className="px-6 py-24 md:px-12">
         <div className="mx-auto max-w-5xl">
           <motion.div
@@ -635,21 +551,21 @@ export default function TerraPage() {
               className="font-mono uppercase text-[#14b8a6]"
               style={{ fontSize: "11px", letterSpacing: "0.2em" }}
             >
-              TWO WAYS TO RUN TERRA
+              THE TERRA HARDWARE
             </p>
             <h2 className="mt-4 font-serif text-[48px] text-white">
-              Choose how you deploy
+              Ready to run in 2 minutes
             </h2>
             <p className="mx-auto mt-4 max-w-[600px] font-sans text-[18px] text-[#94a3b8]">
-              Whether you want a turnkey hardware solution or prefer to use your own devices, Terra fits your setup.
+              A pre-configured streamer that plugs into any HDMI display. Connect to WiFi and Terra launches automatically. No IT project required.
             </p>
           </motion.div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            {/* Option 1: Hardware Device — Available Now */}
+          <div className="mx-auto max-w-xl">
+            {/* Hardware Device — Available Now */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="flex flex-col rounded-2xl p-8"
@@ -703,9 +619,6 @@ export default function TerraPage() {
               </div>
 
               <div className="mt-auto pt-8">
-                <p className="mb-3 text-center font-sans text-[14px] text-[#768a9e]">
-                  Starting at $179/screen/month. Scroll down for full pricing.
-                </p>
                 <a
                   href="#pricing"
                   className="block w-full rounded-full bg-[#14b8a6] py-3.5 text-center font-sans text-[15px] font-medium text-white transition-all duration-200 hover:bg-[#0d9488]"
@@ -713,114 +626,6 @@ export default function TerraPage() {
                 >
                   See Pricing
                 </a>
-              </div>
-            </motion.div>
-
-            {/* Option 2: TV Apps — Coming Soon */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="flex flex-col rounded-2xl p-8"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              {/* Badge */}
-              <div className="mb-6 flex items-center gap-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{ background: "rgba(148,163,184,0.12)" }}
-                >
-                  <Tv className="h-5 w-5 text-[#94a3b8]" />
-                </div>
-                <div>
-                  <p
-                    className="font-mono text-[11px] uppercase tracking-[0.15em]"
-                    style={{ color: "#f59e0b" }}
-                  >
-                    Coming Soon
-                  </p>
-                  <h3 className="font-serif text-[24px] text-white">
-                    Terra Apps
-                  </h3>
-                </div>
-              </div>
-
-              <p className="font-sans text-[16px] leading-relaxed text-[#94a3b8]">
-                Bring your own device. We&apos;re building native Terra apps for Apple TV and Android TV so you can run Terra on hardware you already own — no additional device needed.
-              </p>
-
-              {/* Platform details */}
-              <div className="mt-6 space-y-3">
-                {[
-                  { icon: Smartphone, label: "Apple TV app" },
-                  { icon: Tv, label: "Android TV app" },
-                  { icon: Wifi, label: "Same real-time data, same cinematic experience" },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-start gap-2.5">
-                    <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-[#768a9e]" />
-                    <span className="font-sans text-[14px] text-[#cbd5e1]">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Visual placeholder for apps */}
-              <div className="mt-8 flex flex-1 items-center justify-center">
-                <motion.div
-                  className="flex items-center gap-8"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                >
-                  {/* Apple TV icon */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div
-                      className="flex h-16 w-16 items-center justify-center rounded-2xl"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      <svg viewBox="0 0 24 24" className="h-8 w-8" fill="#94a3b8">
-                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                      </svg>
-                    </div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
-                      Apple TV
-                    </span>
-                  </div>
-
-                  {/* Android TV icon */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div
-                      className="flex h-16 w-16 items-center justify-center rounded-2xl"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      <svg viewBox="0 0 24 24" className="h-8 w-8" fill="#94a3b8">
-                        <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V7H6v11zM3.5 7C2.67 7 2 7.67 2 8.5v7c0 .83.67 1.5 1.5 1.5S5 16.33 5 15.5v-7C5 7.67 4.33 7 3.5 7zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" />
-                      </svg>
-                    </div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
-                      Android TV
-                    </span>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Notify me */}
-              <div className="mt-auto pt-8">
-                <p className="mb-3 font-sans text-[14px] text-[#768a9e]">
-                  Get notified when the apps are available:
-                </p>
-                <AppWaitlistForm />
               </div>
             </motion.div>
           </div>
@@ -980,6 +785,204 @@ export default function TerraPage() {
               Contact us for enterprise pricing.
             </a>
           </motion.p>
+        </div>
+      </section>
+
+      <GradientDivider />
+
+      {/* IT Requirements Section */}
+      <section className="px-6 py-20 md:px-12">
+        <div className="mx-auto max-w-[900px]">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="text-center"
+          >
+            <p
+              className="font-mono uppercase text-[#14b8a6]"
+              style={{ fontSize: "11px", letterSpacing: "0.2em" }}
+            >
+              FOR IT DEPARTMENTS
+            </p>
+            <h2 className="mt-4 font-serif text-[48px] text-white">
+              Works With What You Already Have
+            </h2>
+            <p
+              className="mx-auto mt-4 max-w-[600px] font-sans text-[#94a3b8]"
+              style={{ fontSize: "18px" }}
+            >
+              Terra is designed to run on standard corporate infrastructure. No special hardware beyond the included streamer. No IT project.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="mx-auto mt-12 max-w-[700px]"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(20,184,166,0.2)",
+              borderRadius: "16px",
+              padding: "8px 0",
+            }}
+          >
+            {[
+              { label: "Display", value: "Any HDMI-compatible TV or monitor" },
+              { label: "Resolution", value: "1080p minimum \u2014 4K recommended" },
+              { label: "Internet", value: "10 Mbps WiFi or faster" },
+              { label: "Network", value: "Standard HTTPS outbound only" },
+              { label: "Power", value: "Standard outlet near display" },
+              { label: "Operation", value: "Display on during business hours" },
+            ].map((row, index, arr) => (
+              <div
+                key={row.label}
+                className="flex flex-col gap-1 transition-colors duration-200 hover:bg-[rgba(20,184,166,0.04)] md:flex-row md:items-center md:justify-between"
+                style={{
+                  padding: "16px 24px",
+                  borderBottom: index < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                }}
+              >
+                <span
+                  className="font-sans uppercase text-[#768a9e]"
+                  style={{ fontSize: "12px", letterSpacing: "0.08em" }}
+                >
+                  {row.label}
+                </span>
+                <span className="font-sans text-[15px] text-white">
+                  {row.value}
+                </span>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            className="mt-6 text-center font-sans italic text-[#94a3b8]"
+            style={{ fontSize: "16px" }}
+          >
+            No VPN required. No firewall exceptions. No IT headaches. If Netflix works in your building, Terra works in your building.
+          </motion.p>
+        </div>
+      </section>
+
+      <GradientDivider />
+
+      {/* Coming Soon: Terra Apps */}
+      <section className="px-6 py-24 md:px-12">
+        <div className="mx-auto max-w-xl">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="mb-12 text-center"
+          >
+            <p
+              className="font-mono uppercase"
+              style={{ fontSize: "11px", letterSpacing: "0.2em", color: "#f59e0b" }}
+            >
+              COMING SOON
+            </p>
+            <h2 className="mt-4 font-serif text-[48px] text-white">
+              Terra Apps
+            </h2>
+            <p className="mx-auto mt-4 max-w-[600px] font-sans text-[18px] text-[#94a3b8]">
+              Bring your own device. Run Terra on hardware you already own.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="flex flex-col rounded-2xl p-8"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+            }}
+          >
+            <p className="font-sans text-[16px] leading-relaxed text-[#94a3b8]">
+              We&apos;re building native Terra apps for Apple TV and Android TV so you can run Terra on hardware you already own — no additional device needed.
+            </p>
+
+            {/* Platform details */}
+            <div className="mt-6 space-y-3">
+              {[
+                { icon: Smartphone, label: "Apple TV app" },
+                { icon: Tv, label: "Android TV app" },
+                { icon: Wifi, label: "Same real-time data, same cinematic experience" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-start gap-2.5">
+                  <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-[#768a9e]" />
+                  <span className="font-sans text-[14px] text-[#cbd5e1]">{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Visual placeholder for apps */}
+            <div className="mt-8 flex items-center justify-center">
+              <motion.div
+                className="flex items-center gap-8"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                {/* Apple TV icon */}
+                <div className="flex flex-col items-center gap-2">
+                  <div
+                    className="flex h-16 w-16 items-center justify-center rounded-2xl"
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" className="h-8 w-8" fill="#94a3b8">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                    </svg>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
+                    Apple TV
+                  </span>
+                </div>
+
+                {/* Android TV icon */}
+                <div className="flex flex-col items-center gap-2">
+                  <div
+                    className="flex h-16 w-16 items-center justify-center rounded-2xl"
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" className="h-8 w-8" fill="#94a3b8">
+                      <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V7H6v11zM3.5 7C2.67 7 2 7.67 2 8.5v7c0 .83.67 1.5 1.5 1.5S5 16.33 5 15.5v-7C5 7.67 4.33 7 3.5 7zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" />
+                    </svg>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#768a9e]">
+                    Android TV
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Notify me */}
+            <div className="mt-8 pt-4">
+              <p className="mb-3 font-sans text-[14px] text-[#768a9e]">
+                Get notified when the apps are available:
+              </p>
+              <AppWaitlistForm />
+            </div>
+          </motion.div>
         </div>
       </section>
 
