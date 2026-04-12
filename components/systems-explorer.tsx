@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { Users, Zap, Globe, Utensils, Cpu, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SYSTEMS_DEEP_DIVE } from "@/app/systems-data";
@@ -144,8 +144,8 @@ const connections = [
 ];
 
 // Planetary Systems Map Component
-function PlanetarySystemsMap({ 
-  hoveredSystem, 
+const PlanetarySystemsMap = memo(function PlanetarySystemsMap({
+  hoveredSystem,
   expandedSystem,
   onHoverSystem,
   onClickSystem,
@@ -332,10 +332,10 @@ function PlanetarySystemsMap({
       })}
     </svg>
   );
-}
+});
 
 // Simplified System Diagram for cards
-function SystemDiagram({ 
+const SystemDiagram = memo(function SystemDiagram({ 
   nodes, 
   accentColor, 
   isHovered,
@@ -442,10 +442,10 @@ function SystemDiagram({
       })}
     </svg>
   );
-}
+});
 
 // System Card Component
-function SystemCard({ 
+const SystemCard = memo(function SystemCard({ 
   system, 
   isHighlighted,
   isExpanded,
@@ -577,10 +577,10 @@ function SystemCard({
       </div>
     </div>
   );
-}
+});
 
 // Connector Line Component between selected tile and deep-dive panel
-function ConnectorLine({ 
+const ConnectorLine = memo(function ConnectorLine({ 
   accentColor,
   systemId,
   containerRef,
@@ -665,10 +665,10 @@ function ConnectorLine({
       />
     </motion.div>
   );
-}
+});
 
 // Deep Dive Panel Component - Always rendered, visibility controlled via CSS
-function SystemDeepDivePanel({ 
+const SystemDeepDivePanel = memo(function SystemDeepDivePanel({ 
   systemId, 
   accentColor,
   isVisible,
@@ -998,7 +998,7 @@ padding: 'clamp(20px, 4vw, 40px)',
       </div>
     </div>
   );
-}
+});
 
 // Main Systems Explorer Component
 export function SystemsExplorer() {
