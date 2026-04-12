@@ -56,7 +56,7 @@ export function useDonationCheckout() {
         const message =
           err instanceof Error ? err.message : "Payment failed";
         setState((prev) => ({ ...prev, loading: false, error: message }));
-        toast.error("Could not start checkout. Please try again.");
+        toast.error(message);
       }
     },
     []
@@ -91,7 +91,7 @@ export function useDonationCheckout() {
         const message =
           err instanceof Error ? err.message : "Payment failed";
         setState((prev) => ({ ...prev, loading: false, error: message }));
-        toast.error("Could not start checkout. Please try again.");
+        toast.error(message);
       }
     },
     []
