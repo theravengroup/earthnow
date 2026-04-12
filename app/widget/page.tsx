@@ -103,6 +103,7 @@ export default function WidgetPage() {
     el.setAttribute('stats', selectedStats.join(','));
     el.setAttribute('theme', theme);
     el.setAttribute('layout', layout);
+    (el as HTMLElement).style.width = '100%';
     if (!el.parentElement) previewRef.current.appendChild(el);
   }, [selectedStats, theme, layout]);
 
@@ -248,7 +249,7 @@ export default function WidgetPage() {
 
               {/* Right Column - Live Preview */}
               <div
-                className="flex flex-col items-center justify-center rounded-2xl p-6"
+                className="flex flex-col items-center justify-center rounded-2xl p-3 sm:p-6"
                 style={{
                   background: theme === "dark" ? "#1a1a2e" : "#f3f4f6",
                   border: "1px solid rgba(255,255,255,0.06)",
@@ -282,7 +283,7 @@ export default function WidgetPage() {
                   {/* Live web component preview */}
                   <div
                     ref={previewRef}
-                    className="flex items-center justify-center p-8"
+                    className="flex w-full items-center justify-center p-2 sm:p-8"
                     style={{
                       background: theme === "dark" ? "#0a0e17" : "#ffffff",
                     }}

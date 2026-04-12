@@ -85,8 +85,11 @@
 \
 .en-container {\
   border-radius: 10px;\
-  padding: 16px 20px;\
+  padding: 12px;\
   box-sizing: border-box;\
+}\
+@media (min-width: 400px) {\
+  .en-container { padding: 16px 20px; }\
 }\
 .en-container.en-dark {\
   background: #0a0e17;\
@@ -116,8 +119,12 @@
   flex-direction: column;\
   gap: 4px;\
   min-width: 0;\
-  padding: 12px 16px;\
+  padding: 10px 10px;\
   border-radius: 10px;\
+  overflow: hidden;\
+}\
+@media (min-width: 400px) {\
+  .en-stat { padding: 12px 16px; }\
 }\
 .en-dark .en-stat {\
   background: rgba(255,255,255,0.04);\
@@ -148,12 +155,15 @@
 \
 .en-value {\
   font-family: "Space Mono", monospace;\
-  font-size: 20px;\
+  font-size: 16px;\
   font-weight: 700;\
   letter-spacing: 0.02em;\
   font-variant-numeric: tabular-nums;\
   font-feature-settings: "tnum";\
   line-height: 1.2;\
+}\
+@media (min-width: 400px) {\
+  .en-value { font-size: 20px; }\
 }\
 .en-dark .en-value { text-shadow: 0 0 12px currentColor; }\
 \
