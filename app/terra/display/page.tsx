@@ -11,7 +11,7 @@ export default function TerraDisplayPage() {
         justifyContent: "center",
       }}
     >
-      <p style={{ color: "white", fontSize: "24px" }}>Terra Display - Coming Soon</p>
+      <h1 style={{ color: "white", fontSize: "24px" }}>Terra Display - Coming Soon</h1>
     </div>
   );
 }

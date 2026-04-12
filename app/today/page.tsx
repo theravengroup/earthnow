@@ -1104,12 +1104,12 @@ export default function TodayPage() {
           ) : (
             <>
               {/* Era year */}
-              <h1 
+              <h2
                 className="font-serif font-light text-white"
                 style={{ fontSize: "clamp(48px, 8vw, 120px)" }}
               >
                 {selectedEra.yearDisplay}
-              </h1>
+              </h2>
               
               {/* Era name */}
               <p 
