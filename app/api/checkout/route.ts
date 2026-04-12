@@ -25,6 +25,39 @@ const requestSchema = z.discriminatedUnion("type", [
   terraSchema,
 ]);
 
+/**
+ * Get the PaymentIntent client_secret from a subscription's latest invoice.
+ * Stripe v22 SDK removed payment_intent from the Invoice type, but the API
+ * still returns it. We retrieve the invoice raw and access it via any cast.
+ */
+async function getSubscriptionClientSecret(
+  stripe: Stripe,
+  subscription: Stripe.Subscription
+): Promise<string> {
+  const invoiceId =
+    typeof subscription.latest_invoice === "string"
+      ? subscription.latest_invoice
+      : subscription.latest_invoice?.id;
+
+  if (!invoiceId) {
+    throw new Error("Subscription created but no invoice found");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const invoice: any = await stripe.invoices.retrieve(invoiceId);
+  const piId =
+    typeof invoice.payment_intent === "string"
+      ? invoice.payment_intent
+      : invoice.payment_intent?.id;
+
+  if (!piId) {
+    throw new Error("Invoice has no payment intent");
+  }
+
+  const paymentIntent = await stripe.paymentIntents.retrieve(piId);
+  return paymentIntent.client_secret!;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -54,7 +87,6 @@ export async function POST(request: Request) {
       if (priceId) {
         items = [{ price: priceId, quantity: 1 }];
       } else {
-        // Subscriptions API doesn't support inline price_data — create a Price first
         const price = await stripe.prices.create({
           currency: "usd",
           product: MONTHLY_PRODUCT_ID,
@@ -71,19 +103,10 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "donation", frequency: "monthly" },
       });
 
-      // Stripe API returns payment_intent on the expanded invoice, but the
-      // v22 SDK types don't include it. Access via runtime shape.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const invoice = subscription.latest_invoice as any;
-      const clientSecret = invoice?.payment_intent?.client_secret as string | undefined;
-      if (!clientSecret) {
-        throw new Error("Subscription created but no client secret returned");
-      }
-
+      const clientSecret = await getSubscriptionClientSecret(stripe, subscription);
       return NextResponse.json({ clientSecret });
     }
 
@@ -103,17 +126,10 @@ export async function POST(request: Request) {
         payment_settings: {
           save_default_payment_method: "on_subscription",
         },
-        expand: ["latest_invoice.payment_intent"],
         metadata: { type: "terra", plan },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const invoice = subscription.latest_invoice as any;
-      const clientSecret = invoice?.payment_intent?.client_secret as string | undefined;
-      if (!clientSecret) {
-        throw new Error("Subscription created but no client secret returned");
-      }
-
+      const clientSecret = await getSubscriptionClientSecret(stripe, subscription);
       return NextResponse.json({ clientSecret });
     }
 
