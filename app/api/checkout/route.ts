@@ -30,6 +30,13 @@ const requestSchema = z.discriminatedUnion("type", [
  * Stripe v22 SDK removed payment_intent from the Invoice type, but the API
  * still returns it. We retrieve the invoice raw and access it via any cast.
  */
+/**
+ * Get the PaymentIntent client_secret from a subscription's latest invoice.
+ *
+ * Stripe API v2025-03-31 removed `payment_intent` from the Invoice object.
+ * Instead, invoices now have a `payments` array. We retrieve the invoice with
+ * expanded payments to find the PaymentIntent and its client_secret.
+ */
 async function getSubscriptionClientSecret(
   stripe: Stripe,
   subscription: Stripe.Subscription
@@ -43,19 +50,37 @@ async function getSubscriptionClientSecret(
     throw new Error("Subscription created but no invoice found");
   }
 
+  // Retrieve invoice with expanded payments and their payment intents
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const invoice: any = await stripe.invoices.retrieve(invoiceId);
-  const piId =
-    typeof invoice.payment_intent === "string"
-      ? invoice.payment_intent
-      : invoice.payment_intent?.id;
+  const invoice: any = await stripe.invoices.retrieve(invoiceId, {
+    expand: ["payments.data.payment.payment_intent"],
+  });
 
-  if (!piId) {
-    throw new Error("Invoice has no payment intent");
+  // New API: payments array contains InvoicePayment objects
+  const payments = invoice.payments?.data;
+  if (payments?.length > 0) {
+    const payment = payments[0].payment?.payment_intent;
+    if (payment?.client_secret) {
+      return payment.client_secret;
+    }
+    // payment_intent might be a string ID, not expanded
+    const piId = payments[0].payment?.payment_intent;
+    if (typeof piId === "string") {
+      const pi = await stripe.paymentIntents.retrieve(piId);
+      return pi.client_secret!;
+    }
   }
 
-  const paymentIntent = await stripe.paymentIntents.retrieve(piId);
-  return paymentIntent.client_secret!;
+  // Fallback: try legacy payment_intent field (older API versions)
+  if (invoice.payment_intent) {
+    const piId = typeof invoice.payment_intent === "string"
+      ? invoice.payment_intent
+      : invoice.payment_intent.id;
+    const pi = await stripe.paymentIntents.retrieve(piId);
+    return pi.client_secret!;
+  }
+
+  throw new Error("Could not find payment intent on invoice");
 }
 
 export async function POST(request: Request) {
