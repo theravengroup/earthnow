@@ -51,6 +51,7 @@ const appearance: Appearance = {
     ".Tab--selected": {
       backgroundColor: "rgba(20,184,166,0.1)",
       border: "1px solid rgba(20,184,166,0.3)",
+      color: "#ffffff",
     },
     ".Tab:hover": {
       backgroundColor: "rgba(255,255,255,0.06)",
