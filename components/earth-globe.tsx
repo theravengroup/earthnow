@@ -190,11 +190,13 @@ export default function EarthGlobe() {
         aspectRatio: "1 / 1",
         borderRadius: "50%",
         overflow: "hidden",
+        pointerEvents: "none",
+        touchAction: "pan-y",
       }}
     >
       <Canvas
         camera={{ position: [0, 0, 4.8], fov: 45 }}
-        style={{ background: "transparent", display: "block" }}
+        style={{ background: "transparent", display: "block", touchAction: "pan-y", pointerEvents: "none" }}
         gl={{ alpha: true, antialias: true }}
       >
         <Scene />
