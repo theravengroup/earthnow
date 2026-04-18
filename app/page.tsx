@@ -18,6 +18,7 @@ import { SystemCard, systemsData } from "@/components/system-card";
 import { WhileYouWereHereSection } from "@/components/while-you-were-here";
 import { WhileYouScrolled, useRandomInterstitials } from "@/components/while-you-scrolled";
 import { ShuffleCountdown } from "@/components/vital-signs/shuffle-countdown";
+import { SectionShimmer } from "@/components/section-shimmer";
 
 // Dynamically import heavy below-fold components to reduce initial JS bundle
 const SystemsExplorer = dynamic(
@@ -977,6 +978,9 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </RevealGate>
       </section>
 
+      {/* Boundary: Hero (introduction) → Vital Signs (live telemetry) */}
+      <SectionShimmer tone="teal" />
+
       {/* Suspense boundary for Vital Signs Section */}
       <Suspense fallback={<div className="min-h-[600px] bg-[#0a0e17]" />}>
       {/* The Vital Signs Section */}
@@ -1216,6 +1220,9 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </div>
       </motion.section>
       </Suspense>
+
+      {/* Boundary: Systems (interactive exploration) → Historical narrative */}
+      <SectionShimmer tone="amber" />
 
       {/* Contrast Moment - Pool D (Technology & Disconnection) */}
       <ContrastMoment pool="D" key="contrast-D" />
@@ -1828,6 +1835,9 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       {/* Support Section - flows directly from emotional peak */}
       <DonateSection />
       </Suspense>
+
+      {/* Boundary: Support → Share (invitation to propagate the signal) */}
+      <SectionShimmer tone="violet" />
 
       {/* Suspense boundary for Share section */}
       <Suspense fallback={<div className="min-h-[300px] bg-[#0a0e17]" />}>
