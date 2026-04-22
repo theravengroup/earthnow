@@ -84,45 +84,87 @@ export interface ReserveOk {
 }
 export interface ReserveBlocked {
   ok: false;
-  reason: 'soft_cap_reached';
+  reason: 'soft_cap_reached' | 'hard_cap_reached';
   spendUsd: number;
   capUsd: number;
 }
 export type ReserveResult = ReserveOk | ReserveBlocked;
 
+// Atomic reserve: one round-trip that reads, checks both caps, and
+// conditionally increments. Prevents the race where concurrent callers
+// each see `prior + reservation` just under the cap and all pass.
+//
+// Return shape: [status, value] where status is one of:
+//   1  → ok (value = new balance)
+//   0  → soft cap reached (value = prior balance, no increment)
+//  -1  → hard cap reached (value = prior balance, no increment)
+const RESERVE_SCRIPT = `
+local prior = tonumber(redis.call('GET', KEYS[1]) or '0')
+local reservation = tonumber(ARGV[1])
+local soft_cap = tonumber(ARGV[2])
+local hard_cap = tonumber(ARGV[3])
+if prior + reservation > hard_cap then
+  return {-1, tostring(prior)}
+end
+if prior + reservation > soft_cap then
+  return {0, tostring(prior)}
+end
+local new_value = redis.call('INCRBYFLOAT', KEYS[1], reservation)
+redis.call('EXPIRE', KEYS[1], tonumber(ARGV[4]))
+return {1, tostring(new_value)}
+`;
+
 /**
- * Pre-flight reservation. If adding `reservation` would exceed softCapUsd,
- * decline without adding to the counter (soft bounds). If it would fit,
- * INCRBYFLOAT the reservation and return ok.
- *
- * Note: this is NOT atomic between check and increment. Two concurrent
- * requests can both pass the check and both reserve, briefly exceeding the
- * cap by up to (concurrency × reservation). Acceptable: soft cap leaves
- * $10 headroom under the hard ceiling.
+ * Pre-flight reservation. Atomic check-and-increment via Lua:
+ *   - If adding `reservation` would exceed monthlyUsd → hard_cap_reached
+ *     (never crossed under any concurrency).
+ *   - Else if it would exceed softCapUsd → soft_cap_reached
+ *     (user-facing degradation message).
+ *   - Else INCRBYFLOAT and return ok.
  */
 export async function reserve(reservation: number): Promise<ReserveResult> {
-  const { softCapUsd } = getBudgetConfig();
+  const { monthlyUsd, softCapUsd } = getBudgetConfig();
   const redis = getRedis();
   const key = KEYS.budget();
 
-  const raw = await redis.get<string | number>(key);
-  const prior = raw === null || raw === undefined ? 0 : Number(raw);
+  const result = (await redis.eval(
+    RESERVE_SCRIPT,
+    [key],
+    [
+      reservation.toString(),
+      softCapUsd.toString(),
+      monthlyUsd.toString(),
+      BUDGET_TTL_SEC.toString(),
+    ]
+  )) as [number, string];
 
-  if (prior + reservation > softCapUsd) {
+  const status = result[0];
+  const value = Number(result[1]);
+
+  if (status === -1) {
+    return {
+      ok: false,
+      reason: 'hard_cap_reached',
+      spendUsd: value,
+      capUsd: monthlyUsd,
+    };
+  }
+  if (status === 0) {
     return {
       ok: false,
       reason: 'soft_cap_reached',
-      spendUsd: prior,
+      spendUsd: value,
       capUsd: softCapUsd,
     };
   }
 
-  await redis.incrbyfloat(key, reservation);
-  await redis.expire(key, BUDGET_TTL_SEC);
   await redis.incr(KEYS.budgetCount());
   await redis.expire(KEYS.budgetCount(), BUDGET_TTL_SEC);
-
-  return { ok: true, reservedUsd: reservation, priorSpendUsd: prior };
+  return {
+    ok: true,
+    reservedUsd: reservation,
+    priorSpendUsd: value - reservation,
+  };
 }
 
 /**

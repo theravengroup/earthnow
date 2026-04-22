@@ -2,29 +2,30 @@
  * GET /api/ask-earth/status
  *
  * Operational visibility for Ask Earth. Returns current-month spend,
- * call count, and cap config. Gated by STATUS_AUTH_TOKEN — the caller
- * must send it as `x-status-token` header or `?token=…` query param.
+ * call count, and cap config. Gated by STATUS_AUTH_TOKEN via the
+ * `x-status-token` header (query-string tokens leak into access logs).
  */
 
 import { NextResponse } from 'next/server';
 import { getBudgetConfig, getCurrentSpend } from '@/lib/ask-earth/budget';
+import { safeEqual } from '@/lib/ask-earth/safe-equal';
 
 export const runtime = 'nodejs';
+
+function unauthorized(): NextResponse {
+  return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+}
 
 export async function GET(request: Request) {
   const expected = process.env.STATUS_AUTH_TOKEN;
   if (!expected) {
-    return NextResponse.json(
-      { error: 'STATUS_AUTH_TOKEN not configured' },
-      { status: 500 }
-    );
+    console.error('[ask-earth/status] STATUS_AUTH_TOKEN not configured');
+    return unauthorized();
   }
 
-  const url = new URL(request.url);
-  const provided =
-    request.headers.get('x-status-token') ?? url.searchParams.get('token');
-  if (provided !== expected) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  const provided = request.headers.get('x-status-token');
+  if (!provided || !safeEqual(provided, expected)) {
+    return unauthorized();
   }
 
   let spend;
