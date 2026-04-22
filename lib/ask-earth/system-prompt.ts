@@ -29,17 +29,22 @@ export const CRISIS_PATTERNS = {
   // TIER 3 — Explicit imminent-risk language
   // These should trigger the strongest response (immediate 988 + directive).
   imminent: [
-    /\bkill(ing)?\s+my ?self\b/i,
+    /\bkill(ing|ed)?\s*my\s?self\b/i,
     /\bkms\b/i,
-    /\bend(ing)?\s+(my|it\s+all|my\s+life)\b/i,
+    /\bunalive\b/i,
+    /\bend(ing)?\s+(my|it\s+all|my\s+life|my\s+story|my\s+journey|my\s+chapter|my\s+time)\b/i,
     /\btak(e|ing)\s+my\s+(own\s+)?life\b/i,
     /\bsuicid(e|al)\b/i,
+    /\bsuicidi?o\b/i,
+    /\bsuicidar(me|se)\b/i,
+    /\bme\s+quiero\s+matar\b/i,
+    /自杀|自殺/,
     /\bi\s+(have|got)\s+(the\s+)?(pills|gun|rope|knife|razor)\b/i,
     /\bstanding\s+on\s+(the\s+|a\s+)?(bridge|roof|ledge|edge)\b/i,
     /\bi('m|\s+am)?\s+going\s+to\s+(do\s+it|jump|hang)\b/i,
     /\beasiest\s+way\s+to\s+(die|go)\b/i,
     /\bhow\s+(do|to)\s+i\s+(die|kill)\b/i,
-    /\bhurt(ing)?\s+my ?self\b/i,
+    /\bhurt(ing)?\s*my\s?self\b/i,
     /\bself[\s-]?harm\b/i,
   ],
 
@@ -78,22 +83,74 @@ export const CRISIS_PATTERNS = {
   // Examples: "having a terrible day", "nothing is going right", "feel lost"
 };
 
+// Common homoglyphs — look-alike characters that evade ASCII regex. Mapped
+// when they appear in positions where a user is plausibly obfuscating crisis
+// language. Bias toward recall over precision (foundation doc rule).
+const HOMOGLYPHS: Record<string, string> = {
+  'κ': 'k', 'Κ': 'k',
+  'і': 'i', 'І': 'i', 'ï': 'i', 'î': 'i',
+  'е': 'e', 'Е': 'e', 'ё': 'e',
+  'а': 'a', 'А': 'a',
+  'о': 'o', 'О': 'o', 'ο': 'o',
+  'р': 'p', 'Р': 'p',
+  'с': 'c', 'С': 'c',
+  'х': 'x', 'Х': 'x',
+  'у': 'y', 'У': 'y',
+};
+
+/**
+ * Normalize input before crisis classification. Collapses the most common
+ * obfuscation vectors: accents, homoglyphs, letter-by-letter spacing,
+ * leetspeak digits, case, fullwidth characters.
+ *
+ * Returned string is used ONLY for pattern matching — it is never shown
+ * to the user or passed to the LLM.
+ */
+export function normalizeForCrisis(input: string): string {
+  let n = input.normalize('NFKC');
+  n = n.split('').map((c) => HOMOGLYPHS[c] ?? c).join('');
+  n = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  n = n.toLowerCase();
+  n = n
+    .replace(/0/g, 'o')
+    .replace(/1/g, 'i')
+    .replace(/3/g, 'e')
+    .replace(/4/g, 'a')
+    .replace(/5/g, 's')
+    .replace(/7/g, 't');
+  // Collapse runs of single letters separated by non-letter punctuation
+  // ("s u i c i d e", "k.m.s", "k-m-s") into joined tokens. Requires 3+
+  // single letters in a row with separators, so ordinary prose like
+  // "i am tired" is untouched.
+  n = n.replace(
+    /(?<![a-z])(?:[a-z][\s.\-_·•]+){2,}[a-z](?![a-z])/gi,
+    (m) => m.replace(/[\s.\-_·•]+/g, '')
+  );
+  return n;
+}
+
 /**
  * Classify a user input by crisis tier.
  * Returns 'imminent' | 'possible' | null.
  * Caller should handle 'imminent' and 'possible' with crisis responses.
+ *
+ * Runs patterns against both the raw trimmed input and a normalized form
+ * that strips common obfuscations (see normalizeForCrisis). Any match in
+ * either form triggers the tier — false positives are acceptable, false
+ * negatives are not.
  */
 export function classifyCrisis(
   input: string
 ): 'imminent' | 'possible' | null {
-  const normalized = input.trim();
-  if (!normalized) return null;
+  const raw = input.trim();
+  if (!raw) return null;
+  const normalized = normalizeForCrisis(raw);
 
   for (const pattern of CRISIS_PATTERNS.imminent) {
-    if (pattern.test(normalized)) return 'imminent';
+    if (pattern.test(raw) || pattern.test(normalized)) return 'imminent';
   }
   for (const pattern of CRISIS_PATTERNS.possible) {
-    if (pattern.test(normalized)) return 'possible';
+    if (pattern.test(raw) || pattern.test(normalized)) return 'possible';
   }
   return null;
 }
