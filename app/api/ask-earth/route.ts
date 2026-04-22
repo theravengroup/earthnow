@@ -47,7 +47,7 @@ export const maxDuration = 30;
 
 const requestSchema = z.object({
   question: z.string().trim().min(1).max(500),
-  sessionId: z.string().optional(),
+  sessionId: z.string().regex(/^[A-Za-z0-9-]{8,64}$/),
 });
 
 const MODEL = process.env.ASK_EARTH_MODEL ?? 'claude-sonnet-4-6';
