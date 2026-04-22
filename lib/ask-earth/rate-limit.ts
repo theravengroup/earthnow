@@ -41,10 +41,20 @@ export function hashIp(ip: string): string {
 }
 
 export function extractIp(request: Request): string {
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
+  // `x-vercel-forwarded-for` is set by Vercel and not user-controllable —
+  // use it when available. `x-real-ip` is also Vercel-set.
+  const vercelXff = request.headers.get('x-vercel-forwarded-for');
+  if (vercelXff) return vercelXff.split(',')[0].trim();
   const xr = request.headers.get('x-real-ip');
   if (xr) return xr.trim();
+  // Standard `x-forwarded-for` is a client-appendable list on Vercel.
+  // The real client IP is the LAST entry (Vercel appends it); reading the
+  // first entry would trust whatever the attacker sent.
+  const xff = request.headers.get('x-forwarded-for');
+  if (xff) {
+    const parts = xff.split(',').map((s) => s.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
   return '0.0.0.0';
 }
 
