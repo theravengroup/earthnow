@@ -14,6 +14,7 @@ import { getResend } from '@/lib/resend';
 import { getRedis, KEYS } from '@/lib/ask-earth/upstash';
 import { getBudgetConfig, getCurrentSpend } from '@/lib/ask-earth/budget';
 import type { LogEntry } from '@/lib/ask-earth/logger';
+import { safeEqual } from '@/lib/ask-earth/safe-equal';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -39,18 +40,20 @@ function esc(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
+function unauthorized(): NextResponse {
+  return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+}
+
 export async function GET(request: Request) {
   // Auth gate
   const expected = process.env.CRON_SECRET;
   if (!expected) {
-    return NextResponse.json(
-      { error: 'CRON_SECRET not configured' },
-      { status: 500 }
-    );
+    console.error('[ask-earth/digest] CRON_SECRET not configured');
+    return unauthorized();
   }
   const auth = request.headers.get('authorization');
-  if (auth !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  if (!auth || !safeEqual(auth, `Bearer ${expected}`)) {
+    return unauthorized();
   }
 
   const to = process.env.ASK_EARTH_DIGEST_EMAIL ?? 'hello@danjahn.com';
