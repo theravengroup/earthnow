@@ -19,6 +19,7 @@ import { WhileYouWereHereSection } from "@/components/while-you-were-here";
 import { WhileYouScrolled, useRandomInterstitials } from "@/components/while-you-scrolled";
 import { ShuffleCountdown } from "@/components/vital-signs/shuffle-countdown";
 import { SectionShimmer } from "@/components/section-shimmer";
+import { AskEarthSection } from "@/components/ask-earth/AskEarthSection";
 
 // Dynamically import heavy below-fold components to reduce initial JS bundle
 const SystemsExplorer = dynamic(
@@ -1821,6 +1822,9 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </motion.span>
       </motion.section>
       </Suspense>
+
+      {/* Ask Earth — a single cinematic question/answer moment. Quiet arrival. */}
+      <AskEarthSection />
 
       {/* Now What? Section - after Personal Impact Calculator */}
       <NowWhatSection key="now-what" />

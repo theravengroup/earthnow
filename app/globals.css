@@ -655,6 +655,63 @@ select,
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
+/* Ask Earth — cinematic overlay animations */
+@keyframes askEarthHorizonPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes askEarthCursorBlink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Ask Earth — iridescent halo around input pill.
+   Two effects layered on a single pseudo-element:
+     1. conic-gradient rotates slowly (cyan → blue → purple → magenta → cyan)
+     2. blurred spread with breathing opacity
+   The pill itself sits on top of the halo (z-index), so the halo only
+   shows as a glowing ring around the pill's edges.
+*/
+/* Animates a 360° hue-shift + breathing opacity. We rotate COLORS, not the
+   element itself, because rotating an elongated pill-shaped element creates
+   sweep artifacts as its bounding box changes size during rotation. Hue
+   rotation keeps the halo's geometry stable and hugging the pill. */
+@keyframes askEarthHaloCycle {
+  0%   { filter: blur(10px) hue-rotate(0deg);   opacity: 0.55; }
+  50%  { filter: blur(10px) hue-rotate(180deg); opacity: 0.90; }
+  100% { filter: blur(10px) hue-rotate(360deg); opacity: 0.55; }
+}
+
+.ask-earth-halo::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  z-index: -1;
+  background: conic-gradient(
+    from 90deg,
+    #22d3ee 0%,
+    #3b82f6 25%,
+    #a855f7 50%,
+    #ec4899 75%,
+    #22d3ee 100%
+  );
+  filter: blur(10px);
+  opacity: 0.75;
+  animation: askEarthHaloCycle 14s ease-in-out infinite;
+  will-change: filter, opacity;
+  pointer-events: none;
+}
+
+/* Reduced motion — freeze the halo, keep the visual */
+@media (prefers-reduced-motion: reduce) {
+  .ask-earth-halo::before {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
 /* Floating dust motes */
 .dust-mote {
   animation: dust-float linear infinite;
