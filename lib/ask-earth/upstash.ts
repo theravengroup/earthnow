@@ -49,6 +49,7 @@ export function utcMonthKey(d = new Date()): string {
 export const KEYS = {
   sessionDay: (sessionId: string) => `ask_earth:session:${sessionId}:day:${utcDayKey()}`,
   ipHour: (ipHash: string) => `ask_earth:ip:${ipHash}:hour:${utcHourKey()}`,
+  statusIpHour: (ipHash: string) => `ask_earth:status:ip:${ipHash}:hour:${utcHourKey()}`,
   log: (id: string) => `ask_earth:log:${id}`,
   logIndex: 'ask_earth:log_index',
   crisisHits: 'ask_earth:crisis_hits',

@@ -54,6 +54,10 @@ const MODEL = process.env.ASK_EARTH_MODEL ?? 'claude-sonnet-4-6';
 const MAX_TOOL_TURNS = 5;
 const MAX_TOKENS = 1024;
 
+// Max serialized question is ~500 chars + small JSON envelope. 4 KB is
+// generous; rejects multi-MB bodies before we parse them.
+const MAX_BODY_BYTES = 4096;
+
 // ── SSE helpers ────────────────────────────────────────────────────────
 function sseEvent(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
@@ -99,10 +103,21 @@ export async function POST(request: Request) {
   const logId = makeLogId();
 
   if (!process.env.ANTHROPIC_API_KEY) {
+    console.error('[ask-earth] ANTHROPIC_API_KEY not configured');
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
+  }
+
+  // Reject oversized or wrong-type bodies before parsing.
+  const contentType = request.headers.get('content-type') ?? '';
+  if (!contentType.toLowerCase().includes('application/json')) {
     return NextResponse.json(
-      { error: 'Server not configured: ANTHROPIC_API_KEY missing' },
-      { status: 500 }
+      { error: 'content-type must be application/json' },
+      { status: 415 }
     );
+  }
+  const contentLength = Number(request.headers.get('content-length') ?? '0');
+  if (contentLength > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: 'Body too large' }, { status: 413 });
   }
 
   // Parse + validate
@@ -121,15 +136,14 @@ export async function POST(request: Request) {
   }
   const { question, sessionId } = parsed.data;
 
-  // IP + hash
+  // IP + hash. Failure here means IP_HASH_SECRET is unset — server
+  // misconfiguration, not something the client should see specifics of.
   let ipHash: string;
   try {
     ipHash = hashIp(extractIp(request));
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'IP hashing failed' },
-      { status: 500 }
-    );
+    console.error('[ask-earth] hashIp failed:', err);
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
   }
 
   // ── 1. Rate limit ──────────────────────────────────────────────────
@@ -207,7 +221,9 @@ export async function POST(request: Request) {
   }
 
   // ── 3. Budget reserve ──────────────────────────────────────────────
-  const reservation = estimateMaxCostUsd(MAX_TOKENS);
+  // Reserve for the entire tool loop (up to MAX_TOOL_TURNS full calls);
+  // reconcile() credits back the unused portion after success.
+  const reservation = estimateMaxCostUsd(MAX_TOKENS) * MAX_TOOL_TURNS;
   let reserveRes;
   try {
     reserveRes = await reserve(reservation);

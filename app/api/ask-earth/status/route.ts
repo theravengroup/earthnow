@@ -9,8 +9,14 @@
 import { NextResponse } from 'next/server';
 import { getBudgetConfig, getCurrentSpend } from '@/lib/ask-earth/budget';
 import { safeEqual } from '@/lib/ask-earth/safe-equal';
+import { extractIp, hashIp } from '@/lib/ask-earth/rate-limit';
+import { getRedis, KEYS } from '@/lib/ask-earth/upstash';
 
 export const runtime = 'nodejs';
+
+// Modest per-IP cap. Defense-in-depth against token leak → Upstash
+// hammering. Legitimate monitoring easily stays under this.
+const STATUS_IP_HOUR_LIMIT = 60;
 
 function unauthorized(): NextResponse {
   return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
@@ -26,6 +32,32 @@ export async function GET(request: Request) {
   const provided = request.headers.get('x-status-token');
   if (!provided || !safeEqual(provided, expected)) {
     return unauthorized();
+  }
+
+  // Per-IP rate limit after successful auth. Key is scoped to status so
+  // it doesn't share a bucket with the main Ask Earth endpoint.
+  try {
+    const ipHash = hashIp(extractIp(request));
+    const redis = getRedis();
+    const key = KEYS.statusIpHour(ipHash);
+    const [count] = await redis
+      .multi()
+      .incr(key)
+      .expire(key, 3600)
+      .exec<[number, number]>();
+    if (count > STATUS_IP_HOUR_LIMIT) {
+      const retry = await redis.ttl(key);
+      return NextResponse.json(
+        { error: 'rate_limited' },
+        {
+          status: 429,
+          headers: { 'retry-after': String(retry > 0 ? retry : 3600) },
+        }
+      );
+    }
+  } catch (err) {
+    // Rate-limit check failure must not block authenticated monitoring.
+    console.error('[ask-earth/status] rate-limit check failed:', err);
   }
 
   let spend;

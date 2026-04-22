@@ -121,6 +121,12 @@ export async function GET(request: Request) {
     .map(([t, n]) => `${t}: ${n}`)
     .join(' · ');
 
+  // Crisis rows are displayed with tier + timestamp only. Verbatim question
+  // content is deliberately redacted — it often contains highly sensitive
+  // personal context (names, locations, medical). Counts + tiers are
+  // sufficient for operational awareness. Raw content remains in Redis
+  // (90-day TTL) if deeper review is ever warranted via an authenticated
+  // admin path, not over email.
   const crisisRows = samples
     .filter((s) => s.tone === 'crisis')
     .slice(0, 20)
@@ -129,7 +135,7 @@ export async function GET(request: Request) {
     <tr>
       <td style="padding:6px 10px;color:#94a3b8;font-size:12px;font-family:ui-monospace,monospace">${new Date(s.ts).toISOString().slice(11, 19)}Z</td>
       <td style="padding:6px 10px;color:#e2e8f0"><b>${esc(s.tier ?? '?')}</b></td>
-      <td style="padding:6px 10px;color:#e2e8f0">${esc(s.question)}</td>
+      <td style="padding:6px 10px;color:#64748b;font-style:italic">[redacted — sensitive content]</td>
     </tr>`
     )
     .join('');
@@ -208,6 +214,23 @@ export async function GET(request: Request) {
     );
   }
 
+  // Trim sorted-set indexes to last 90 days so they don't grow forever.
+  // Individual log entries already expire via per-key TTL; this drops the
+  // stale zset members pointing to them. Runs after email so a trim
+  // failure doesn't block the digest.
+  let trimmed = { logs: 0, crisis: 0 };
+  try {
+    const redis = getRedis();
+    const cutoff = now - 90 * DAY_MS;
+    const [logsRemoved, crisisRemoved] = await Promise.all([
+      redis.zremrangebyscore(KEYS.logIndex, 0, cutoff),
+      redis.zremrangebyscore(KEYS.crisisHits, 0, cutoff),
+    ]);
+    trimmed = { logs: logsRemoved ?? 0, crisis: crisisRemoved ?? 0 };
+  } catch (err) {
+    console.error('[ask-earth/digest] zset trim failed:', err);
+  }
+
   return NextResponse.json({
     ok: true,
     month: spend.month,
@@ -215,5 +238,6 @@ export async function GET(request: Request) {
     softCapUsd,
     last24h: { total: logIds.length, crisis: crisisIds.length },
     sent: to,
+    trimmed,
   });
 }
