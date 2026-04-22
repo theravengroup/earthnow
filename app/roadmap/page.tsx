@@ -38,6 +38,7 @@ const STARS: Array<{ x: number; y: number; size: number; dur: number; del: numbe
 
 // Live features data
 const liveFeatures = [
+  { title: "Ask Earth", desc: "Ask the planet a question. Earth answers in first person — calm, ancient, grounded. One cinematic moment, not a chat." },
   { title: "75+ Live Counters", desc: "Real-time data across population, climate, money, technology, and civilization." },
   { title: "Cinematic Intro", desc: "A different opening every visit. 40 unique stats, letter-by-letter animation." },
   { title: "5 System Deep-Dives", desc: "People, Energy, Planet, Food, Technology — each with tabbed storytelling." },
@@ -70,7 +71,7 @@ const buildingNow = [
 
 // On the horizon data
 const onTheHorizon = [
-  { title: "AI-Powered Insights", desc: "Daily AI-generated planet summaries. Ask questions about the data. Trend analysis in plain language." },
+  { title: "Ambient Narrative", desc: "Same voice as Ask Earth, offered without being asked. Captions that surface planetary moments as you explore the site." },
   { title: "Terra TV Apps", desc: "AppleTV and Android TV apps. Turn any screen into a living planet dashboard." },
   { title: "Guided Scroll Mode", desc: "Auto-scroll the homepage at documentary pace. Ambient music. Cinematic." },
   { title: "Region-Specific Views", desc: "Zoom into countries. Compare local data to global trends." },
