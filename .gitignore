@@ -13,3 +13,4 @@ tsconfig.tsbuildinfo
 .lighthouseci/
 test-results/
 playwright-report/
+.vercel
