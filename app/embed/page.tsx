@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { SITE_URL } from "@/lib/constants";
+import { formatAbbreviated, formatWithCommas } from "@/lib/format";
 
 import { DAILY_RATES as SHARED_RATES } from "@/lib/data/daily-rates";
 
@@ -62,19 +63,6 @@ const STAT_CONFIG: Record<string, { label: string; color: string; abbreviated: b
   hunger: { label: "Hunger Deaths", color: "#ef4444", abbreviated: false },
 };
 
-// Formatting functions
-function formatNumber(num: number): string {
-  return Math.floor(num).toLocaleString("en-US");
-}
-
-function formatAbbreviated(num: number): string {
-  if (num >= 1e12) return (num / 1e12).toFixed(1) + "T";
-  if (num >= 1e9) return (num / 1e9).toFixed(1) + "B";
-  if (num >= 1e6) return (num / 1e6).toFixed(1) + "M";
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + "K";
-  return Math.floor(num).toLocaleString("en-US");
-}
-
 function getSecondsSinceMidnightUTC(): number {
   const now = new Date();
   return now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds() + now.getUTCMilliseconds() / 1000;
@@ -110,7 +98,7 @@ function StatDisplay({
   if (!config) return null;
 
   const value = currentValues[statKey] || 0;
-  const formatted = config.abbreviated ? formatAbbreviated(value) : formatNumber(value);
+  const formatted = config.abbreviated ? formatAbbreviated(value) : formatWithCommas(Math.floor(value));
   
   // Adjust colors for light theme
   const numberColor = theme === "light" 

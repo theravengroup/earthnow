@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ShareButton } from "@/components/share-button";
+import { formatNumber } from "@/lib/format";
 
 interface ImpactData {
   waterUsed: number;
@@ -24,20 +25,6 @@ interface ImpactShareCarouselProps {
   onRegenerate: () => void;
   onShareCurrentCard: (card: { intro: string; value: string; unit: string; context: string; color: string }) => void;
   onGetImageBlob: () => Promise<Blob | null>;
-}
-
-// Format large numbers with abbreviations
-function formatNumber(num: number): string {
-  if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(2) + 'B';
-  }
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(2) + 'M';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K';
-  }
-  return Math.floor(num).toLocaleString();
 }
 
 // Generate seeded random stars for consistent rendering

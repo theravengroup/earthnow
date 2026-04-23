@@ -6,8 +6,11 @@ import {
   GraduationCap, Camera, Utensils,
 } from "lucide-react";
 import { DAILY_RATES } from "@/lib/data/daily-rates";
+import { formatAbbreviated } from "@/lib/format";
 // SITE_URL is available for consumers that need it; re-exported for convenience
 export { SITE_URL } from "@/lib/constants";
+// Keep this available to downstream today/* pages that already import from here.
+export { formatAbbreviated };
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -37,15 +40,6 @@ export function getSecondsSinceMidnightUTC(forDate?: Date): number {
 /** Format a number with comma separators. */
 export function formatNumber(num: number, decimals = 0): string {
   return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-/** Format a large number with K / M / B / T abbreviation. */
-export function formatAbbreviated(num: number): string {
-  if (num >= 1e12) return (num / 1e12).toFixed(1) + "T";
-  if (num >= 1e9) return (num / 1e9).toFixed(1) + "B";
-  if (num >= 1e6) return (num / 1e6).toFixed(1) + "M";
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + "K";
-  return formatNumber(num);
 }
 
 // ============================================================================

@@ -5,6 +5,7 @@ import { Users, Zap, Globe, Utensils, Cpu, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SYSTEMS_DEEP_DIVE } from "@/app/systems-data";
 import { getSecondsSinceLocalMidnight } from "@/hooks/use-global-tick";
+import { formatNumber } from "@/lib/format";
 
 // CSS keyframes for animations - GPU-optimized, slow and cinematic
 const animationStyles = `
@@ -41,16 +42,6 @@ const animationStyles = `
     50% { top: calc(100% - 6px); }
   }
 `;
-
-// Helper function to format large numbers
-function formatNumber(num: number): string {
-  if (num >= 1e12) return (num / 1e12).toFixed(2) + "T";
-  if (num >= 1e9) return (num / 1e9).toFixed(2) + "B";
-  if (num >= 1e6) return (num / 1e6).toFixed(2) + "M";
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + "K";
-  return Math.floor(num).toLocaleString();
-}
-
 
 // System data configuration
 const systemsConfig = [
