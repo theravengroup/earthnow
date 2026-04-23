@@ -5,18 +5,52 @@ import { useState, useRef, useEffect } from 'react';
 interface AskEarthInputProps {
   disabled?: boolean;
   onSubmit: (question: string) => void;
+  /**
+   * User's entered birth year, if any. Used to personalize suggested prompt
+   * chips. Treated as "present" only when the value is a valid 4-digit year
+   * in [1920, 2025] so partial mid-typing values (e.g. 199) don't leak.
+   */
+  birthYear?: number | "";
 }
 
 const MAX_CHARS = 500;
 const COUNTER_REVEAL_AT = 400;
 
+/** Build the suggested prompt chip list, personalizing when a valid birth year exists. */
+function getSuggestedPrompts(birthYear: number | "" | undefined): string[] {
+  const hasYear =
+    typeof birthYear === 'number' && birthYear >= 1920 && birthYear <= 2025;
+  if (hasYear) {
+    const year60 = birthYear + 60;
+    return [
+      `What will the world look like in ${year60}?`,
+      'Which tipping point is closest?',
+      `What mattered most for someone born in ${birthYear}?`,
+      'Can we still fix this?',
+    ];
+  }
+  return [
+    'What will the world look like in 30 years?',
+    'Which tipping point is closest?',
+    "What's changing fastest right now?",
+    'Can we still fix this?',
+  ];
+}
+
 /**
  * Glass-pill input with embedded globe + iridescent rotating halo.
  * At-rest ("Moment 1") treatment for Ask Earth.
  */
-export function AskEarthInput({ disabled, onSubmit }: AskEarthInputProps) {
+export function AskEarthInput({ disabled, onSubmit, birthYear }: AskEarthInputProps) {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestedPrompts = getSuggestedPrompts(birthYear);
+
+  const handleChipClick = (prompt: string) => {
+    if (disabled) return;
+    onSubmit(prompt);
+    setValue('');
+  };
 
   // Refocus if disabled toggles off (overlay dismissed and user returns)
   useEffect(() => {
@@ -151,6 +185,33 @@ export function AskEarthInput({ disabled, onSubmit }: AskEarthInputProps) {
           {value.length} / {MAX_CHARS}
         </div>
       </form>
+
+      {/* Suggested prompt chips — below the pill. Clicking submits the
+          question directly so users can engage with one tap.
+          Personalized when a valid birth year is entered above. */}
+      <div
+        className="mt-4 flex flex-wrap justify-center gap-2"
+        aria-label="Suggested questions"
+      >
+        {suggestedPrompts.map((prompt) => (
+          <button
+            key={prompt}
+            type="button"
+            disabled={disabled}
+            onClick={() => handleChipClick(prompt)}
+            className="ask-earth-chip rounded-full px-4 py-2 text-[13px] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: 'rgba(203,213,225,0.85)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+            }}
+          >
+            {prompt}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

@@ -4,11 +4,19 @@ import { useAskEarth } from '@/hooks/use-ask-earth';
 import { AskEarthInput } from './AskEarthInput';
 import { AskEarthOverlay } from './AskEarthOverlay';
 
+interface AskEarthSectionProps {
+  /**
+   * Optional birth year from the Lifetime Impact calculator. Forwarded to
+   * AskEarthInput to personalize suggested prompt chips.
+   */
+  birthYear?: number | "";
+}
+
 /**
  * Page-level wrapper. Owns no state beyond what the hook provides.
  * Placement: dropped into app/page.tsx after "The planet doesn't pause."
  */
-export function AskEarthSection() {
+export function AskEarthSection({ birthYear }: AskEarthSectionProps = {}) {
   const {
     phase,
     question,
@@ -26,7 +34,11 @@ export function AskEarthSection() {
       style={{ background: '#070b11' }}
       aria-label="Ask Earth"
     >
-      <AskEarthInput disabled={phase !== 'idle'} onSubmit={submit} />
+      <AskEarthInput
+        disabled={phase !== 'idle'}
+        onSubmit={submit}
+        birthYear={birthYear}
+      />
 
       {error && (
         <p
