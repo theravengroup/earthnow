@@ -10,15 +10,6 @@ export const MONTHLY_PRICE_IDS: Record<number, string> = {
   100: "price_1TBeQ4IyPpp79nUYmjF4t7c7",
 };
 
-export const ONE_TIME_PRICE_IDS: Record<number, string> = {
-  1: "price_1TBeP3IyPpp79nUYaDclB7kw",
-  5: "price_1TBebfIyPpp79nUYIKpJAvCR",
-  10: "price_1TBeP3IyPpp79nUYYvgHo3zx",
-  25: "price_1TBeP3IyPpp79nUYaKb4BvxW",
-  50: "price_1TBeP3IyPpp79nUYegWHOhN3",
-  100: "price_1TBeP3IyPpp79nUYK9qgPUU5",
-};
-
 // Custom donation price (used as fallback for non-preset amounts)
 export const CUSTOM_DONATION_PRICE_ID = "price_1TBetiIyPpp79nUYCOvJhDJq";
 
