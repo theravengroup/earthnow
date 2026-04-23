@@ -57,7 +57,10 @@ export function ImpactShareCarousel({
   onShareCurrentCard,
   onGetImageBlob,
 }: ImpactShareCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Default to the CO₂ card (index 1). It's the strongest universal hook for
+  // sharing — everyone recognizes the climate framing, and the headline
+  // number lands immediately. Users can swipe/arrow-nav to other angles.
+  const [currentIndex, setCurrentIndex] = useState(1);
   const touchStartX = useRef<number | null>(null);
   
   // Generate stars once with a fixed seed
@@ -448,25 +451,8 @@ export function ImpactShareCarousel({
         </button>
       </div>
 
-      {/* Dot Indicators */}
-      <div className="mt-6 flex items-center gap-2">
-        {cardData.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className="h-2 w-2 rounded-full transition-all"
-            style={{
-              background: index === currentIndex 
-                ? "rgba(255,255,255,0.9)" 
-                : "rgba(255,255,255,0.3)",
-              transform: index === currentIndex ? "scale(1.2)" : "scale(1)",
-            }}
-            aria-label={`Go to card ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Share Actions */}
+      {/* Primary Share CTA — single prominent button. The default card
+          (CO₂) is pre-selected so users can share with one tap. */}
       <div className="mt-8 flex justify-center">
         <ShareButton
           text={`${cardData[currentIndex].intro} ${cardData[currentIndex].value} ${cardData[currentIndex].unit}\n\n${cardData[currentIndex].context}`}
@@ -475,10 +461,34 @@ export function ImpactShareCarousel({
             onShareCurrentCard(cardData[currentIndex]);
             return onGetImageBlob();
           }}
-          label="Share My Impact"
-          size="md"
+          label="Share This"
+          primary
           align="center"
         />
+      </div>
+
+      {/* Secondary: swipe/nav hint + dot indicators. Demoted visually so
+          users don't feel they must browse before sharing. */}
+      <p className="mt-6 text-[12px] text-[#94a3b8]/70">
+        Prefer a different angle? Swipe or tap arrows — {cardData.length - 1}{" "}
+        more to explore.
+      </p>
+      <div className="mt-3 flex items-center gap-1.5">
+        {cardData.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className="h-1.5 w-1.5 rounded-full transition-all"
+            style={{
+              background:
+                index === currentIndex
+                  ? "rgba(20,184,166,0.9)"
+                  : "rgba(255,255,255,0.2)",
+              transform: index === currentIndex ? "scale(1.4)" : "scale(1)",
+            }}
+            aria-label={`Go to card ${index + 1}`}
+          />
+        ))}
       </div>
 
       {/* Regenerate option */}

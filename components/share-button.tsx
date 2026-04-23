@@ -16,6 +16,12 @@ interface ShareButtonProps {
   label?: string;         // Button label (default: "Share")
   size?: "sm" | "md";
   align?: "left" | "right" | "center";
+  /**
+   * When true, renders the share trigger as a prominent teal-gradient CTA
+   * suitable for "primary action" moments (e.g. the Lifetime Impact share
+   * carousel). Overrides `size` padding/typography.
+   */
+  primary?: boolean;
 }
 
 export function ShareButton({
@@ -26,6 +32,7 @@ export function ShareButton({
   label = "Share",
   size = "sm",
   align = "right",
+  primary = false,
 }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -164,8 +171,8 @@ export function ShareButton({
     setIsOpen(false);
   };
 
-  const btnPadding = size === 'sm' ? '5px 12px' : '8px 18px';
-  const btnFontSize = size === 'sm' ? 12 : 14;
+  const btnPadding = primary ? '14px 32px' : size === 'sm' ? '5px 12px' : '8px 18px';
+  const btnFontSize = primary ? 15 : size === 'sm' ? 12 : 14;
   const popoverLeft = align === 'right' ? 'auto' : align === 'left' ? 0 : '50%';
   const popoverRight = align === 'right' ? 0 : 'auto';
   const popoverTransform = align === 'center' ? 'translateX(-50%)' : 'none';
@@ -196,26 +203,47 @@ export function ShareButton({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 6,
-          background: 'none',
-          border: '1px solid rgba(255,255,255,0.15)',
+          gap: primary ? 10 : 6,
+          background: primary
+            ? 'linear-gradient(135deg, #0f766e, #14b8a6)'
+            : 'none',
+          border: primary
+            ? '1px solid rgba(20,184,166,0.45)'
+            : '1px solid rgba(255,255,255,0.15)',
           borderRadius: 999,
           padding: btnPadding,
           cursor: 'pointer',
           fontFamily: 'var(--font-sans)',
           fontSize: btnFontSize,
-          fontWeight: 500,
-          color: 'rgba(255,255,255,0.55)',
-          letterSpacing: '0.04em',
-          transition: 'color 0.2s ease, border-color 0.2s ease',
+          fontWeight: primary ? 600 : 500,
+          color: primary ? '#ffffff' : 'rgba(255,255,255,0.55)',
+          letterSpacing: '0.02em',
+          boxShadow: primary
+            ? '0 0 30px rgba(20,184,166,0.28), 0 4px 14px rgba(0,0,0,0.35)'
+            : 'none',
+          transition: primary
+            ? 'transform 0.2s ease, box-shadow 0.2s ease'
+            : 'color 0.2s ease, border-color 0.2s ease',
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+          if (primary) {
+            e.currentTarget.style.transform = 'scale(1.03)';
+            e.currentTarget.style.boxShadow =
+              '0 0 38px rgba(20,184,166,0.5), 0 6px 18px rgba(0,0,0,0.4)';
+          } else {
+            e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+          }
         }}
         onMouseLeave={e => {
-          e.currentTarget.style.color = 'rgba(255,255,255,0.55)';
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+          if (primary) {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow =
+              '0 0 30px rgba(20,184,166,0.28), 0 4px 14px rgba(0,0,0,0.35)';
+          } else {
+            e.currentTarget.style.color = 'rgba(255,255,255,0.55)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+          }
         }}
       >
         {isGenerating ? (
