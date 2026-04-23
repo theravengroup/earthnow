@@ -73,6 +73,7 @@ import {
   LiveStat,
   ShareMomentSection,
 } from "@/components/impact/lifetime-impact";
+import { HeadlineInsight } from "@/components/impact/headline-insight";
 import { drawRoundRect, formatLargeNumber, formatTime, formatTimeWithUnit, PER_SECOND_RATES, type ShareMomentState } from "@/lib/canvas/generate-share-card";
 
 
@@ -1573,6 +1574,17 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
             </motion.button>
           </div>
 
+          {/* Headline insight — dominant narrative anchor above the grid */}
+          {calculatedImpact && typeof birthYear === "number" && (
+            <HeadlineInsight
+              birthYear={birthYear}
+              daysLived={calculatedImpact.daysLived}
+              co2Tonnes={calculatedImpact.co2Produced}
+              milesTraveled={calculatedImpact.milesTraveled}
+              mealsConsumed={calculatedImpact.mealsConsumed}
+            />
+          )}
+
           {/* Result Cards Grid */}
           <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {(() => {
@@ -1824,7 +1836,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
       </Suspense>
 
       {/* Ask Earth — a single cinematic question/answer moment. Quiet arrival. */}
-      <AskEarthSection />
+      <AskEarthSection birthYear={birthYear} />
 
       {/* Now What? Section - after Personal Impact Calculator */}
       <NowWhatSection key="now-what" />

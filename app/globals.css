@@ -712,6 +712,17 @@ select,
   }
 }
 
+/* Suggested-prompt chips under the Ask Earth pill */
+.ask-earth-chip:not(:disabled):hover {
+  background: rgba(34, 211, 238, 0.08) !important;
+  border-color: rgba(34, 211, 238, 0.4) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+.ask-earth-chip:not(:disabled):active {
+  transform: translateY(0);
+}
+
 /* Floating dust motes */
 .dust-mote {
   animation: dust-float linear infinite;
