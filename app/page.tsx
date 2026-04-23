@@ -914,7 +914,7 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   Explore the Signals
                 </motion.button>
                 <motion.button
-                  onClick={() => document.getElementById('your-impact')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => document.getElementById('birth-year-prompt')?.scrollIntoView({ behavior: 'smooth' })}
                   className="cta-primary whitespace-nowrap rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300"
                   style={{
                     background: 'linear-gradient(135deg, #0f766e, #14b8a6)',
@@ -980,7 +980,99 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         </RevealGate>
       </section>
 
-      {/* Boundary: Hero (introduction) → Vital Signs (live telemetry) */}
+      {/* Birth Year Hero Module — prominent conversion moment on first scroll.
+          Shares birthYear + calculatedImpact state with the deeper Lifetime
+          Impact section, so either entry point drives the same result. */}
+      <motion.section
+        id="birth-year-prompt"
+        className="relative overflow-hidden bg-[#0a0e17] px-6 py-20 md:px-12 md:py-28"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          <span
+            className="inline-block rounded-full px-4 py-1.5 text-[12px] font-medium uppercase tracking-widest"
+            style={{
+              border: '1px solid rgba(20,184,166,0.4)',
+              color: '#14b8a6',
+            }}
+          >
+            Make it personal
+          </span>
+          <h2
+            className="mt-6 font-serif font-semibold leading-[1.15] text-white"
+            style={{ fontSize: 'clamp(28px, 5vw, 52px)' }}
+          >
+            What has the planet done in your lifetime?
+          </h2>
+          <p className="mt-4 text-[16px] text-[#94a3b8] md:text-[18px]">
+            Enter your birth year. See your footprint in seconds.
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (
+                typeof birthYear !== 'number' ||
+                birthYear < 1920 ||
+                birthYear > 2025
+              ) {
+                return;
+              }
+              calculateImpact();
+              setTimeout(() => {
+                document
+                  .getElementById('your-impact')
+                  ?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+          >
+            <input
+              type="number"
+              value={birthYear}
+              onChange={(e) =>
+                setBirthYear(e.target.value ? parseInt(e.target.value) : "")
+              }
+              placeholder="BIRTH YEAR"
+              min={1920}
+              max={2025}
+              aria-label="Your birth year"
+              className="hide-number-spinner rounded-lg border text-center font-mono text-white uppercase focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder:font-mono placeholder:uppercase placeholder:opacity-50"
+              style={{
+                background: '#1e293b',
+                borderColor: '#334155',
+                minWidth: 260,
+                padding: '14px 24px',
+                fontSize: 16,
+                appearance: 'none',
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+              }}
+            />
+            <motion.button
+              type="submit"
+              className="cta-primary rounded-full px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #0f766e, #14b8a6)',
+                border: '1px solid rgba(20,184,166,0.4)',
+                letterSpacing: '0.02em',
+              }}
+              whileHover={{
+                scale: 1.03,
+                boxShadow:
+                  '0 0 35px rgba(20,184,166,0.4), 0 4px 15px rgba(0,0,0,0.3)',
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Show my impact →
+            </motion.button>
+          </form>
+        </div>
+      </motion.section>
+
+      {/* Boundary: Birth-year prompt → Vital Signs (live telemetry) */}
       <SectionShimmer tone="teal" />
 
       {/* Suspense boundary for Vital Signs Section */}
