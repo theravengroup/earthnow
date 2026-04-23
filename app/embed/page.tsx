@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { SITE_URL } from "@/lib/constants";
 import { formatAbbreviated, formatWithCommas } from "@/lib/format";
+import { getSecondsSinceMidnightUTC } from "@/components/today/shared";
 
 import { DAILY_RATES as SHARED_RATES } from "@/lib/data/daily-rates";
 
@@ -62,11 +63,6 @@ const STAT_CONFIG: Record<string, { label: string; color: string; abbreviated: b
   vaccines: { label: "Vaccines Administered", color: "#22c55e", abbreviated: true },
   hunger: { label: "Hunger Deaths", color: "#ef4444", abbreviated: false },
 };
-
-function getSecondsSinceMidnightUTC(): number {
-  const now = new Date();
-  return now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds() + now.getUTCMilliseconds() / 1000;
-}
 
 // Breathing dot component
 function BreathingDot({ color }: { color: string }) {
