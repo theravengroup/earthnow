@@ -22,7 +22,7 @@ function generateSlug(title: string): string {
 // ============================================
 // TYPE DEFINITIONS
 // ============================================
-interface TimelineEvent {
+export interface TimelineEvent {
   year: string;
   title: string;
   description: string;
@@ -81,7 +81,7 @@ function latLngToXY(lat: number, lng: number): { x: number; y: number } {
 // ============================================
 // TIMELINE EVENTS DATASET (~300 milestones)
 // ============================================
-const timelineEvents: TimelineEvent[] = [
+export const timelineEvents: TimelineEvent[] = [
   // ============================================
   // ANCIENT WORLD (~40 milestones)
   // ============================================

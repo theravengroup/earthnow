@@ -74,6 +74,7 @@ import {
   ShareMomentSection,
 } from "@/components/impact/lifetime-impact";
 import { HeadlineInsight } from "@/components/impact/headline-insight";
+import { LifetimeTimeline } from "@/components/impact/lifetime-timeline";
 import { drawRoundRect, formatLargeNumber, formatTime, formatTimeWithUnit, PER_SECOND_RATES, type ShareMomentState } from "@/lib/canvas/generate-share-card";
 
 
@@ -1675,6 +1676,12 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               milesTraveled={calculatedImpact.milesTraveled}
               mealsConsumed={calculatedImpact.mealsConsumed}
             />
+          )}
+
+          {/* Scrubbable lifetime timeline — planetary milestones during
+              the user's lifetime, fused from app/timeline data */}
+          {calculatedImpact && typeof birthYear === "number" && (
+            <LifetimeTimeline birthYear={birthYear} />
           )}
 
           {/* Result Cards Grid */}
