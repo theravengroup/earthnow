@@ -80,10 +80,11 @@ export function AskEarthOverlay({
         <p
           className="font-serif italic"
           style={{
-            color: 'rgba(148,163,184,0.75)',
+            color: 'rgba(203,213,225,0.95)',
             fontSize: 'clamp(18px, 2.5vw, 22px)',
             letterSpacing: '0.01em',
             maxWidth: '720px',
+            textShadow: '0 1px 2px rgba(0,0,0,0.65), 0 2px 14px rgba(0,0,0,0.55)',
             opacity: showQuestion ? 1 : 0,
             transform: showQuestion ? 'translateY(0)' : 'translateY(12px)',
             transition: 'opacity 600ms ease-out 150ms, transform 600ms ease-out 150ms',
@@ -144,11 +145,20 @@ export function AskEarthOverlay({
           </p>
         </div>
 
-        {/* Tap-anywhere hint — only rendered in holding phase */}
+        {/* Tap-anywhere hint — ghost-pill so it reads as a quiet tap target,
+            not ambient text. Accent color matches the moment's tone. */}
         {showHint && (
           <div
-            className="mt-10 font-mono text-[11px] uppercase tracking-[0.25em]"
-            style={{ color: 'rgba(148,163,184,0.45)' }}
+            className="mt-10 inline-flex rounded-full font-mono text-[11px] uppercase tracking-[0.25em]"
+            style={{
+              color: 'rgba(226,232,240,0.88)',
+              padding: '8px 18px',
+              border: `1px solid ${accent}40`,
+              background: `${accent}14`,
+              boxShadow: `0 0 22px ${accent}1f, inset 0 0 0 1px rgba(255,255,255,0.02)`,
+              textShadow: '0 1px 2px rgba(0,0,0,0.6)',
+              animation: 'askEarthHintPulse 3.6s ease-in-out infinite',
+            }}
           >
             tap anywhere to return
           </div>
