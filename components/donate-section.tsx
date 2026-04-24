@@ -154,16 +154,19 @@ export function DonateSection({
                       {/* Most Popular chip. Inline whiteSpace / textWrap
                           defeat the global `text-wrap: pretty` rule applied to
                           <span> in globals.css, which was letting the label
-                          wrap to two lines and collide with the paragraph. */}
+                          wrap to two lines and collide with the paragraph.
+                          Sized to fit within the $10 button width on mobile so
+                          its rounded corners don't bleed into the $5/$25
+                          buttons on either side. */}
                       {isPopular && (
                         <span
-                          className="absolute left-1/2 -translate-x-1/2 rounded-full"
+                          className="pointer-events-none absolute left-1/2 -translate-x-1/2 rounded-full"
                           style={{
-                            top: -14,
-                            padding: '2px 9px',
-                            fontSize: 9,
+                            top: -12,
+                            padding: '2px 6px',
+                            fontSize: 8,
                             fontWeight: 600,
-                            letterSpacing: '0.12em',
+                            letterSpacing: '0.08em',
                             textTransform: 'uppercase',
                             whiteSpace: 'nowrap',
                             textWrap: 'nowrap' as const,
