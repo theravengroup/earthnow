@@ -136,8 +136,10 @@ export function DonateSection({
                 </button>
               </div>
 
-              {/* Small Contribution Encouragement */}
-              <p className="mb-4 text-center text-[15px] italic text-[#94a3b8]">
+              {/* Small Contribution Encouragement.
+                  mb-7 gives the "Most Popular" chip headroom above the $10
+                  pill so it doesn't collide with this paragraph. */}
+              <p className="mb-7 text-center text-[15px] italic text-[#94a3b8]">
                 Even small contributions make a real difference.
               </p>
 
@@ -149,9 +151,28 @@ export function DonateSection({
 
                   return (
                     <div key={amount} className="relative flex flex-col items-center">
-                      {/* Most Popular Label */}
+                      {/* Most Popular chip. Inline whiteSpace / textWrap
+                          defeat the global `text-wrap: pretty` rule applied to
+                          <span> in globals.css, which was letting the label
+                          wrap to two lines and collide with the paragraph. */}
                       {isPopular && (
-                        <span className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-[#3b82f6]">
+                        <span
+                          className="absolute left-1/2 -translate-x-1/2 rounded-full"
+                          style={{
+                            top: -14,
+                            padding: '2px 9px',
+                            fontSize: 9,
+                            fontWeight: 600,
+                            letterSpacing: '0.12em',
+                            textTransform: 'uppercase',
+                            whiteSpace: 'nowrap',
+                            textWrap: 'nowrap' as const,
+                            background: 'rgba(59, 130, 246, 0.16)',
+                            border: '1px solid rgba(59, 130, 246, 0.45)',
+                            color: '#93c5fd',
+                            boxShadow: '0 0 10px rgba(59, 130, 246, 0.22)',
+                          }}
+                        >
                           Most Popular
                         </span>
                       )}
