@@ -20,8 +20,11 @@ body {
 }
 
 /* Prevent orphan words — when text wraps, ensure at least 3 words
-   carry to the next line instead of leaving a single word alone */
-p, h1, h2, h3, h4, h5, h6, span, li {
+   carry to the next line instead of leaving a single word alone.
+   Scoped to block text elements only. Including <span> here caused
+   badges/chips that rely on `white-space: nowrap` to silently wrap
+   to two lines (e.g. "MOST POPULAR" in the donate section). */
+p, h1, h2, h3, h4, h5, h6, li, blockquote {
   text-wrap: pretty;
 }
 

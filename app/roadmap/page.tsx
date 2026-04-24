@@ -39,10 +39,14 @@ const STARS: Array<{ x: number; y: number; size: number; dur: number; del: numbe
 // Live features data
 const liveFeatures = [
   { title: "Ask Earth", desc: "Ask the planet a question. Earth answers in first person — calm, ancient, grounded. One cinematic moment, not a chat." },
+  { title: "Ask Earth Suggested Prompts", desc: "Four one-tap starter questions. Personalized to your era when a birth year is set." },
   { title: "75+ Live Counters", desc: "Real-time data across population, climate, money, technology, and civilization." },
   { title: "Cinematic Intro", desc: "A different opening every visit. 40 unique stats, letter-by-letter animation." },
   { title: "5 System Deep-Dives", desc: "People, Energy, Planet, Food, Technology — each with tabbed storytelling." },
   { title: "Lifetime Impact Calculator", desc: "Enter your birth year. See what the planet spent — including poop produced." },
+  { title: "Headline Insight", desc: "Your lifetime as one cinematic sentence: the world's population when you arrived, now, and the CO₂ you've added." },
+  { title: "Lifetime Timeline Ribbon", desc: "A scrubbable ribbon of planetary events during your life. Color-coded by category. Drag your finger or tap a dot to explore decades." },
+  { title: "Personalization as a Lens", desc: "Enter a birth year once. The site shifts — a persistent chip in the nav, an inline reveal, contextual framing as you keep exploring." },
   { title: "60 Civilization Signals", desc: "A living bento grid of humanity's vital signs, shuffling with animated transitions." },
   { title: "Contrast Moments", desc: "Juxtapositions that make you stop scrolling. Randomized every visit." },
   { title: "\"While You Scrolled\" Interstitials", desc: "Live-ticking counters between sections. Balanced mix of hopeful, alarming, and fascinating." },
@@ -52,6 +56,7 @@ const liveFeatures = [
   { title: "Historical Timeline", desc: "295 milestones across 12,000 years. Filterable. Shareable. Map-linked." },
   { title: "Embeddable Live Widget", desc: "A web component anyone can embed. 22 stats, dark/light themes, configurable layout." },
   { title: "Shareable Moment Cards", desc: "Generate a cinematic snapshot of your visit. Copy, download, or share." },
+  { title: "Swipe-to-Explore Impact Cards", desc: "Ten angles on your lifetime impact — CO₂, water, miles, meals, and more. Swipe or tap arrows to find the one that lands." },
   { title: "Dynamic OG Images", desc: "Every page generates its own social preview card. Beautiful when shared." },
   { title: "Integrated Stripe Payments", desc: "Native payment forms that feel like the site. One-time or monthly. No redirects." },
   { title: "Terra Product Page", desc: "A dedicated page for the Terra ambient display with live data ticker and ordering." },
@@ -60,7 +65,7 @@ const liveFeatures = [
   { title: "Scroll-Triggered Card Illumination", desc: "Cards start dormant and power on with a staggered wave as you scroll. HUD-style corner brackets." },
   { title: "Atmosphere & Dust Motes", desc: "Fresnel atmospheric glow on the globe. 18 floating dust motes drifting at different speeds for parallax depth." },
   { title: "Particle Burst Effects", desc: "CSS-animated particles burst outward when Civilization Signals shuffle. Cinematic transitions." },
-  { title: "Mobile-First Design", desc: "Optimized for phones, tablets, and desktops. Responsive grids, touch-friendly." },
+  { title: "Mobile-First Design", desc: "Optimized for phones, tablets, and desktops. Responsive grids, touch-friendly with large tap targets and drag-to-scrub gestures." },
 ];
 
 // Building now data
