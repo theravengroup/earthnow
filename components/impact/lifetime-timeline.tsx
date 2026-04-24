@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { timelineEvents, type TimelineEvent } from "@/app/timeline/page";
 
@@ -61,6 +61,7 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
   const defaultIdx = Math.min(events.length - 1, Math.floor(events.length / 2));
   const [focusedIdx, setFocusedIdx] = useState(defaultIdx);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [isScrubbing, setIsScrubbing] = useState(false);
 
   // Scrub animation on first scroll-into-view: playhead sweeps L→R, cycling
   // the focused card through each event. Stops on first user interaction.
@@ -123,11 +124,51 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
 
   const focused = events[focusedIdx];
 
-  const handleEventFocus = (idx: number) => {
+  const handleEventFocus = useCallback((idx: number) => {
     setHasUserInteracted(true);
     setFocusedIdx(idx);
     setPlayheadPct(null);
-  };
+  }, []);
+
+  // Drag-to-scrub: on mobile especially, dense decades are impossible to tap
+  // precisely. Dragging along the ribbon updates the focused event in real
+  // time — finger slides = scrubber. Nearest-neighbor by leftPct. Works with
+  // mouse too for desktop parity.
+  const scrubToClientX = useCallback((clientX: number) => {
+    const ribbon = ribbonRef.current;
+    if (!ribbon) return;
+    const rect = ribbon.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    let nearest = 0;
+    let nearestDist = Infinity;
+    for (let i = 0; i < events.length; i++) {
+      const d = Math.abs(events[i].leftPct - pct);
+      if (d < nearestDist) {
+        nearest = i;
+        nearestDist = d;
+      }
+    }
+    handleEventFocus(nearest);
+  }, [events, handleEventFocus]);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // Only primary button / touch / pen
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    setIsScrubbing(true);
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+    scrubToClientX(e.clientX);
+  }, [scrubToClientX]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isScrubbing) return;
+    scrubToClientX(e.clientX);
+  }, [isScrubbing, scrubToClientX]);
+
+  const handlePointerEnd = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    setIsScrubbing(false);
+    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+  }, []);
 
   return (
     <motion.div
@@ -145,14 +186,30 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
             {events.length} moments that reshaped the planet while you&rsquo;ve
             been alive.
           </h3>
+          {/* Hint sits above the ribbon so users see the instruction before
+              trying to interact. Device-aware copy — no "Hover" on touch. */}
+          <p className="mt-3 text-center text-[12px] text-[#cbd5e1]">
+            <span className="pointer-coarse:hidden">
+              Hover any dot &mdash; or drag along the ribbon &mdash; to scrub through.
+            </span>
+            <span className="pointer-fine:hidden">
+              Tap any dot &mdash; or drag your finger along the ribbon &mdash; to scrub through.
+            </span>
+          </p>
         </div>
 
-        {/* Ribbon */}
+        {/* Ribbon. touch-action: pan-y lets vertical page scroll pass through
+            while horizontal drags become scrub gestures handled by JS. */}
         <div
           ref={ribbonRef}
-          className="relative mt-10 select-none"
+          className="relative mt-8 select-none"
           role="list"
           aria-label={`${events.length} planetary events during your lifetime`}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
+          style={{ touchAction: 'pan-y', cursor: isScrubbing ? 'grabbing' : 'grab' }}
         >
           {/* Axis */}
           <div
@@ -172,7 +229,7 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
               return (
                 <div
                   key={year}
-                  className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="pointer-events-none absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
                   style={{ left: `${pct}%` }}
                 >
                   <div
@@ -196,11 +253,14 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
             />
           )}
 
-          {/* Event dots */}
+          {/* Event dots. Each button is a 32px transparent hit target so
+              fingers can land precisely even in dense decades; the visible
+              dot is an 8px child centered inside. */}
           <div className="relative h-16">
             {events.map((event, idx) => {
               const isFocused = idx === focusedIdx;
               const color = colorFor(event.category);
+              const dotSize = isFocused ? 14 : 8;
               return (
                 <button
                   key={`${event.numericYear}-${event.title}`}
@@ -210,23 +270,34 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
                   onFocus={() => handleEventFocus(idx)}
                   onClick={() => handleEventFocus(idx)}
                   aria-label={`${event.numericYear}: ${event.title}`}
-                  className="rounded-full transition-[transform,box-shadow] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   style={{
                     position: "absolute",
                     left: `${event.leftPct}%`,
                     top: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: isFocused ? 14 : 8,
-                    height: isFocused ? 14 : 8,
-                    background: color,
-                    boxShadow: isFocused
-                      ? `0 0 16px ${color}, 0 0 4px ${color}`
-                      : `0 0 6px ${color}88`,
-                    zIndex: isFocused ? 2 : 1,
+                    width: 32,
+                    height: 32,
+                    background: "transparent",
                     padding: 0,
                     border: "none",
+                    zIndex: isFocused ? 3 : 2,
+                    cursor: "pointer",
                   }}
-                />
+                >
+                  <span
+                    aria-hidden
+                    className="block rounded-full transition-[width,height,box-shadow] duration-200"
+                    style={{
+                      width: dotSize,
+                      height: dotSize,
+                      background: color,
+                      boxShadow: isFocused
+                        ? `0 0 16px ${color}, 0 0 4px ${color}`
+                        : `0 0 6px ${color}88`,
+                    }}
+                  />
+                </button>
               );
             })}
           </div>
@@ -280,10 +351,6 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
             </p>
           </motion.div>
         </AnimatePresence>
-
-        <p className="mt-4 text-center text-[11px] text-[#94a3b8]/60">
-          Hover or tap any dot to read that moment.
-        </p>
       </div>
     </motion.div>
   );
