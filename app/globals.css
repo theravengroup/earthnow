@@ -666,6 +666,11 @@ select,
   50% { opacity: 1; }
 }
 
+@keyframes askEarthHintPulse {
+  0%, 100% { opacity: 0.78; }
+  50% { opacity: 1; }
+}
+
 /* Ask Earth — iridescent halo around input pill.
    Two effects layered on a single pseudo-element:
      1. conic-gradient rotates slowly (cyan → blue → purple → magenta → cyan)
