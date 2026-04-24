@@ -74,6 +74,10 @@ function Clouds() {
   );
 }
 
+// Number of trailing samples per satellite. Higher = longer streak, more GPU
+// vertex work. 24 reads as a clear short comet tail without dominating the dot.
+const SATELLITE_TRAIL_SAMPLES = 24;
+
 function SatelliteDot({
   orbitRadius,
   tilt,
@@ -90,16 +94,53 @@ function SatelliteDot({
   const dotRef = useRef<THREE.Mesh>(null);
   const angleRef = useRef(startAngle);
 
+  // Fading trail behind each satellite. Reads as "object on a path" rather
+  // than ambient particle, which is the whole reason it exists — first-time
+  // visitors weren't picking up that the green dots are satellites.
+  const trailObj = useMemo(() => {
+    const positions = new Float32Array(SATELLITE_TRAIL_SAMPLES * 3);
+    const colors = new Float32Array(SATELLITE_TRAIL_SAMPLES * 3);
+    const x0 = Math.cos(startAngle) * orbitRadius;
+    const z0 = Math.sin(startAngle) * orbitRadius;
+    for (let i = 0; i < SATELLITE_TRAIL_SAMPLES; i++) {
+      positions[i * 3] = x0;
+      positions[i * 3 + 1] = 0;
+      positions[i * 3 + 2] = z0;
+      const alpha = 1 - i / (SATELLITE_TRAIL_SAMPLES - 1);
+      colors[i * 3] = (94 / 255) * alpha;
+      colors[i * 3 + 1] = (234 / 255) * alpha;
+      colors[i * 3 + 2] = (212 / 255) * alpha;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true });
+    return new THREE.Line(geo, mat);
+  }, [orbitRadius, startAngle]);
+
   useFrame(() => {
     angleRef.current += speed;
+    const x = Math.cos(angleRef.current) * orbitRadius;
+    const z = Math.sin(angleRef.current) * orbitRadius;
     if (dotRef.current) {
-      dotRef.current.position.x = Math.cos(angleRef.current) * orbitRadius;
-      dotRef.current.position.z = Math.sin(angleRef.current) * orbitRadius;
+      dotRef.current.position.x = x;
+      dotRef.current.position.z = z;
     }
+    const positions = trailObj.geometry.attributes.position.array as Float32Array;
+    for (let i = SATELLITE_TRAIL_SAMPLES - 1; i > 0; i--) {
+      positions[i * 3] = positions[(i - 1) * 3];
+      positions[i * 3 + 1] = positions[(i - 1) * 3 + 1];
+      positions[i * 3 + 2] = positions[(i - 1) * 3 + 2];
+    }
+    positions[0] = x;
+    positions[1] = 0;
+    positions[2] = z;
+    trailObj.geometry.attributes.position.needsUpdate = true;
   });
 
   return (
     <group rotation={[rotationAxis === "x" ? tilt : 0, 0, rotationAxis === "z" ? tilt : 0]}>
+      <primitive object={trailObj} />
       <mesh ref={dotRef}>
         <sphereGeometry args={[0.03, 8, 8]} />
         <meshBasicMaterial color="#5eead4" />

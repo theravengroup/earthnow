@@ -152,23 +152,43 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
     handleEventFocus(nearest);
   }, [events, handleEventFocus]);
 
+  // iPad Safari has known issues with setPointerCapture + touch-action: pan-y
+  // (capture gets implicitly released without firing pointerup/pointercancel,
+  // leaving state stuck after a few drags). Avoid pointer capture entirely:
+  // attach movement listeners to document for the lifetime of one gesture,
+  // and use a small threshold to distinguish tap from drag.
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    // Only primary button / touch / pen
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    setIsScrubbing(true);
-    try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
-    scrubToClientX(e.clientX);
+
+    const startX = e.clientX;
+    const pointerId = e.pointerId;
+    let dragStarted = false;
+    const DRAG_THRESHOLD = 6;
+
+    scrubToClientX(startX);
+
+    const handleMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
+      if (!dragStarted) {
+        if (Math.abs(moveEvent.clientX - startX) < DRAG_THRESHOLD) return;
+        dragStarted = true;
+        setIsScrubbing(true);
+      }
+      scrubToClientX(moveEvent.clientX);
+    };
+
+    const handleEnd = (endEvent: PointerEvent) => {
+      if (endEvent.pointerId !== pointerId) return;
+      setIsScrubbing(false);
+      document.removeEventListener('pointermove', handleMove);
+      document.removeEventListener('pointerup', handleEnd);
+      document.removeEventListener('pointercancel', handleEnd);
+    };
+
+    document.addEventListener('pointermove', handleMove);
+    document.addEventListener('pointerup', handleEnd);
+    document.addEventListener('pointercancel', handleEnd);
   }, [scrubToClientX]);
-
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isScrubbing) return;
-    scrubToClientX(e.clientX);
-  }, [isScrubbing, scrubToClientX]);
-
-  const handlePointerEnd = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    setIsScrubbing(false);
-    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
-  }, []);
 
   return (
     <motion.div
@@ -206,9 +226,6 @@ export function LifetimeTimeline({ birthYear }: LifetimeTimelineProps) {
           role="list"
           aria-label={`${events.length} planetary events during your lifetime`}
           onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerEnd}
-          onPointerCancel={handlePointerEnd}
           style={{ touchAction: 'pan-y', cursor: isScrubbing ? 'grabbing' : 'grab' }}
         >
           {/* Axis */}

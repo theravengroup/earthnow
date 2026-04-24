@@ -956,6 +956,25 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   Your Lifetime Impact
                 </motion.button>
               </div>
+              {/* Identifies the moving green dots on the globe. First-time
+                  visitors were reading them as ambient decoration rather than
+                  satellites; the pulsing dot icon mirrors what they see. */}
+              <motion.div
+                className="mt-6 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em]"
+                style={{ color: 'rgba(148,163,184,0.75)' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.2, delay: 1.4 }}
+              >
+                <motion.span
+                  aria-hidden
+                  className="inline-block h-[6px] w-[6px] rounded-full"
+                  style={{ background: '#5eead4', boxShadow: '0 0 6px #5eead4' }}
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                Satellites in orbit
+              </motion.div>
             </div>
           </motion.div>
         </RevealGate>
@@ -1122,30 +1141,26 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                   label="Days alive"
                 />
               </div>
-              <p className="mt-7 text-[14px] text-[#94a3b8]">
-                A lens, not a destination. Keep scrolling &mdash; the rest of
-                the planet&rsquo;s story colors in around you.
+              {/* Sectional handoff: discourage skipping ahead, invite a slow
+                  read-through. The full lifetime view lives further down — let
+                  users discover it via scroll, not a shortcut. */}
+              <p className="mt-8 font-serif text-[20px] italic leading-snug text-white sm:text-[22px]">
+                Don&rsquo;t skip ahead &mdash; let the planet&rsquo;s story
+                unfold around you.
               </p>
-              <a
-                href="#your-impact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById('your-impact')
-                    ?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-medium tracking-wide transition-colors duration-200"
-                style={{ color: '#14b8a6' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#5eead4';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#14b8a6';
-                }}
+              <motion.div
+                aria-hidden
+                className="mt-5 flex justify-center"
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
               >
-                Or jump to your full lifetime
-                <span aria-hidden>↓</span>
-              </a>
+                <span
+                  className="text-[22px]"
+                  style={{ color: '#14b8a6' }}
+                >
+                  ↓
+                </span>
+              </motion.div>
             </motion.div>
           )}
         </div>

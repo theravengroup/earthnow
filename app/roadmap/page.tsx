@@ -64,6 +64,7 @@ const liveFeatures = [
   { title: "Cinematic Loading Sequence", desc: "Loading bar, globe reveal, navbar slide, audio prompt, content fade. A different arrival every time." },
   { title: "Scroll-Triggered Card Illumination", desc: "Cards start dormant and power on with a staggered wave as you scroll. HUD-style corner brackets." },
   { title: "Atmosphere & Dust Motes", desc: "Fresnel atmospheric glow on the globe. 18 floating dust motes drifting at different speeds for parallax depth." },
+  { title: "Satellite Trails", desc: "Four satellites orbit the hero globe, each leaving a fading teal streak so the motion reads as a tracked object rather than ambient decoration. A pulsing caption below identifies them at a glance." },
   { title: "Particle Burst Effects", desc: "CSS-animated particles burst outward when Civilization Signals shuffle. Cinematic transitions." },
   { title: "Mobile-First Design", desc: "Optimized for phones, tablets, and desktops. Responsive grids, touch-friendly with large tap targets and drag-to-scrub gestures." },
 ];
