@@ -25,9 +25,13 @@ interface UniversalNavbarProps {
   onSectionClick?: (sectionId: string) => void;
   /** Force solid dark background regardless of scroll position */
   forceSolidBackground?: boolean;
+  /** True once the user has entered a birth year. Lights up the Your Impact
+   *  link on desktop and surfaces a visible pill in the mobile chrome so
+   *  personalization persists without forcing a scroll. */
+  hasPersonalized?: boolean;
 }
 
-export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackground = false }: UniversalNavbarProps) {
+export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackground = false, hasPersonalized = false }: UniversalNavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -162,14 +166,15 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
 
               // For section links on homepage, use button to enable smooth scroll
               if (isHomepage && link.type === "section") {
+                const showPersonalDot = hasPersonalized && link.id === "your-impact";
                 return (
                   <button
                     key={link.id}
                     onClick={() => handleLinkClick(link)}
                     aria-current={isActive ? "true" : undefined}
-                    className="nav-link group relative whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
+                    className="nav-link group relative inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] font-medium tracking-wide transition-all duration-200 xl:text-[14px]"
                     style={{
-                      color: isActive ? "white" : "#94a3b8",
+                      color: isActive || showPersonalDot ? "white" : "#94a3b8",
                     }}
                     onMouseEnter={(e) => {
                       if (!isActive) {
@@ -179,11 +184,21 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
                     }}
                     onMouseLeave={(e) => {
                       if (!isActive) {
-                        e.currentTarget.style.color = "#94a3b8";
+                        e.currentTarget.style.color = showPersonalDot ? "white" : "#94a3b8";
                         e.currentTarget.style.textShadow = "none";
                       }
                     }}
                   >
+                    {showPersonalDot && (
+                      <span
+                        aria-hidden
+                        className="inline-block h-[6px] w-[6px] rounded-full"
+                        style={{
+                          background: "#14b8a6",
+                          boxShadow: "0 0 8px rgba(20,184,166,0.7)",
+                        }}
+                      />
+                    )}
                     {link.label}
                     {/* Underline - active state is teal, hover grows from center */}
                     <span
@@ -342,18 +357,54 @@ export function UniversalNavbar({ activeSection, onSectionClick, forceSolidBackg
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="relative z-[60] text-white lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
+          {/* Mobile chrome: personalized pill + hamburger */}
+          <div className="flex items-center gap-3 lg:hidden">
+            {/* Persistent personalization breadcrumb on mobile — visible in
+                chrome (not hidden behind the hamburger) so the user always
+                has a one-tap path back to their full impact. */}
+            {hasPersonalized && !mobileMenuOpen && (
+              <button
+                onClick={() => {
+                  if (isHomepage && onSectionClick) {
+                    onSectionClick("your-impact");
+                  } else {
+                    window.location.href = "/#your-impact";
+                  }
+                }}
+                aria-label="Jump to your personalized impact"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200"
+                style={{
+                  border: "1px solid rgba(20,184,166,0.5)",
+                  background: "rgba(20,184,166,0.14)",
+                  color: "#5eead4",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                <span
+                  aria-hidden
+                  className="inline-block h-[5px] w-[5px] rounded-full"
+                  style={{
+                    background: "#14b8a6",
+                    boxShadow: "0 0 6px rgba(20,184,166,0.7)",
+                  }}
+                />
+                Your Impact
+              </button>
             )}
-          </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="relative z-[60] text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </nav>
 
