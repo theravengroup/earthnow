@@ -125,6 +125,21 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; style?: 
   Utensils, Heart, Shield, Mail, BookOpen, Flame, Users, Search, Trees, Package, Fish, Cloud, TreePine, Baby, Skull, Camera, Cpu, Play, Moon, GraduationCap, Smartphone, Trash2, DollarSign, Droplets, MessageCircle, AlertTriangle, Megaphone, Phone, Fuel, Zap, Wine, Dumbbell, HeartPulse, Database, Mountain, Landmark, Snowflake, Wind, TrendingUp, Rabbit, Clock, Satellite, Orbit,
 };
 
+function InlineStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="font-mono text-[22px] font-semibold tabular-nums text-white sm:text-[28px] md:text-[32px]"
+        style={{ textShadow: '0 0 18px rgba(20,184,166,0.22)' }}
+      >
+        {value}
+      </div>
+      <div className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-[#94a3b8] sm:text-[11px]">
+        {label}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const impactRef = useRef<HTMLDivElement>(null);
@@ -756,6 +771,7 @@ export default function Home() {
       <UniversalNavbar
         activeSection={activeSection}
         onSectionClick={scrollToSection}
+        hasPersonalized={calculatedImpact !== null && typeof birthYear === 'number'}
       />
       
       {/* Main page content */}
@@ -1022,11 +1038,6 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
                 return;
               }
               calculateImpact();
-              setTimeout(() => {
-                document
-                  .getElementById('your-impact')
-                  ?.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
             }}
             className="mt-10 flex flex-wrap items-center justify-center gap-3"
           >
@@ -1070,6 +1081,65 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
               Show my impact →
             </motion.button>
           </form>
+
+          {/* Inline reveal: preview numbers in place, no scroll hijack.
+              Full narrative (population framing, timeline, share) lives in
+              #your-impact below — reached by natural scroll or explicit link. */}
+          {calculatedImpact && typeof birthYear === 'number' && (
+            <motion.div
+              key={birthYear}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="mx-auto mt-12 max-w-2xl border-t pt-10"
+              style={{ borderColor: 'rgba(255,255,255,0.08)' }}
+            >
+              <p
+                className="text-[11px] font-medium uppercase tracking-[0.18em]"
+                style={{ color: '#14b8a6' }}
+              >
+                Your footprint, at a glance
+              </p>
+              <div className="mt-5 grid grid-cols-3 gap-3 sm:gap-8">
+                <InlineStat
+                  value={Math.max(1, Math.floor(calculatedImpact.daysLived / 365)).toLocaleString()}
+                  label="Years on Earth"
+                />
+                <InlineStat
+                  value={Math.round(calculatedImpact.co2Produced).toLocaleString()}
+                  label="Tonnes of CO₂"
+                />
+                <InlineStat
+                  value={calculatedImpact.daysLived.toLocaleString()}
+                  label="Days alive"
+                />
+              </div>
+              <p className="mt-7 text-[14px] text-[#94a3b8]">
+                A lens, not a destination. Keep scrolling &mdash; the rest of
+                the planet&rsquo;s story colors in around you.
+              </p>
+              <a
+                href="#your-impact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById('your-impact')
+                    ?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-medium tracking-wide transition-colors duration-200"
+                style={{ color: '#14b8a6' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#5eead4';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#14b8a6';
+                }}
+              >
+                Or jump to your full lifetime
+                <span aria-hidden>↓</span>
+              </a>
+            </motion.div>
+          )}
         </div>
       </motion.section>
 
