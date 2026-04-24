@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { ArrowUp } from 'lucide-react';
 
 interface AskEarthInputProps {
   disabled?: boolean;
@@ -83,7 +84,7 @@ export function AskEarthInput({ disabled, onSubmit, birthYear }: AskEarthInputPr
         >
           {/* Pill — glass surface that sits ABOVE the halo */}
           <div
-            className="ask-earth-pill absolute inset-0 flex items-center gap-4 overflow-hidden rounded-full pl-3 pr-6"
+            className="ask-earth-pill absolute inset-0 flex items-center gap-4 overflow-hidden rounded-full pl-3 pr-3"
             style={{
               background: 'rgba(14, 20, 32, 0.55)',
               backdropFilter: 'blur(14px) saturate(120%)',
@@ -157,17 +158,33 @@ export function AskEarthInput({ disabled, onSubmit, birthYear }: AskEarthInputPr
                 letterSpacing: '0.005em',
               }}
             />
-          </div>
 
-          {/* Visually-hidden submit — preserves form submit for screen readers */}
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            aria-label="Ask Earth"
-            className="sr-only"
-          >
-            Ask Earth
-          </button>
+            {/* Submit — mirrors the Earth on the left so the pill reads as a
+                conversation: Earth listens, your question launches up. Muted
+                until the input has content, teal when ready to send. */}
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              aria-label="Ask Earth"
+              className="ask-earth-submit shrink-0 flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(20,184,166,0.6)] disabled:cursor-not-allowed"
+              style={{
+                width: 44,
+                height: 44,
+                background: canSubmit
+                  ? 'linear-gradient(135deg, #0f766e, #14b8a6)'
+                  : 'rgba(20, 184, 166, 0.06)',
+                border: canSubmit
+                  ? '1px solid rgba(20, 184, 166, 0.65)'
+                  : '1px solid rgba(20, 184, 166, 0.22)',
+                color: canSubmit ? '#ffffff' : 'rgba(94, 234, 212, 0.55)',
+                boxShadow: canSubmit
+                  ? '0 0 18px rgba(20, 184, 166, 0.42), 0 2px 8px rgba(0,0,0,0.3)'
+                  : 'none',
+              }}
+            >
+              <ArrowUp size={18} strokeWidth={2.25} aria-hidden />
+            </button>
+          </div>
         </div>
 
         {/* Character counter — below the pill, past 80% of cap only */}
