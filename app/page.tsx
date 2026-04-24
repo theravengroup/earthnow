@@ -902,12 +902,20 @@ className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         >
           <h1
               className="mb-6 font-serif font-bold leading-tight text-white"
-              style={{ fontSize: 'clamp(20px, 5.5vw, 56px)' }}
+              style={{
+                fontSize: 'clamp(20px, 5.5vw, 56px)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.55), 0 2px 18px rgba(0,0,0,0.75)',
+              }}
             >
             The planet is changing every second.
           </h1>
 
-          <p className="mb-10 max-w-xl text-lg text-[#94a3b8]">
+          <p
+            className="mb-10 max-w-xl text-lg text-[#cbd5e1]"
+            style={{
+              textShadow: '0 1px 2px rgba(0,0,0,0.65), 0 2px 14px rgba(0,0,0,0.8)',
+            }}
+          >
             See the patterns, pressures, and turning points shaping life on Earth.
           </p>
 
